@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/features/home/ui/home.dart';
+import 'package:fluttermiwallet/res/colors.dart';
+import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/extentions/color_extentions.dart';
 
 class MiWalletApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MI Wallet',
+      title: appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: blueColor.toMaterial(),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: 'MI Wallet'),
+      home: HomePage(),
     );
   }
 }

@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage>
     return AppBar(
       centerTitle: true,
       leading: SvgPicture.asset(
-        'assets/imgs/ic_menu.svg',
+        'assets/images/ic_menu.svg',
         color: Colors.black,
         width: ScreenUtil().setWidth(28),
         height: ScreenUtil().setWidth(28),

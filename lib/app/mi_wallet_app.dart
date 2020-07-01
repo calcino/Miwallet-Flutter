@@ -13,7 +13,6 @@ class MiWalletApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: blueColor.toMaterial(),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(),
     );

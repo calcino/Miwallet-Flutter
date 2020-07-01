@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttermiwallet/features/home/ui/add_count.dart';
 import 'package:fluttermiwallet/features/home/ui/home.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -12,7 +13,6 @@ class MiWalletApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: blueColor.toMaterial(),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(),
     );

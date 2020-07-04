@@ -5,6 +5,7 @@ import 'package:fluttermiwallet/features/home/ui/history_list.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:unicorndial/unicorndial.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -51,12 +52,17 @@ class _HomePageState extends State<HomePage>
   Widget _appBar() {
     return AppBar(
       centerTitle: true,
-      leading: SvgPicture.asset(
-        'assets/images/ic_menu.svg',
-        color: Colors.black,
-        width: ScreenUtil().setWidth(28),
-        height: ScreenUtil().setWidth(28),
-        fit: BoxFit.fill,
+      leading: InkWell(
+        onTap: (){
+          print('menu tapped');
+        },
+        child: SvgPicture.asset(
+          'assets/images/ic_menu.svg',
+          color: Colors.white,
+          width: ScreenUtil().setWidth(28),
+          height: ScreenUtil().setWidth(28),
+          fit: BoxFit.fill,
+        ),
       ),
       bottom: _tabBar(),
       title: Text(
@@ -72,24 +78,58 @@ class _HomePageState extends State<HomePage>
       indicatorColor: orangeColor,
       controller: _tabController,
       tabs: [
-        Tab(text: "June",),
-        Tab(text: "May",),
-        Tab(text: "April",),
-        Tab(text: "March",),
-        Tab(text: "February",),
+        Tab(
+          text: "June",
+        ),
+        Tab(
+          text: "May",
+        ),
+        Tab(
+          text: "April",
+        ),
+        Tab(
+          text: "March",
+        ),
+        Tab(
+          text: "February",
+        ),
       ],
     );
   }
 
   Widget _floatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {},
-      backgroundColor: darkOrangeColor,
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
-        size: ScreenUtil().setWidth(30),
-      ),
-    );
+    Widget _createUnicornButton(
+        String title, IconData iconData, Function onPressed) {
+      return UnicornButton(
+          hasLabel: true,
+          labelText: title,
+          labelHasShadow: false,
+          labelBackgroundColor: Colors.transparent,
+          labelFontSize: ScreenUtil().setSp(normalText),
+          labelColor: blueColor,
+          currentButton: FloatingActionButton(
+            heroTag: title,
+            elevation: 10,
+            backgroundColor: veryLightBlueColor,
+            mini: true,
+            child: Icon(
+              iconData,
+              color: blueColor,
+            ),
+            onPressed: onPressed,
+          ));
+    }
+
+    var childButtons = List<UnicornButton>();
+
+    childButtons.add(_createUnicornButton(expense, Icons.arrow_upward, () {}));
+    childButtons.add(_createUnicornButton(income, Icons.arrow_downward, () {}));
+
+    return UnicornDialer(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),
+        parentButtonBackground: darkOrangeColor,
+        orientation: UnicornOrientation.VERTICAL,
+        parentButton: Icon(Icons.add, color: Colors.white),
+        childButtons: childButtons);
   }
 }

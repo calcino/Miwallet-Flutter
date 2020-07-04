@@ -33,6 +33,7 @@ dependencies:
   flutter_screenutil: ^2.1.0
   flutter_cupertino_date_picker: ^1.0.26+2
   intl: ^0.16.1
+  unicorndial: ^1.1.5
 
 dev_dependencies:
   flutter_test:

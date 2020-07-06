@@ -14,7 +14,7 @@ class MiWalletApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: blueColor.toMaterial(),
       ),
-      home: HomePage(),
+      home: AddCount(),
     );
   }
 }

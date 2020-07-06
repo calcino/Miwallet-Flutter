@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttermiwallet/helper/widgets/bottom_sheet_widget.dart';
+import 'package:fluttermiwallet/res/colors.dart';
+import 'package:fluttermiwallet/res/strings.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class AddCount extends StatefulWidget {
@@ -12,15 +17,11 @@ class AddCount extends StatefulWidget {
 }
 
 class _AddCountState extends State<AddCount> {
-  Color _toolbarColor = Color(0xff1565C0);
-
-  Color _textColor = Color(0xff0D47A1);
-
-  Color _hintColor = Color(0xff707070);
-
   DateTime _time;
-
   DateTime _date;
+  PickedFile _imageFile;
+  ImagePicker _pickedFile = ImagePicker();
+  bool _isPicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,9 @@ class _AddCountState extends State<AddCount> {
 
   Widget _appBar() {
     return AppBar(
-      backgroundColor: _toolbarColor,
       elevation: 0,
       title: Text(
-        "Add Expense",
+        addExpense,
         style: TextStyle(
           color: Colors.white,
           fontSize: ScreenUtil().setSp(20),
@@ -57,7 +57,7 @@ class _AddCountState extends State<AddCount> {
           ),
           child: GestureDetector(
             child: Text(
-              "save",
+              save,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -68,7 +68,7 @@ class _AddCountState extends State<AddCount> {
         ),
       ],
       leading: InkWell(
-        onTap: (){
+        onTap: () {
           Navigator.of(context).pop();
         },
         child: Icon(
@@ -85,17 +85,32 @@ class _AddCountState extends State<AddCount> {
       child: Column(
         children: <Widget>[
           _fieldBox(
-            marginTop: 19,
-            width: 318,
-            label: "Category",
-            childWidget: _chooseBottomSheet("Choose"),
-          ),
+              marginTop: 19,
+              width: 318,
+              label: category,
+              childWidget: _chooseBottomSheet(choose),
+              onPressed: () {
+                showModalBottomSheet(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(
+                        ScreenUtil().setWidth(25),
+                      ),
+                    ),
+                  ),
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return _chooseCategoryBtmSheet();
+                  },
+                );
+              }),
           _fieldBox(
             marginTop: 13,
             marginBottom: 13,
             width: 318,
-            label: "Subcategory",
-            childWidget: _chooseBottomSheet("Choose"),
+            label: subcategory,
+            childWidget: _chooseBottomSheet(choose),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +118,7 @@ class _AddCountState extends State<AddCount> {
               _fieldBox(
                 marginTop: 0,
                 width: 156,
-                label: "Time",
+                label: time,
                 marginRight: 0,
                 childWidget: _dateTimeShow(_time == null
                     ? "00:00"
@@ -113,7 +128,7 @@ class _AddCountState extends State<AddCount> {
               _fieldBox(
                 marginTop: 0,
                 width: 156,
-                label: "Date",
+                label: date,
                 marginLeft: 0,
                 childWidget: _dateTimeShow(
                   _date == null
@@ -129,20 +144,20 @@ class _AddCountState extends State<AddCount> {
           _fieldBox(
             marginTop: 15,
             width: 318,
-            label: "From Which Account",
-            childWidget: _chooseBottomSheet("Saderat"),
+            label: fromWhichAccount,
+            childWidget: _chooseBottomSheet(saderat),
           ),
           _fieldBox(
             marginTop: 12,
             width: 318,
-            label: "Description",
+            label: description,
             marginBottom: 23.5,
             height: 84,
             childWidget: _descTextField(),
           ),
           Divider(
             height: ScreenUtil().setWidth(1),
-            color: _hintColor,
+            color: hintColor,
           ),
           _imagePickerButton(),
         ],
@@ -152,20 +167,20 @@ class _AddCountState extends State<AddCount> {
 
   Widget _imagePickerButton() {
     return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.only(
-        top: ScreenUtil().setHeight(30.5),
-        bottom: ScreenUtil().setHeight(61),
-      ),
-      child: Image(
-        image: AssetImage(
-          "assets/images/image_picker.png",
+        width: ScreenUtil().setWidth(283),
+        height: ScreenUtil().setHeight(113),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: _isPicked ? hintColor : Colors.white,
+          borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))
         ),
-        fit: BoxFit.cover,
-        width: ScreenUtil().setWidth(92),
-        height: ScreenUtil().setHeight(75),
-      ),
-    );
+        margin: EdgeInsets.only(
+          top: ScreenUtil().setHeight(40),
+          bottom: ScreenUtil().setHeight(64),
+          right: ScreenUtil().setWidth(18),
+          left: ScreenUtil().setWidth(18),
+        ),
+        child: _setImageView());
   }
 
   Widget _fieldBox(
@@ -198,12 +213,12 @@ class _AddCountState extends State<AddCount> {
                 onPressed: onPressed,
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
-                highlightedBorderColor: _hintColor,
-                color: _textColor,
+                highlightedBorderColor: hintColor,
+                color: textColor,
                 borderSide: BorderSide(
-                  color: _toolbarColor.withOpacity(0.55),
+                  color: blueColor.withOpacity(0.55),
                 ),
-                disabledBorderColor: _toolbarColor.withOpacity(0.55),
+                disabledBorderColor: blueColor.withOpacity(0.55),
                 child: childWidget,
               ),
             ),
@@ -223,7 +238,7 @@ class _AddCountState extends State<AddCount> {
                 child: Text(
                   label,
                   style: TextStyle(
-                      fontSize: ScreenUtil().setSp(14), color: _textColor),
+                      fontSize: ScreenUtil().setSp(14), color: textColor),
                 ),
               ),
             ),
@@ -238,7 +253,6 @@ class _AddCountState extends State<AddCount> {
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(21)),
-        color: _toolbarColor,
         height: ScreenUtil().setHeight(156),
         child: Container(
           padding: EdgeInsets.only(
@@ -248,10 +262,10 @@ class _AddCountState extends State<AddCount> {
             top: ScreenUtil().setWidth(10),
           ),
           margin: EdgeInsets.only(
-            top: ScreenUtil().setHeight(64),
+            top: ScreenUtil().setHeight(44),
           ),
           width: ScreenUtil().setWidth(318),
-          height: ScreenUtil().setHeight(80),
+          height: ScreenUtil().setHeight(90),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(
@@ -263,15 +277,17 @@ class _AddCountState extends State<AddCount> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Amount",
+                amount,
                 style: TextStyle(
-                    fontSize: ScreenUtil().setSp(14), color: _textColor),
+                    fontSize: ScreenUtil().setSp(14), color: textColor),
               ),
               TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: "\$0.00",
-                  suffixIcon: Image.asset("assets/images/calculator.png",),
+                  suffixIcon: Image.asset(
+                    "assets/images/calculator.png",
+                  ),
                   counterStyle: TextStyle(
                     color: Color(0xff0D47A1),
                     fontSize: ScreenUtil().setSp(14),
@@ -295,7 +311,7 @@ class _AddCountState extends State<AddCount> {
       children: <Widget>[
         Text(
           hint,
-          style: TextStyle(fontSize: ScreenUtil().setSp(12), color: _hintColor),
+          style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
         ),
         Icon(Icons.arrow_drop_down),
       ],
@@ -307,7 +323,7 @@ class _AddCountState extends State<AddCount> {
       alignment: Alignment.centerLeft,
       child: Text(
         dateTime,
-        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: _hintColor),
+        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
       ),
     );
   }
@@ -318,9 +334,84 @@ class _AddCountState extends State<AddCount> {
       pickerMode: DateTimePickerMode.time,
       dateFormat: "HH-mm",
       onConfirm: (datetime, list) => setState(
-            () {
+        () {
           _time = datetime;
         },
+      ),
+    );
+  }
+
+  _chooseCategoryBtmSheet() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: 0,
+        maxHeight: ScreenUtil().setHeight(550),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          categoryAppBar(chooseCategory, false, context),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: <Widget>[
+                    Divider(
+                      color: hintColor,
+                      height: ScreenUtil().setHeight(1),
+                    ),
+                    index == 0
+                        ? categoryListField(addNewCategory, icon: Icons.add)
+                        : categoryListField("Food"),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _addCategoryBtmSheet() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: ScreenUtil().setHeight(100),
+        maxHeight: ScreenUtil().setHeight(550),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          categoryAppBar(addCategory, true, context),
+          _labelText(nameCategory, marginTop: 20, marginBottom: 6),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenUtil().setHeight(36),
+            ),
+            child: TextField(
+              style: TextStyle(
+                color: hintColor,
+                fontSize: ScreenUtil().setSp(12),
+              ),
+              maxLines: 1,
+              decoration: InputDecoration(),
+            ),
+          ),
+          _labelText(chooseAnIcon, marginTop: 15, marginBottom: 17),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setHeight(36),
+              ),
+              child: GridView.count(
+                crossAxisCount: 6,
+                children: List.generate(30, (index) => Icon(Icons.image)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -331,9 +422,28 @@ class _AddCountState extends State<AddCount> {
       pickerMode: DateTimePickerMode.date,
       dateFormat: "yyyy-MMMM-dd",
       onConfirm: (datetime, list) => setState(
-            () {
+        () {
           _date = datetime;
         },
+      ),
+    );
+  }
+
+  _labelText(String label, {double marginTop, double marginBottom}) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: ScreenUtil().setHeight(marginTop),
+        bottom: ScreenUtil().setHeight(marginBottom),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setHeight(36),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: blueColor,
+          fontSize: ScreenUtil().setSp(14),
+        ),
       ),
     );
   }
@@ -342,10 +452,84 @@ class _AddCountState extends State<AddCount> {
     return TextField(
       minLines: 1,
       maxLines: 6,
-      style: TextStyle(fontSize: ScreenUtil().setSp(12), color: _hintColor),
+      style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
       decoration: InputDecoration(
         border: InputBorder.none,
       ),
     );
+  }
+
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("From where do you want to take the photo?"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Gallery"),
+                      onTap: () {
+                        _openGallery(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("Camera"),
+                      onTap: () {
+                        _openCamera(context);
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
+  void _openGallery(BuildContext context) async {
+    PickedFile _picture =
+        await _pickedFile.getImage(source: ImageSource.gallery);
+
+    if (_picture != null) {
+      this.setState(() {
+        _isPicked = true;
+        _imageFile = _picture;
+      });
+    }
+    Navigator.of(context).pop();
+  }
+
+  void _openCamera(BuildContext context) async {
+    PickedFile _img = await _pickedFile.getImage(source: ImageSource.camera);
+    if (_img != null) {
+      this.setState(() {
+        _isPicked = true;
+        _imageFile = _img;
+      });
+    }
+    Navigator.of(context).pop();
+  }
+
+  Widget _setImageView() {
+    if (_imageFile != null) {
+      return Image.file(
+        File(_imageFile.path),
+        alignment: Alignment.center,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return InkWell(
+        onTap: () => _showSelectionDialog(context),
+        child: Image(
+          image: AssetImage(
+            "assets/images/image_picker.png",
+          ),
+          fit: BoxFit.cover,
+          width: ScreenUtil().setWidth(92),
+          height: ScreenUtil().setHeight(75),
+        ),
+      );
+    }
   }
 }

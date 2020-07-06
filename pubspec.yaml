@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^1.6.11
   path: ^1.6.4
   image_picker: ^0.6.7+3
+  unicorndial: ^1.1.5
 
 dev_dependencies:
   flutter_test:

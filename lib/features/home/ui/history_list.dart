@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttermiwallet/db/entity/cost_history.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
@@ -15,7 +16,8 @@ class HistoryList extends StatelessWidget {
     return Column(
       children: <Widget>[
         _header(),
-        _sectionedList(),
+        //_sectionedList(),
+        EmptyDataWidget()
       ],
     );
   }
@@ -234,6 +236,37 @@ class _HistoryItem extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class EmptyDataWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ScreenUtil.init(width: 320, height: 640);
+    return Expanded(
+      flex: 10,
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              emptyData,
+              style: TextStyle(
+                  color: blueColor, fontSize: ScreenUtil().setSp(largeText)),
+            ),
+            SizedBox(
+              height: ScreenUtil().setWidth(30),
+            ),
+            SvgPicture.asset(
+              'assets/images/empty_history.svg',
+              width: ScreenUtil().setWidth(160),
+            ),
+          ],
+        ),
       ),
     );
   }

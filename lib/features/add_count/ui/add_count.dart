@@ -5,9 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/helper/widgets/bottom_sheet_widget.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
+import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
+import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
+import 'package:fluttermiwallet/utils/widgets/show_date_time_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -32,63 +35,22 @@ class _AddCountState extends State<AddCount> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: _appBar(),
+        appBar: appBar(context, bottomCalcAppBar(),addExpense,),
         body: _body(context),
       ),
     );
   }
 
-  Widget _appBar() {
-    return AppBar(
-      elevation: 0,
-      title: Text(
-        addExpense,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: ScreenUtil().setSp(20),
-        ),
-      ),
-      centerTitle: true,
-      actions: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.only(
-            right: ScreenUtil().setWidth(21),
-          ),
-          child: GestureDetector(
-            child: Text(
-              save,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: ScreenUtil().setSp(14),
-              ),
-            ),
-          ),
-        ),
-      ],
-      leading: InkWell(
-        onTap: () {
-          Navigator.of(context).pop();
-        },
-        child: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-        ),
-      ),
-      bottom: _calcField(),
-    );
-  }
 
   Widget _body(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          _fieldBox(
+          customTextBox(
               marginTop: 19,
               width: 318,
               label: category,
-              childWidget: _chooseBottomSheet(choose),
+              childWidget: chooseBottomSheet(choose),
               onPressed: () {
                 showModalBottomSheet(
                   shape: RoundedRectangleBorder(
@@ -105,32 +67,32 @@ class _AddCountState extends State<AddCount> {
                   },
                 );
               }),
-          _fieldBox(
+          customTextBox(
             marginTop: 13,
             marginBottom: 13,
             width: 318,
             label: subcategory,
-            childWidget: _chooseBottomSheet(choose),
+            childWidget: chooseBottomSheet(choose),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              _fieldBox(
+              customTextBox(
                 marginTop: 0,
                 width: 156,
                 label: time,
                 marginRight: 0,
-                childWidget: _dateTimeShow(_time == null
+                childWidget: dateTimeShow(_time == null
                     ? "00:00"
                     : DateFormat("HH:mm").format(_time)),
                 onPressed: () => _showTimePicker(),
               ),
-              _fieldBox(
+              customTextBox(
                 marginTop: 0,
                 width: 156,
                 label: date,
                 marginLeft: 0,
-                childWidget: _dateTimeShow(
+                childWidget: dateTimeShow(
                   _date == null
                       ? DateFormat('dd MMMM,yyyy').format(
                           DateTime.now(),
@@ -141,19 +103,19 @@ class _AddCountState extends State<AddCount> {
               ),
             ],
           ),
-          _fieldBox(
+          customTextBox(
             marginTop: 15,
             width: 318,
             label: fromWhichAccount,
-            childWidget: _chooseBottomSheet(saderat),
+            childWidget: chooseBottomSheet(saderat),
           ),
-          _fieldBox(
+          customTextBox(
             marginTop: 12,
             width: 318,
             label: description,
             marginBottom: 23.5,
             height: 84,
-            childWidget: _descTextField(),
+            childWidget: descTextField(),
           ),
           Divider(
             height: ScreenUtil().setWidth(1),
@@ -183,152 +145,12 @@ class _AddCountState extends State<AddCount> {
         child: _setImageView());
   }
 
-  Widget _fieldBox(
-      {double width,
-      double height = 50.0,
-      marginTop,
-      marginBottom = 0,
-      marginRight = 21,
-      marginLeft = 21,
-      String label,
-      Widget childWidget,
-      Function onPressed}) {
-    return Container(
-      margin: EdgeInsets.only(
-          top: ScreenUtil().setHeight(marginTop),
-          bottom: ScreenUtil().setHeight(marginBottom),
-          right: ScreenUtil().setWidth(marginRight),
-          left: ScreenUtil().setWidth(marginLeft)),
-      height: ScreenUtil().setHeight(height),
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              width: ScreenUtil().setWidth(width),
-              height: ScreenUtil().setHeight(height - 14),
-              child: OutlineButton(
-                padding:
-                    EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-                onPressed: onPressed,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                highlightedBorderColor: hintColor,
-                color: textColor,
-                borderSide: BorderSide(
-                  color: blueColor.withOpacity(0.55),
-                ),
-                disabledBorderColor: blueColor.withOpacity(0.55),
-                child: childWidget,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: FittedBox(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(4),
-                ),
-                margin: EdgeInsets.only(
-                  left: ScreenUtil().setWidth(11),
-                ),
-                height: ScreenUtil().setHeight(19),
-                color: Colors.white,
-                child: Text(
-                  label,
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setSp(14), color: textColor),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _calcField() {
-    return PreferredSize(
-      child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(21)),
-        height: ScreenUtil().setHeight(156),
-        child: Container(
-          padding: EdgeInsets.only(
-            left: ScreenUtil().setWidth(16),
-            right: ScreenUtil().setWidth(16),
-            bottom: ScreenUtil().setWidth(10),
-            top: ScreenUtil().setWidth(10),
-          ),
-          margin: EdgeInsets.only(
-            top: ScreenUtil().setHeight(44),
-          ),
-          width: ScreenUtil().setWidth(318),
-          height: ScreenUtil().setHeight(90),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(
-              ScreenUtil().setWidth(13),
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                amount,
-                style: TextStyle(
-                    fontSize: ScreenUtil().setSp(14), color: textColor),
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: "\$0.00",
-                  suffixIcon: Image.asset(
-                    "assets/images/calculator.png",
-                  ),
-                  counterStyle: TextStyle(
-                    color: Color(0xff0D47A1),
-                    fontSize: ScreenUtil().setSp(14),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      preferredSize: Size(
-        ScreenUtil().setWidth(318),
-        ScreenUtil().setHeight(156),
-      ),
-    );
-  }
 
-  Widget _chooseBottomSheet(String hint) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          hint,
-          style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
-        ),
-        Icon(Icons.arrow_drop_down),
-      ],
-    );
-  }
 
-  Widget _dateTimeShow(String dateTime) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        dateTime,
-        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
-      ),
-    );
-  }
 
-  _showTimePicker() {
+
+   _showTimePicker() {
     DatePicker.showDatePicker(
       context,
       pickerMode: DateTimePickerMode.time,
@@ -448,16 +270,6 @@ class _AddCountState extends State<AddCount> {
     );
   }
 
-  Widget _descTextField() {
-    return TextField(
-      minLines: 1,
-      maxLines: 6,
-      style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
-      decoration: InputDecoration(
-        border: InputBorder.none,
-      ),
-    );
-  }
 
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(

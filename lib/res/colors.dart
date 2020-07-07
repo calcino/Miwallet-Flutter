@@ -8,3 +8,4 @@ const Color greenColor = Color(0xff0C9B45);
 const Color redColor = Color(0xffFF5252);
 const Color textColor = Color(0xff0D47A1);
 const Color hintColor = Color(0xff707070);
+const Color boxColor = Color(0xffF5F5F5);

@@ -26,7 +26,6 @@ const String nameCategory = 'Name Category';
 const String time = 'Time';
 const String date = 'Date';
 const String fromWhichAccount = 'From Which Account';
-const String saderat = 'Saderat';
 const String description = 'Description';
 const String amount = 'Amount';
 const String chooseAnIcon = 'Choose An Icon';

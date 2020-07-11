@@ -35,12 +35,15 @@ class _AddCountState extends State<AddCount> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(context, bottomCalcAppBar(),addExpense,),
+        appBar: appBar(
+          context,
+          bottomCalcAppBar(),
+          addExpense,
+        ),
         body: _body(context),
       ),
     );
   }
-
 
   Widget _body(BuildContext context) {
     return SingleChildScrollView(
@@ -107,7 +110,7 @@ class _AddCountState extends State<AddCount> {
             marginTop: 15,
             width: 318,
             label: fromWhichAccount,
-            childWidget: chooseBottomSheet(saderat),
+            childWidget: chooseBottomSheet('Saderat'),
           ),
           customTextBox(
             marginTop: 12,
@@ -133,9 +136,8 @@ class _AddCountState extends State<AddCount> {
         height: ScreenUtil().setHeight(113),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: _isPicked ? hintColor : Colors.white,
-          borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))
-        ),
+            color: _isPicked ? hintColor : Colors.white,
+            borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))),
         margin: EdgeInsets.only(
           top: ScreenUtil().setHeight(40),
           bottom: ScreenUtil().setHeight(64),
@@ -145,12 +147,7 @@ class _AddCountState extends State<AddCount> {
         child: _setImageView());
   }
 
-
-
-
-
-
-   _showTimePicker() {
+  _showTimePicker() {
     DatePicker.showDatePicker(
       context,
       pickerMode: DateTimePickerMode.time,
@@ -269,7 +266,6 @@ class _AddCountState extends State<AddCount> {
       ),
     );
   }
-
 
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(

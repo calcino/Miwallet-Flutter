@@ -26,7 +26,6 @@ const String nameCategory = 'Name Category';
 const String time = 'Time';
 const String date = 'Date';
 const String fromWhichAccount = 'From Which Account';
-const String saderat = 'Saderat';
 const String description = 'Description';
 const String amount = 'Amount';
 const String chooseAnIcon = 'Choose An Icon';
@@ -34,7 +33,6 @@ const String totalBalance = 'Total Balance';
 
 const String emptyData = 'Empty Data';
 const String dashboard = 'Dashboard';
-const String totalBalance = 'Dashboard';
 
 //array
 const List<String> dashboardRangeOfDate = [

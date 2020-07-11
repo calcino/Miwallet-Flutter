@@ -13,15 +13,13 @@ class AccountsScreen extends StatefulWidget {
   _AccountsScreenState createState() => _AccountsScreenState();
 }
 
-class _AccountsScreenState extends State<AccountsScreen>
-    {
-
-
+class _AccountsScreenState extends State<AccountsScreen> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 360, height: 640);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: _appBar(),
         body: _body(),
       ),
@@ -47,15 +45,14 @@ class _AccountsScreenState extends State<AccountsScreen>
   }
 
   Widget _body() {
-    return Padding(
-      padding: EdgeInsets.all(ScreenUtil().setWidth(21)),
-      child: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return AccountView();
-          }
-      ),
-    );
+    return ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(21),),
+            child: AccountView(),
+          );
+        });
   }
 }
 
@@ -64,7 +61,8 @@ class AccountView extends StatefulWidget {
   _AccountViewState createState() => _AccountViewState();
 }
 
-class _AccountViewState extends State<AccountView> with SingleTickerProviderStateMixin {
+class _AccountViewState extends State<AccountView>
+    with SingleTickerProviderStateMixin {
   var isExpanded = false;
   AnimationController _controller;
   Animation<double> _rotateAnim;
@@ -77,6 +75,7 @@ class _AccountViewState extends State<AccountView> with SingleTickerProviderStat
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -85,7 +84,7 @@ class _AccountViewState extends State<AccountView> with SingleTickerProviderStat
       },
       child: Container(
         margin: EdgeInsets.only(
-          bottom: ScreenUtil().setHeight(10),
+          bottom: ScreenUtil().setHeight(12),
         ),
         decoration: BoxDecoration(
           color: boxColor,
@@ -110,7 +109,6 @@ class _AccountViewState extends State<AccountView> with SingleTickerProviderStat
     );
   }
 
-
   Widget _accountView() {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -119,6 +117,9 @@ class _AccountViewState extends State<AccountView> with SingleTickerProviderStat
       height: ScreenUtil().setHeight(50),
       decoration: BoxDecoration(
         color: boxColor,
+        borderRadius: BorderRadius.circular(
+          ScreenUtil().setWidth(10),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,10 +186,11 @@ class _AccountViewState extends State<AccountView> with SingleTickerProviderStat
   }
 
   Widget operatorContainer(String text) {
-    return Container(
-      width: ScreenUtil().setWidth(105),
-      alignment: Alignment.center,
-      child: bottomText(text, size: 12, color: textColor),
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: bottomText(text, size: 12, color: textColor),
+      ),
     );
   }
 
@@ -206,4 +208,3 @@ class _AccountViewState extends State<AccountView> with SingleTickerProviderStat
     }
   }
 }
-

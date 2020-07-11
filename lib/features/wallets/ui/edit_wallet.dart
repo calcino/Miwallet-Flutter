@@ -21,6 +21,7 @@ class _EditWalletState extends State<EditWallet> {
     ScreenUtil.init(width: 360, height: 640);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: appBar(context, bottomCalcAppBar(), editWallet),
         body: _body(context),
       ),
@@ -33,13 +34,11 @@ class _EditWalletState extends State<EditWallet> {
         children: <Widget>[
           customTextBox(
             marginTop: 19,
-            width: 318,
             label: accountName,
             childWidget: chooseBottomSheet("Saderat"),
           ),
           customTextBox(
             marginTop: 10,
-            width: 318,
             label: bank,
             childWidget: chooseBottomSheet(choose),
             onPressed: () {
@@ -61,7 +60,6 @@ class _EditWalletState extends State<EditWallet> {
           ),
           customTextBox(
             marginTop: 10,
-            width: 318,
             label: description,
             marginBottom: 0,
             height: 84,

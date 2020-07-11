@@ -74,10 +74,9 @@ Widget bottomCalcAppBar({bool isExpanded=false}) {
               top: ScreenUtil().setWidth(10),
             ),
             margin: EdgeInsets.only(
-              top: ScreenUtil().setHeight(30),
+              top: ScreenUtil().setHeight(40),
             ),
-            width: ScreenUtil().setWidth(318),
-            height: ScreenUtil().setHeight(90),
+            height: ScreenUtil().setHeight(70),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(
@@ -88,21 +87,25 @@ Widget bottomCalcAppBar({bool isExpanded=false}) {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  amount,
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setSp(14), color: textColor),
+                Expanded(
+                  child: Text(
+                    amount,
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(14), color: textColor),
+                  ),
                 ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "\$0.00",
-                    suffixIcon: Image.asset(
-                      "assets/images/calculator.png",
-                    ),
-                    counterStyle: TextStyle(
-                      color: Color(0xff0D47A1),
-                      fontSize: ScreenUtil().setSp(14),
+                Expanded(
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: "\$0.00",
+                      suffixIcon: Image.asset(
+                        "assets/images/calculator.png",
+                      ),
+                      counterStyle: TextStyle(
+                        color: Color(0xff0D47A1),
+                        fontSize: ScreenUtil().setSp(14),
+                      ),
                     ),
                   ),
                 ),

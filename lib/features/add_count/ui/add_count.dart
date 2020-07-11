@@ -35,12 +35,15 @@ class _AddCountState extends State<AddCount> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(context, bottomCalcAppBar(),addExpense,),
+        appBar: appBar(
+          context,
+          bottomCalcAppBar(),
+          addExpense,
+        ),
         body: _body(context),
       ),
     );
   }
-
 
   Widget _body(BuildContext context) {
     return SingleChildScrollView(
@@ -48,7 +51,6 @@ class _AddCountState extends State<AddCount> {
         children: <Widget>[
           customTextBox(
               marginTop: 19,
-              width: 318,
               label: category,
               childWidget: chooseBottomSheet(choose),
               onPressed: () {
@@ -70,48 +72,47 @@ class _AddCountState extends State<AddCount> {
           customTextBox(
             marginTop: 13,
             marginBottom: 13,
-            width: 318,
             label: subcategory,
             childWidget: chooseBottomSheet(choose),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              customTextBox(
-                marginTop: 0,
-                width: 156,
-                label: time,
-                marginRight: 0,
-                childWidget: dateTimeShow(_time == null
-                    ? "00:00"
-                    : DateFormat("HH:mm").format(_time)),
-                onPressed: () => _showTimePicker(),
-              ),
-              customTextBox(
-                marginTop: 0,
-                width: 156,
-                label: date,
-                marginLeft: 0,
-                childWidget: dateTimeShow(
-                  _date == null
-                      ? DateFormat('dd MMMM,yyyy').format(
-                          DateTime.now(),
-                        )
-                      : DateFormat("dd MMMM,yyyy").format(_date),
+              Expanded(
+                child: customTextBox(
+                  marginTop: 0,
+                  label: time,
+                  marginRight: 3.5,
+                  childWidget: dateTimeShow(
+                    _time == null ? "00:00" : DateFormat("HH:mm").format(_time),
+                  ),
+                  onPressed: () => _showTimePicker(),
                 ),
-                onPressed: () => _showDatePicker(),
+              ),
+              Expanded(
+                child: customTextBox(
+                  marginTop: 0,
+                  label: date,
+                  marginLeft: 3.5,
+                  childWidget: dateTimeShow(
+                    _date == null
+                        ? DateFormat('dd MMMM,yyyy').format(
+                            DateTime.now(),
+                          )
+                        : DateFormat("dd MMMM,yyyy").format(_date),
+                  ),
+                  onPressed: () => _showDatePicker(),
+                ),
               ),
             ],
           ),
           customTextBox(
             marginTop: 15,
-            width: 318,
             label: fromWhichAccount,
             childWidget: chooseBottomSheet(saderat),
           ),
           customTextBox(
             marginTop: 12,
-            width: 318,
             label: description,
             marginBottom: 23.5,
             height: 84,
@@ -133,9 +134,8 @@ class _AddCountState extends State<AddCount> {
         height: ScreenUtil().setHeight(113),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: _isPicked ? hintColor : Colors.white,
-          borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))
-        ),
+            color: _isPicked ? hintColor : Colors.white,
+            borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))),
         margin: EdgeInsets.only(
           top: ScreenUtil().setHeight(40),
           bottom: ScreenUtil().setHeight(64),
@@ -145,12 +145,7 @@ class _AddCountState extends State<AddCount> {
         child: _setImageView());
   }
 
-
-
-
-
-
-   _showTimePicker() {
+  _showTimePicker() {
     DatePicker.showDatePicker(
       context,
       pickerMode: DateTimePickerMode.time,
@@ -269,7 +264,6 @@ class _AddCountState extends State<AddCount> {
       ),
     );
   }
-
 
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(

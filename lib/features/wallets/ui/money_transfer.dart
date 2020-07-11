@@ -18,6 +18,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: appBar(context, bottomCalcAppBar(isExpanded: true), moneyTransfer),
         body: _body(),
       ),
@@ -31,42 +32,42 @@ class _MoneyTransferState extends State<MoneyTransfer> {
           customTextBox(
             marginTop: 19,
             marginBottom: 12,
-            width: 318,
             label: accountName,
             childWidget: chooseBottomSheet("Saderat"),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              customTextBox(
-                marginTop: 0,
-                width: 156,
-                label: time,
-                marginRight: 0,
-                childWidget: dateTimeShow(_time == null
-                    ? "00:00"
-                    : DateFormat("HH:mm").format(_time)),
-                onPressed: () => _showTimePicker(),
-              ),
-              customTextBox(
-                marginTop: 0,
-                width: 156,
-                label: date,
-                marginLeft: 0,
-                childWidget: dateTimeShow(
-                  _date == null
-                      ? DateFormat('dd MMMM,yyyy').format(
-                    DateTime.now(),
-                  )
-                      : DateFormat("dd MMMM,yyyy").format(_date),
+              Expanded(
+                child: customTextBox(
+                  marginTop: 0,
+                  label: time,
+                  marginRight: 3.5,
+                  childWidget: dateTimeShow(_time == null
+                      ? "00:00"
+                      : DateFormat("HH:mm").format(_time)),
+                  onPressed: () => _showTimePicker(),
                 ),
-                onPressed: () => _showDatePicker(),
+              ),
+              Expanded(
+                child: customTextBox(
+                  marginTop: 0,
+                  label: date,
+                  marginLeft: 3.5,
+                  childWidget: dateTimeShow(
+                    _date == null
+                        ? DateFormat('dd MMMM,yyyy').format(
+                      DateTime.now(),
+                    )
+                        : DateFormat("dd MMMM,yyyy").format(_date),
+                  ),
+                  onPressed: () => _showDatePicker(),
+                ),
               ),
             ],
           ),
           customTextBox(
             marginTop: 12,
-            width: 318,
             label: description,
             marginBottom: 0,
             height: 84,

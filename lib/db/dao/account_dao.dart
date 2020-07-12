@@ -9,7 +9,7 @@ abstract class AccountDao {
 
   @Query('SELECT * FROM Accounts WHERE id = :id')
   Stream<Account> findAccount(int id);
-  
+
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<void> insertAccount(Account account);
 

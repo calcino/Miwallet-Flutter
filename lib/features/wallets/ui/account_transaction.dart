@@ -12,6 +12,7 @@ class AccountTransaction extends StatelessWidget {
     ScreenUtil.init(width: 360, height: 640);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: _appBar(context),
         body: _body(),
       ),
@@ -37,18 +38,18 @@ class AccountTransaction extends StatelessWidget {
   }
 
   Widget _body() {
-    return Container(
-      padding: EdgeInsets.only(
-        top: ScreenUtil().setHeight(22),
-        left: ScreenUtil().setWidth(15.5),
-        right: ScreenUtil().setWidth(15.5),
-      ),
-      child: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-          return _accountsField();
+    return ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              top: index==0?ScreenUtil().setHeight(22):0,
+              left: ScreenUtil().setWidth(15.5),
+              right: ScreenUtil().setWidth(15.5),
+            ),
+            child: _accountsField(),
+          );
         }
-      ),
     );
   }
 

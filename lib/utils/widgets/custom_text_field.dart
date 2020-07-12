@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 
 Widget customTextBox(
-    {double width,
+    {
     double height = 50.0,
     marginTop,
     marginBottom = 0,
@@ -25,7 +25,6 @@ Widget customTextBox(
         Align(
           alignment: Alignment.center,
           child: Container(
-            width: ScreenUtil().setWidth(width),
             height: ScreenUtil().setHeight(height - 14),
             child: OutlineButton(
               padding:

@@ -1,6 +1,7 @@
 package com.calcino.fluttermiwallet
-import android.os.Bundle
 
+
+import android.os.Bundle
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.imagepicker.ImagePickerPlugin
 
@@ -11,4 +12,5 @@ class MainActivity : FlutterActivity() {
         ImagePickerPlugin.registerWith(
                 registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"))
     }
+
 }

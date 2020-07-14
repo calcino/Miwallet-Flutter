@@ -1,12 +1,12 @@
-
 import 'package:floor/floor.dart';
+import 'package:flutter/foundation.dart';
 
-@Entity(tableName: 'Banks')
+@entity
 class Bank {
   @PrimaryKey(autoGenerate: true)
   final int id;
   final String name;
   final String createdDateTime;
 
-  Bank(this.id, this.name, this.createdDateTime);
+  Bank({this.id, @required this.name, @required this.createdDateTime});
 }

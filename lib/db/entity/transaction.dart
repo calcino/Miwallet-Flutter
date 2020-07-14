@@ -1,13 +1,16 @@
 import 'package:floor/floor.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/category.dart';
+import 'package:fluttermiwallet/db/entity/category.dart' as category;
 import 'package:fluttermiwallet/db/entity/subcategory.dart';
 
-@Entity(tableName: 'Transactions', foreignKeys: [
+@Entity(foreignKeys: [
   ForeignKey(
       childColumns: ['accountId'], parentColumns: ['id'], entity: Account),
   ForeignKey(
-      childColumns: ['categoryId'], parentColumns: ['id'], entity: Category),
+      childColumns: ['categoryId'],
+      parentColumns: ['id'],
+      entity: category.Category),
   ForeignKey(
       childColumns: ['subcategoryId'],
       parentColumns: ['id'],
@@ -25,6 +28,14 @@ class Transaction {
   final String createdDateTime;
   final bool isIncome;
 
-  Transaction(this.id, this.accountId, this.amount, this.dateTime,
-      this.receiptImagePath, this.categoryId, this.subcategoryId, this.createdDateTime, this.isIncome);
+  Transaction(
+      {this.id,
+      @required this.accountId,
+      @required this.amount,
+      @required this.dateTime,
+      @required this.receiptImagePath,
+      @required this.categoryId,
+      @required this.subcategoryId,
+      @required this.createdDateTime,
+      @required this.isIncome});
 }

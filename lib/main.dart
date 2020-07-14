@@ -4,8 +4,8 @@ import 'package:fluttermiwallet/db/database.dart';
 
 import 'app/ui/mi_wallet_app.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var db = await $FloorAppDatabase.databaseBuilder('miwallet.db').build();
-  runApp(MiWalletApp(db: db));
+  final db = await $FloorAppDatabase.databaseBuilder('miwallet.db').build();
+  runApp(MiWalletApp(db));
 }

@@ -30,7 +30,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
     return AppBar(
       elevation: 0,
       title: Text(
-        accounts,
+        Strings.accounts,
         style: TextStyle(
           color: Colors.white,
           fontSize: ScreenUtil().setSp(20),
@@ -38,7 +38,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
       ),
       centerTitle: true,
       bottom: bottomTextAppBar(
-        bottomText(totalBalance),
+        bottomText(Strings.totalBalance),
         bottomText("\$6,000.00"),
       ),
     );
@@ -163,21 +163,21 @@ class _AccountViewState extends State<AccountView>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              operatorContainer(moneyTransfer),
+              operatorContainer(Strings.moneyTransfer),
               VerticalDivider(
                 color: blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
-              operatorContainer(transactions),
+              operatorContainer(Strings.transactions),
               VerticalDivider(
                 color: blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
-              operatorContainer(edit),
+              operatorContainer(Strings.edit),
             ],
           ),
         ),

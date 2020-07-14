@@ -19,7 +19,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(context, bottomCalcAppBar(isExpanded: true), moneyTransfer),
+        appBar: appBar(context, bottomCalcAppBar(isExpanded: true), Strings.moneyTransfer),
         body: _body(),
       ),
     );
@@ -32,7 +32,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
           customTextBox(
             marginTop: 19,
             marginBottom: 12,
-            label: accountName,
+            label: Strings.accountName,
             childWidget: chooseBottomSheet("Saderat"),
           ),
           Row(
@@ -41,7 +41,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
               Expanded(
                 child: customTextBox(
                   marginTop: 0,
-                  label: time,
+                  label: Strings.time,
                   marginRight: 3.5,
                   childWidget: dateTimeShow(_time == null
                       ? "00:00"
@@ -52,7 +52,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
               Expanded(
                 child: customTextBox(
                   marginTop: 0,
-                  label: date,
+                  label: Strings.date,
                   marginLeft: 3.5,
                   childWidget: dateTimeShow(
                     _date == null
@@ -68,7 +68,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
           ),
           customTextBox(
             marginTop: 12,
-            label: description,
+            label: Strings.description,
             marginBottom: 0,
             height: 84,
             childWidget: descTextField(),

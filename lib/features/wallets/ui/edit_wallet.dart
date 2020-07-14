@@ -22,7 +22,7 @@ class _EditWalletState extends State<EditWallet> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(context, bottomCalcAppBar(), editWallet),
+        appBar: appBar(context, bottomCalcAppBar(), Strings.editWallet),
         body: _body(context),
       ),
     );
@@ -34,13 +34,13 @@ class _EditWalletState extends State<EditWallet> {
         children: <Widget>[
           customTextBox(
             marginTop: 19,
-            label: accountName,
+            label: Strings.accountName,
             childWidget: chooseBottomSheet("Saderat"),
           ),
           customTextBox(
             marginTop: 10,
-            label: bank,
-            childWidget: chooseBottomSheet(choose),
+            label: Strings.bank,
+            childWidget: chooseBottomSheet(Strings.choose),
             onPressed: () {
               showModalBottomSheet(
                 shape: RoundedRectangleBorder(
@@ -60,16 +60,16 @@ class _EditWalletState extends State<EditWallet> {
           ),
           customTextBox(
             marginTop: 10,
-            label: description,
+            label: Strings.description,
             marginBottom: 0,
             height: 84,
             childWidget: descTextField(),
           ),
-          switchBoxRow(savingsAccount, isSavaing,
+          switchBoxRow(Strings.savingsAccount, isSavaing,
               onChanged: (bool) => setState(() {
                     isSavaing = !isSavaing;
                   })),
-          switchBoxRow(showInTotalBalance, isShowing,
+          switchBoxRow(Strings.showInTotalBalance, isShowing,
               onChanged: (bool) => setState(() {
                 isShowing = !isShowing;
               })),
@@ -87,7 +87,7 @@ class _EditWalletState extends State<EditWallet> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          categoryAppBar(selectBank, false, context),
+          categoryAppBar(Strings.selectBank, false, context),
           Expanded(
             child: ListView.builder(
               itemCount: 5,

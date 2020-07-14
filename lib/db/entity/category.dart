@@ -1,14 +1,17 @@
-
 import 'package:floor/floor.dart';
+import 'package:flutter/foundation.dart';
 
-@Entity(tableName: 'Categories')
+@entity
 class Category {
-
   @PrimaryKey(autoGenerate: true)
   final int id;
   final String name;
   final String imagePath;
   final String createdDateTime;
 
-  Category(this.id, this.name, this.imagePath, this.createdDateTime);
+  Category(
+      {this.id,
+      @required this.name,
+      @required this.imagePath,
+      @required this.createdDateTime});
 }

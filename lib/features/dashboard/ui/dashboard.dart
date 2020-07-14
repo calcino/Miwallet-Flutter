@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/db/entity/transaction.dart';
+import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
@@ -28,19 +28,25 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _provider = context.read<DashboardProvider>();
-    //_provider.insertFakeSubcategory();
-    //_provider.insertFakeCategory();
-    //_provider.insertFakeBank();
-    //_provider.insertFakeAccount();
-    //_provider.insertFakeTransactions();
-
-    //_provider.getCategories().then((value) => print(value));
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 640);
-    _provider.getTransactions();
+    //_provider.insertFakeSubcategory();
+    //_provider.insertFakeCategory();
+    //_provider.insertFakeBank();
+    //_provider.insertFakeAccount();
+    //_provider.insertFakeTransfer();
+    //_provider.insertFakeAccountTransactions();
+
+    //_provider.getCategories();
+    //_provider.getSubcategories();
+    //_provider.getAllAccounts();
+    //_provider.getAllBanks();
+    //_provider.getAccountTransactions();
+    //_provider.getTransfers();
+
     Logger.log('dashboard build called: ${DateTime.now().toIso8601String()}');
     return Scaffold(
       backgroundColor: Colors.white,
@@ -177,7 +183,7 @@ class _DashboardState extends State<Dashboard> {
   Widget _dataListWidget() {
     return Expanded(
       flex: 20,
-      child: Selector<DashboardProvider, List<Transaction>>(
+      child: Selector<DashboardProvider, List<AccountTransaction>>(
         selector: (ctx,provider) => provider.transactions,
         builder: (ctx,transactions,child) {
           return ListView.builder(

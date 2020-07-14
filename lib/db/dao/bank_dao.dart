@@ -7,7 +7,7 @@ abstract class BankDao {
   @Query('SELECT * FROM Bank')
   Future<List<Bank>> findAll();
 
-  @Query('SELECT * FROM Cank WHERE id = :id')
+  @Query('SELECT * FROM Bank WHERE id = :id')
   Stream<Bank> findBank(int id);
 
   @Insert(onConflict: OnConflictStrategy.fail)

@@ -14,4 +14,9 @@ class Category {
       @required this.name,
       @required this.imagePath,
       @required this.createdDateTime});
+
+  @override
+  String toString() {
+    return 'Category: {id: $id,name: $name, createdDateTime: $createdDateTime}';
+  }
 }

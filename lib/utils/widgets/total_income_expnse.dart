@@ -5,11 +5,15 @@ import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 
 class TotalIncomeExpense extends StatelessWidget {
+  final double income, expense;
 
-  //TODO get data from constructor later
+  const TotalIncomeExpense(
+      {Key key, @required this.income, @required this.expense})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(width: 320,height: 640);
+    ScreenUtil.init(width: 320, height: 640);
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -38,9 +42,9 @@ class TotalIncomeExpense extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _globalCostWidget(isIncome: true, amount: 1000000),
+            _globalCostWidget(isIncome: true, amount: income),
             _divider(),
-            _globalCostWidget(isIncome: false, amount: 4000.67463),
+            _globalCostWidget(isIncome: false, amount: expense),
           ],
         ),
       ),
@@ -88,7 +92,7 @@ class TotalIncomeExpense extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              isIncome ? income : expense,
+              isIncome ? Strings.income : Strings.expense,
               style: TextStyle(
                 color: blueColor,
               ),
@@ -97,8 +101,7 @@ class TotalIncomeExpense extends StatelessWidget {
               height: ScreenUtil().setWidth(7),
             ),
             Container(
-              constraints:
-              BoxConstraints(maxWidth: ScreenUtil().setWidth(70)),
+              constraints: BoxConstraints(maxWidth: ScreenUtil().setWidth(70)),
               child: FittedBox(
                 child: Text(
                   '\$' +

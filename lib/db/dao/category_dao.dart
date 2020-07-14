@@ -4,10 +4,10 @@ import 'package:fluttermiwallet/db/entity/category.dart';
 @dao
 abstract class CategoryDao {
 
-  @Query('SELECT * FROM Categories')
+  @Query('SELECT * FROM Category')
   Future<List<Category>> findAll();
 
-  @Query('SELECT * FROM Categories WHERE id = :id')
+  @Query('SELECT * FROM Category WHERE id = :id')
   Stream<Category> findCategory(int id);
 
   @Insert(onConflict: OnConflictStrategy.fail)

@@ -38,7 +38,7 @@ class _AddCountState extends State<AddCount> {
         appBar: appBar(
           context,
           bottomCalcAppBar(),
-          addExpense,
+          Strings.addExpense,
         ),
         body: _body(context),
       ),
@@ -51,8 +51,8 @@ class _AddCountState extends State<AddCount> {
         children: <Widget>[
           customTextBox(
               marginTop: 19,
-              label: category,
-              childWidget: chooseBottomSheet(choose),
+              label: Strings.category,
+              childWidget: chooseBottomSheet(Strings.choose),
               onPressed: () {
                 showModalBottomSheet(
                   shape: RoundedRectangleBorder(
@@ -72,8 +72,8 @@ class _AddCountState extends State<AddCount> {
           customTextBox(
             marginTop: 13,
             marginBottom: 13,
-            label: subcategory,
-            childWidget: chooseBottomSheet(choose),
+            label: Strings.subcategory,
+            childWidget: chooseBottomSheet(Strings.choose),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +81,7 @@ class _AddCountState extends State<AddCount> {
               Expanded(
                 child: customTextBox(
                   marginTop: 0,
-                  label: time,
+                  label: Strings.time,
                   marginRight: 3.5,
                   childWidget: dateTimeShow(
                     _time == null ? "00:00" : DateFormat("HH:mm").format(_time),
@@ -92,7 +92,7 @@ class _AddCountState extends State<AddCount> {
               Expanded(
                 child: customTextBox(
                   marginTop: 0,
-                  label: date,
+                  label: Strings.date,
                   marginLeft: 3.5,
                   childWidget: dateTimeShow(
                     _date == null
@@ -108,12 +108,12 @@ class _AddCountState extends State<AddCount> {
           ),
           customTextBox(
             marginTop: 15,
-            label: fromWhichAccount,
+            label: Strings.fromWhichAccount,
             childWidget: chooseBottomSheet('Saderat'),
           ),
           customTextBox(
             marginTop: 12,
-            label: description,
+            label: Strings.description,
             marginBottom: 23.5,
             height: 84,
             childWidget: descTextField(),
@@ -167,7 +167,7 @@ class _AddCountState extends State<AddCount> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          categoryAppBar(chooseCategory, false, context),
+          categoryAppBar(Strings.chooseCategory, false, context),
           Expanded(
             child: ListView.builder(
               itemCount: 5,
@@ -179,7 +179,7 @@ class _AddCountState extends State<AddCount> {
                       height: ScreenUtil().setHeight(1),
                     ),
                     index == 0
-                        ? categoryListField(addNewCategory, icon: Icons.add)
+                        ? categoryListField(Strings.addNewCategory, icon: Icons.add)
                         : categoryListField("Food"),
                   ],
                 );
@@ -201,8 +201,8 @@ class _AddCountState extends State<AddCount> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          categoryAppBar(addCategory, true, context),
-          _labelText(nameCategory, marginTop: 20, marginBottom: 6),
+          categoryAppBar(Strings.addCategory, true, context),
+          _labelText(Strings.nameCategory, marginTop: 20, marginBottom: 6),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: ScreenUtil().setHeight(36),
@@ -216,7 +216,7 @@ class _AddCountState extends State<AddCount> {
               decoration: InputDecoration(),
             ),
           ),
-          _labelText(chooseAnIcon, marginTop: 15, marginBottom: 17),
+          _labelText(Strings.chooseAnIcon, marginTop: 15, marginBottom: 17),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(

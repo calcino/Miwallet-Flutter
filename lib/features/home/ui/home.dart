@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage>
       ),
       bottom: _tabBar(),
       title: Text(
-        appName,
+        Strings.appName,
         style: TextStyle(fontSize: ScreenUtil().setSp(largeText)),
       ),
     );
@@ -122,8 +122,8 @@ class _HomePageState extends State<HomePage>
 
     var childButtons = List<UnicornButton>();
 
-    childButtons.add(_createUnicornButton(expense, Icons.arrow_upward, () {}));
-    childButtons.add(_createUnicornButton(income, Icons.arrow_downward, () {}));
+    childButtons.add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {}));
+    childButtons.add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {}));
 
     return UnicornDialer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),

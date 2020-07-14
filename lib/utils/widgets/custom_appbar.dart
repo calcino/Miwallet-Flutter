@@ -23,7 +23,7 @@ Widget appBar(BuildContext context, PreferredSize bottom, String title) {
         ),
         child: GestureDetector(
           child: Text(
-            save,
+            Strings.save,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -55,7 +55,7 @@ Widget bottomCalcAppBar({bool isExpanded=false}) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(isExpanded?
-                from + "Saderat" + account:"",
+              Strings.from + "Saderat" + Strings.account:"",
                 style: TextStyle(
                     fontSize: ScreenUtil().setSp(14), color: Colors.white),
               ),
@@ -89,7 +89,7 @@ Widget bottomCalcAppBar({bool isExpanded=false}) {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    amount,
+                    Strings.amount,
                     style: TextStyle(
                         fontSize: ScreenUtil().setSp(14), color: textColor),
                   ),

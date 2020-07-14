@@ -1,12 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/db/entity/transaction.dart';
+import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
+import 'package:provider/provider.dart';
 
-class AccountTransaction extends StatelessWidget {
+class AccountTransaction extends StatefulWidget {
+  @override
+  _AccountTransactionState createState() => _AccountTransactionState();
+}
+
+class _AccountTransactionState extends State<AccountTransaction> {
+  WalletsProvider _provider;
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = Provider.of<WalletsProvider>(context, listen: false);
+    _provider.getAllTransaction();
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 360, height: 640);
@@ -38,22 +57,27 @@ class AccountTransaction extends StatelessWidget {
   }
 
   Widget _body() {
-    return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: index==0?ScreenUtil().setHeight(22):0,
-              left: ScreenUtil().setWidth(15.5),
-              right: ScreenUtil().setWidth(15.5),
-            ),
-            child: _accountsField(),
-          );
-        }
+    return Selector<WalletsProvider, List<Transaction>>(
+      selector: (ctx, provider) => _provider.transactions,
+      builder: (ctx,transaction,child){
+        return ListView.builder(
+            itemCount: transaction.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: index==0?ScreenUtil().setHeight(22):0,
+                  left: ScreenUtil().setWidth(15.5),
+                  right: ScreenUtil().setWidth(15.5),
+                ),
+                child: _accountsField(transaction[index]),
+              );
+            }
+        );
+      }
     );
   }
 
-  Widget _accountsField() {
+  Widget _accountsField(Transaction transaction) {
     return Container(
       margin: EdgeInsets.only(
         bottom: ScreenUtil().setHeight(8),
@@ -90,7 +114,7 @@ class AccountTransaction extends StatelessWidget {
                 ],
               ),
               space: 8),
-          bottomText("-\$150.00", size: 12, color: textColor),
+          bottomText("-\$${transaction.amount}", size: 12, color: textColor),
         ],
       ),
     );

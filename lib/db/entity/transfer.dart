@@ -1,10 +1,10 @@
 import 'package:floor/floor.dart';
 import 'package:fluttermiwallet/db/entity/account.dart';
 
-@Entity(tableName: 'Transfers', foreignKeys: [
+@Entity(foreignKeys: [
   ForeignKey(
       childColumns: ['sourceAccountId', 'destinationAccountId'],
-      parentColumns: ['id'],
+      parentColumns: ['id','id'],
       entity: Account)
 ])
 class Transfer {

@@ -90,17 +90,17 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Acounts` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `bankId` INTEGER, `name` TEXT, `balance` REAL, `descriptions` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`bankId`) REFERENCES `Banks` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `Account` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `bankId` INTEGER, `name` TEXT, `balance` REAL, `descriptions` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`bankId`) REFERENCES `Bank` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Banks` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `createdDateTime` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Bank` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `createdDateTime` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Categories` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `imagePath` TEXT, `createdDateTime` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `imagePath` TEXT, `createdDateTime` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Subcategories` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryId` INTEGER, `name` TEXT, `imagePath` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`categoryId`) REFERENCES `Categories` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `Subcategory` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryId` INTEGER, `name` TEXT, `imagePath` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`categoryId`) REFERENCES `Category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Transactions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `accountId` INTEGER, `amount` REAL, `dateTime` TEXT, `receiptImagePath` TEXT, `categoryId` INTEGER, `subcategoryId` INTEGER, `createdDateTime` TEXT, `isIncome` INTEGER, FOREIGN KEY (`accountId`) REFERENCES `Acounts` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`categoryId`) REFERENCES `Categories` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subcategoryId`) REFERENCES `Subcategories` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `Transaction` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `accountId` INTEGER, `amount` REAL, `dateTime` TEXT, `receiptImagePath` TEXT, `categoryId` INTEGER, `subcategoryId` INTEGER, `createdDateTime` TEXT, `isIncome` INTEGER, FOREIGN KEY (`accountId`) REFERENCES `Account` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`categoryId`) REFERENCES `Category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subcategoryId`) REFERENCES `Subcategory` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Transfers` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `sourceAccountId` INTEGER, `destinationAccountId` INTEGER, `amount` REAL, `dateTime` TEXT, `descriptions` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`sourceAccountId`, `destinationAccountId`) REFERENCES `Acounts` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `Transfer` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `sourceAccountId` INTEGER, `destinationAccountId` INTEGER, `amount` REAL, `dateTime` TEXT, `descriptions` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`sourceAccountId`, `destinationAccountId`) REFERENCES `Account` (`id`, `id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -146,7 +146,7 @@ class _$AccountDao extends AccountDao {
       : _queryAdapter = QueryAdapter(database, changeListener),
         _accountInsertionAdapter = InsertionAdapter(
             database,
-            'Acounts',
+            'Account',
             (Account item) => <String, dynamic>{
                   'id': item.id,
                   'bankId': item.bankId,
@@ -158,7 +158,7 @@ class _$AccountDao extends AccountDao {
             changeListener),
         _accountUpdateAdapter = UpdateAdapter(
             database,
-            'Acounts',
+            'Account',
             ['id'],
             (Account item) => <String, dynamic>{
                   'id': item.id,
@@ -176,13 +176,13 @@ class _$AccountDao extends AccountDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _acountsMapper = (Map<String, dynamic> row) => Account(
-      row['id'] as int,
+  static final _accountMapper = (Map<String, dynamic> row) => Account(
       row['bankId'] as int,
       row['name'] as String,
       row['balance'] as double,
       row['descriptions'] as String,
-      row['createdDateTime'] as String);
+      row['createdDateTime'] as String,
+      row['id'] as int);
 
   final InsertionAdapter<Account> _accountInsertionAdapter;
 
@@ -190,17 +190,17 @@ class _$AccountDao extends AccountDao {
 
   @override
   Future<List<Account>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Accounts',
-        mapper: _acountsMapper);
+    return _queryAdapter.queryList('SELECT * FROM Account',
+        mapper: _accountMapper);
   }
 
   @override
   Stream<Account> findAccount(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Accounts WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Account WHERE id = ?',
         arguments: <dynamic>[id],
-        queryableName: 'Acounts',
+        queryableName: 'Account',
         isView: false,
-        mapper: _acountsMapper);
+        mapper: _accountMapper);
   }
 
   @override
@@ -219,7 +219,7 @@ class _$BankDao extends BankDao {
       : _queryAdapter = QueryAdapter(database, changeListener),
         _bankInsertionAdapter = InsertionAdapter(
             database,
-            'Banks',
+            'Bank',
             (Bank item) => <String, dynamic>{
                   'id': item.id,
                   'name': item.name,
@@ -228,7 +228,7 @@ class _$BankDao extends BankDao {
             changeListener),
         _bankUpdateAdapter = UpdateAdapter(
             database,
-            'Banks',
+            'Bank',
             ['id'],
             (Bank item) => <String, dynamic>{
                   'id': item.id,
@@ -243,10 +243,10 @@ class _$BankDao extends BankDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _banksMapper = (Map<String, dynamic> row) => Bank(
-      row['id'] as int,
+  static final _bankMapper = (Map<String, dynamic> row) => Bank(
       row['name'] as String,
-      row['createdDateTime'] as String);
+      row['createdDateTime'] as String,
+      row['id'] as int);
 
   final InsertionAdapter<Bank> _bankInsertionAdapter;
 
@@ -254,16 +254,16 @@ class _$BankDao extends BankDao {
 
   @override
   Future<List<Bank>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Banks', mapper: _banksMapper);
+    return _queryAdapter.queryList('SELECT * FROM Bank', mapper: _bankMapper);
   }
 
   @override
   Stream<Bank> findBank(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Banks WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Bank WHERE id = ?',
         arguments: <dynamic>[id],
-        queryableName: 'Banks',
+        queryableName: 'Bank',
         isView: false,
-        mapper: _banksMapper);
+        mapper: _bankMapper);
   }
 
   @override
@@ -282,7 +282,7 @@ class _$CategoryDao extends CategoryDao {
       : _queryAdapter = QueryAdapter(database, changeListener),
         _categoryInsertionAdapter = InsertionAdapter(
             database,
-            'Categories',
+            'Category',
             (Category item) => <String, dynamic>{
                   'id': item.id,
                   'name': item.name,
@@ -292,7 +292,7 @@ class _$CategoryDao extends CategoryDao {
             changeListener),
         _categoryUpdateAdapter = UpdateAdapter(
             database,
-            'Categories',
+            'Category',
             ['id'],
             (Category item) => <String, dynamic>{
                   'id': item.id,
@@ -308,7 +308,7 @@ class _$CategoryDao extends CategoryDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _categoriesMapper = (Map<String, dynamic> row) => Category(
+  static final _categoryMapper = (Map<String, dynamic> row) => Category(
       row['id'] as int,
       row['name'] as String,
       row['imagePath'] as String,
@@ -320,17 +320,17 @@ class _$CategoryDao extends CategoryDao {
 
   @override
   Future<List<Category>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Categories',
-        mapper: _categoriesMapper);
+    return _queryAdapter.queryList('SELECT * FROM Category',
+        mapper: _categoryMapper);
   }
 
   @override
   Stream<Category> findCategory(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Categories WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Category WHERE id = ?',
         arguments: <dynamic>[id],
-        queryableName: 'Categories',
+        queryableName: 'Category',
         isView: false,
-        mapper: _categoriesMapper);
+        mapper: _categoryMapper);
   }
 
   @override
@@ -349,7 +349,7 @@ class _$SubcategoryDao extends SubcategoryDao {
       : _queryAdapter = QueryAdapter(database, changeListener),
         _subcategoryInsertionAdapter = InsertionAdapter(
             database,
-            'Subcategories',
+            'Subcategory',
             (Subcategory item) => <String, dynamic>{
                   'id': item.id,
                   'categoryId': item.categoryId,
@@ -360,7 +360,7 @@ class _$SubcategoryDao extends SubcategoryDao {
             changeListener),
         _subcategoryUpdateAdapter = UpdateAdapter(
             database,
-            'Subcategories',
+            'Subcategory',
             ['id'],
             (Subcategory item) => <String, dynamic>{
                   'id': item.id,
@@ -377,7 +377,7 @@ class _$SubcategoryDao extends SubcategoryDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _subcategoriesMapper = (Map<String, dynamic> row) => Subcategory(
+  static final _subcategoryMapper = (Map<String, dynamic> row) => Subcategory(
       row['id'] as int,
       row['categoryId'] as int,
       row['name'] as String,
@@ -390,17 +390,17 @@ class _$SubcategoryDao extends SubcategoryDao {
 
   @override
   Future<List<Subcategory>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Subcategories',
-        mapper: _subcategoriesMapper);
+    return _queryAdapter.queryList('SELECT * FROM Subcategory',
+        mapper: _subcategoryMapper);
   }
 
   @override
   Stream<Subcategory> findSubcategory(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Subcategories WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Subcategory WHERE id = ?',
         arguments: <dynamic>[id],
-        queryableName: 'Subcategories',
+        queryableName: 'Subcategory',
         isView: false,
-        mapper: _subcategoriesMapper);
+        mapper: _subcategoryMapper);
   }
 
   @override
@@ -421,7 +421,7 @@ class _$TransactionDao extends TransactionDao {
       : _queryAdapter = QueryAdapter(database, changeListener),
         _transactionInsertionAdapter = InsertionAdapter(
             database,
-            'Transactions',
+            'Transaction',
             (Transaction item) => <String, dynamic>{
                   'id': item.id,
                   'accountId': item.accountId,
@@ -437,7 +437,7 @@ class _$TransactionDao extends TransactionDao {
             changeListener),
         _transactionUpdateAdapter = UpdateAdapter(
             database,
-            'Transactions',
+            'Transaction',
             ['id'],
             (Transaction item) => <String, dynamic>{
                   'id': item.id,
@@ -459,7 +459,7 @@ class _$TransactionDao extends TransactionDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _transactionsMapper = (Map<String, dynamic> row) => Transaction(
+  static final _transactionMapper = (Map<String, dynamic> row) => Transaction(
       row['id'] as int,
       row['accountId'] as int,
       row['amount'] as double,
@@ -476,17 +476,17 @@ class _$TransactionDao extends TransactionDao {
 
   @override
   Future<List<Transaction>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Transactions',
-        mapper: _transactionsMapper);
+    return _queryAdapter.queryList('SELECT * FROM Transaction',
+        mapper: _transactionMapper);
   }
 
   @override
   Stream<Transaction> findTransaction(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Transactions WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Transaction WHERE id = ?',
         arguments: <dynamic>[id],
-        queryableName: 'Transactions',
+        queryableName: 'Transaction',
         isView: false,
-        mapper: _transactionsMapper);
+        mapper: _transactionMapper);
   }
 
   @override
@@ -507,7 +507,7 @@ class _$TransferDao extends TransferDao {
       : _queryAdapter = QueryAdapter(database, changeListener),
         _transferInsertionAdapter = InsertionAdapter(
             database,
-            'Transfers',
+            'Transfer',
             (Transfer item) => <String, dynamic>{
                   'id': item.id,
                   'sourceAccountId': item.sourceAccountId,
@@ -520,7 +520,7 @@ class _$TransferDao extends TransferDao {
             changeListener),
         _transferUpdateAdapter = UpdateAdapter(
             database,
-            'Transfers',
+            'Transfer',
             ['id'],
             (Transfer item) => <String, dynamic>{
                   'id': item.id,
@@ -539,7 +539,7 @@ class _$TransferDao extends TransferDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _transfersMapper = (Map<String, dynamic> row) => Transfer(
+  static final _transferMapper = (Map<String, dynamic> row) => Transfer(
       row['id'] as int,
       row['sourceAccountId'] as int,
       row['destinationAccountId'] as int,
@@ -554,17 +554,17 @@ class _$TransferDao extends TransferDao {
 
   @override
   Future<List<Transfer>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Transfers',
-        mapper: _transfersMapper);
+    return _queryAdapter.queryList('SELECT * FROM Transfer',
+        mapper: _transferMapper);
   }
 
   @override
   Stream<Transfer> findTransfer(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Transfers WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Transfer WHERE id = ?',
         arguments: <dynamic>[id],
-        queryableName: 'Transfers',
+        queryableName: 'Transfer',
         isView: false,
-        mapper: _transfersMapper);
+        mapper: _transferMapper);
   }
 
   @override

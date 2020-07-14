@@ -1,7 +1,7 @@
 import 'package:floor/floor.dart';
 import 'package:fluttermiwallet/db/entity/category.dart';
 
-@Entity(tableName: 'Subcategories', foreignKeys: [
+@Entity(foreignKeys: [
   ForeignKey(
       childColumns: ['categoryId'], parentColumns: ['id'], entity: Category)
 ])

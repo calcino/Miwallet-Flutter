@@ -3,7 +3,7 @@ import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/db/entity/category.dart';
 import 'package:fluttermiwallet/db/entity/subcategory.dart';
 
-@Entity(tableName: 'Transactions', foreignKeys: [
+@Entity(foreignKeys: [
   ForeignKey(
       childColumns: ['accountId'], parentColumns: ['id'], entity: Account),
   ForeignKey(

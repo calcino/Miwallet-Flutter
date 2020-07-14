@@ -4,10 +4,10 @@ import 'package:fluttermiwallet/db/entity/transfer.dart';
 @dao
 abstract class TransferDao {
 
-  @Query('SELECT * FROM Transfers')
+  @Query('SELECT * FROM Transfer')
   Future<List<Transfer>> findAll();
 
-  @Query('SELECT * FROM Transfers WHERE id = :id')
+  @Query('SELECT * FROM Transfer WHERE id = :id')
   Stream<Transfer> findTransfer(int id);
 
   @Insert(onConflict: OnConflictStrategy.fail)

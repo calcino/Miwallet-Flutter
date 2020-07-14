@@ -5,10 +5,10 @@ import 'package:fluttermiwallet/db/entity/transaction.dart';
 abstract class TransactionDao {
 
   @Query('SELECT * FROM Transaction')
-  Future<List<Transaction>> findAll();
+  Future<List<Transaction>> findAllTransaction();
 
   @Query('SELECT * FROM Transaction WHERE id = :id')
-  Stream<Transaction> findTransaction(int id);
+  Future<Transaction> findTransaction(int id);
 
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<void> insertTransaction(Transaction transaction);

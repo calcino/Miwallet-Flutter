@@ -1,5 +1,5 @@
-
 import 'package:floor/floor.dart';
+import 'package:flutter/foundation.dart';
 
 @entity
 class Bank {
@@ -8,5 +8,5 @@ class Bank {
   final String name;
   final String createdDateTime;
 
-  Bank(this.name, this.createdDateTime,[this.id]);
+  Bank({this.id, @required this.name, @required this.createdDateTime});
 }

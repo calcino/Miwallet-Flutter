@@ -18,7 +18,7 @@ class EmptyDataWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              emptyData,
+              Strings.emptyData,
               style: TextStyle(
                   color: blueColor, fontSize: ScreenUtil().setSp(largeText)),
             ),

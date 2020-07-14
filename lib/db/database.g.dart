@@ -177,12 +177,12 @@ class _$AccountDao extends AccountDao {
   final QueryAdapter _queryAdapter;
 
   static final _accountMapper = (Map<String, dynamic> row) => Account(
-      row['bankId'] as int,
-      row['name'] as String,
-      row['balance'] as double,
-      row['descriptions'] as String,
-      row['createdDateTime'] as String,
-      row['id'] as int);
+      id: row['id'] as int,
+      bankId: row['bankId'] as int,
+      name: row['name'] as String,
+      balance: row['balance'] as double,
+      descriptions: row['descriptions'] as String,
+      createdDateTime: row['createdDateTime'] as String);
 
   final InsertionAdapter<Account> _accountInsertionAdapter;
 
@@ -244,9 +244,9 @@ class _$BankDao extends BankDao {
   final QueryAdapter _queryAdapter;
 
   static final _bankMapper = (Map<String, dynamic> row) => Bank(
-      row['name'] as String,
-      row['createdDateTime'] as String,
-      row['id'] as int);
+      id: row['id'] as int,
+      name: row['name'] as String,
+      createdDateTime: row['createdDateTime'] as String);
 
   final InsertionAdapter<Bank> _bankInsertionAdapter;
 
@@ -259,7 +259,7 @@ class _$BankDao extends BankDao {
 
   @override
   Stream<Bank> findBank(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Bank WHERE id = ?',
+    return _queryAdapter.queryStream('SELECT * FROM Cank WHERE id = ?',
         arguments: <dynamic>[id],
         queryableName: 'Bank',
         isView: false,
@@ -309,10 +309,10 @@ class _$CategoryDao extends CategoryDao {
   final QueryAdapter _queryAdapter;
 
   static final _categoryMapper = (Map<String, dynamic> row) => Category(
-      row['id'] as int,
-      row['name'] as String,
-      row['imagePath'] as String,
-      row['createdDateTime'] as String);
+      id: row['id'] as int,
+      name: row['name'] as String,
+      imagePath: row['imagePath'] as String,
+      createdDateTime: row['createdDateTime'] as String);
 
   final InsertionAdapter<Category> _categoryInsertionAdapter;
 
@@ -378,11 +378,11 @@ class _$SubcategoryDao extends SubcategoryDao {
   final QueryAdapter _queryAdapter;
 
   static final _subcategoryMapper = (Map<String, dynamic> row) => Subcategory(
-      row['id'] as int,
-      row['categoryId'] as int,
-      row['name'] as String,
-      row['imagePath'] as String,
-      row['createdDateTime'] as String);
+      id: row['id'] as int,
+      categoryId: row['categoryId'] as int,
+      name: row['name'] as String,
+      imagePath: row['imagePath'] as String,
+      createdDateTime: row['createdDateTime'] as String);
 
   final InsertionAdapter<Subcategory> _subcategoryInsertionAdapter;
 
@@ -418,7 +418,7 @@ class _$SubcategoryDao extends SubcategoryDao {
 
 class _$TransactionDao extends TransactionDao {
   _$TransactionDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _transactionInsertionAdapter = InsertionAdapter(
             database,
             'Transaction',
@@ -433,8 +433,7 @@ class _$TransactionDao extends TransactionDao {
                   'createdDateTime': item.createdDateTime,
                   'isIncome':
                       item.isIncome == null ? null : (item.isIncome ? 1 : 0)
-                },
-            changeListener),
+                }),
         _transactionUpdateAdapter = UpdateAdapter(
             database,
             'Transaction',
@@ -450,8 +449,7 @@ class _$TransactionDao extends TransactionDao {
                   'createdDateTime': item.createdDateTime,
                   'isIncome':
                       item.isIncome == null ? null : (item.isIncome ? 1 : 0)
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -460,33 +458,30 @@ class _$TransactionDao extends TransactionDao {
   final QueryAdapter _queryAdapter;
 
   static final _transactionMapper = (Map<String, dynamic> row) => Transaction(
-      row['id'] as int,
-      row['accountId'] as int,
-      row['amount'] as double,
-      row['dateTime'] as String,
-      row['receiptImagePath'] as String,
-      row['categoryId'] as int,
-      row['subcategoryId'] as int,
-      row['createdDateTime'] as String,
-      row['isIncome'] == null ? null : (row['isIncome'] as int) != 0);
+      id: row['id'] as int,
+      accountId: row['accountId'] as int,
+      amount: row['amount'] as double,
+      dateTime: row['dateTime'] as String,
+      receiptImagePath: row['receiptImagePath'] as String,
+      categoryId: row['categoryId'] as int,
+      subcategoryId: row['subcategoryId'] as int,
+      createdDateTime: row['createdDateTime'] as String,
+      isIncome: row['isIncome'] == null ? null : (row['isIncome'] as int) != 0);
 
   final InsertionAdapter<Transaction> _transactionInsertionAdapter;
 
   final UpdateAdapter<Transaction> _transactionUpdateAdapter;
 
   @override
-  Future<List<Transaction>> findAll() async {
+  Future<List<Transaction>> findAllTransaction() async {
     return _queryAdapter.queryList('SELECT * FROM Transaction',
         mapper: _transactionMapper);
   }
 
   @override
-  Stream<Transaction> findTransaction(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Transaction WHERE id = ?',
-        arguments: <dynamic>[id],
-        queryableName: 'Transaction',
-        isView: false,
-        mapper: _transactionMapper);
+  Future<Transaction> findTransaction(int id) async {
+    return _queryAdapter.query('SELECT * FROM Transaction WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _transactionMapper);
   }
 
   @override
@@ -540,13 +535,13 @@ class _$TransferDao extends TransferDao {
   final QueryAdapter _queryAdapter;
 
   static final _transferMapper = (Map<String, dynamic> row) => Transfer(
-      row['id'] as int,
-      row['sourceAccountId'] as int,
-      row['destinationAccountId'] as int,
-      row['amount'] as double,
-      row['dateTime'] as String,
-      row['descriptions'] as String,
-      row['createdDateTime'] as String);
+      id: row['id'] as int,
+      sourceAccountId: row['sourceAccountId'] as int,
+      destinationAccountId: row['destinationAccountId'] as int,
+      amount: row['amount'] as double,
+      dateTime: row['dateTime'] as String,
+      descriptions: row['descriptions'] as String,
+      createdDateTime: row['createdDateTime'] as String);
 
   final InsertionAdapter<Transfer> _transferInsertionAdapter;
 

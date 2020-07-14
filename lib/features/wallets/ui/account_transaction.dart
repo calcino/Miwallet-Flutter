@@ -42,7 +42,7 @@ class _AccountTransactionState extends State<AccountTransaction> {
     return AppBar(
       elevation: 0,
       title: Text(
-        accountTransactions,
+        Strings.accountTransactions,
         style: TextStyle(
           color: Colors.white,
           fontSize: ScreenUtil().setSp(20),
@@ -50,8 +50,8 @@ class _AccountTransactionState extends State<AccountTransaction> {
       ),
       leading: backButton(context),
       centerTitle: true,
-      bottom: bottomTextAppBar(bottomText("Saderat" + account, size: 14),
-          bottomText("150" + transactions, size: 14),
+      bottom: bottomTextAppBar(bottomText("Saderat" + Strings.account, size: 14),
+          bottomText("150" + Strings.transactions, size: 14),
           marginHorizontal: 26),
     );
   }

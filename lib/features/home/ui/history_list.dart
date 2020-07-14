@@ -15,7 +15,7 @@ class HistoryList extends StatelessWidget {
     ScreenUtil.init(width: 320, height: 640);
     return Column(
       children: <Widget>[
-        TotalIncomeExpense(),
+        TotalIncomeExpense(expense: 1000,income: 398383,),
         _sectionedList(),
         //EmptyDataWidget()
       ],
@@ -184,7 +184,7 @@ class _HistoryHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    income,
+                    Strings.income,
                     style: TextStyle(
                         color: Colors.grey[500],
                         fontSize: ScreenUtil().setSp(smallText)),
@@ -193,7 +193,7 @@ class _HistoryHeader extends StatelessWidget {
                     height: ScreenUtil().setWidth(5),
                   ),
                   Text(
-                    expense,
+                    Strings.expense,
                     style: TextStyle(
                       color: Colors.grey[500],
                       fontSize: ScreenUtil().setSp(smallText),

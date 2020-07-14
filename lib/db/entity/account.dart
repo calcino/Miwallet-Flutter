@@ -1,4 +1,5 @@
 import 'package:floor/floor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttermiwallet/db/entity/bank.dart';
 
 @Entity(foreignKeys: [
@@ -13,5 +14,11 @@ class Account {
   final String descriptions;
   final String createdDateTime;
 
-  Account(this.bankId, this.name, this.balance, this.descriptions, this.createdDateTime,[this.id]);
+  Account(
+      {this.id,
+      @required this.bankId,
+      @required this.name,
+      @required this.balance,
+      @required this.descriptions,
+      @required this.createdDateTime});
 }

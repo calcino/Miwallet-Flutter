@@ -13,6 +13,7 @@ class MainActivity : FlutterActivity() {
         ImagePickerPlugin.registerWith(
                 registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"))
         SqflitePlugin.registerWith(registrarFor("com.tekartik.sqflite.SqflitePlugin"))
+
     }
 
 }

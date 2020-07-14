@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/database.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/features/wallets/ui/account_transaction.dart';
@@ -10,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttermiwallet/utils/extentions/color_extentions.dart';
 
 class MiWalletApp extends StatelessWidget {
-  final AppDatabase db;
+  final AppDatabase _db;
 
   const MiWalletApp({Key key, this.db}) : super(key: key);
   @override
@@ -23,7 +22,7 @@ class MiWalletApp extends StatelessWidget {
 
   Widget _materialApp(BuildContext context) {
     return MaterialApp(
-      title: appName,
+      title: Strings.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: blueColor.toMaterial(), canvasColor: blueColor),

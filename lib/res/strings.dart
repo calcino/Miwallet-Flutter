@@ -1,5 +1,6 @@
 class Strings {
   Strings._();
+
   static const String appName = 'Mi wallet';
   static const String income = 'Income';
   static const String expense = 'Expense';

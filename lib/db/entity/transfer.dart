@@ -4,9 +4,13 @@ import 'package:fluttermiwallet/db/entity/account.dart';
 
 @Entity(foreignKeys: [
   ForeignKey(
-      childColumns: ['sourceAccountId', 'destinationAccountId'],
-      parentColumns: ['id', 'id'],
-      entity: Account)
+      childColumns: ['sourceAccountId'],
+      parentColumns: ['id'],
+      entity: Account),
+  ForeignKey(
+      childColumns: ['destinationAccountId'],
+      parentColumns: ['id'],
+      entity: Account),
 ])
 class Transfer {
   @PrimaryKey(autoGenerate: true)
@@ -26,4 +30,10 @@ class Transfer {
       @required this.dateTime,
       @required this.descriptions,
       @required this.createdDateTime});
+
+  @override
+  String toString() {
+    return 'Transfer: {id: $id, sourceAccountId: $sourceAccountId, destinationAccountId: $destinationAccountId,'
+        'amount: $amount, dateTime: $dateTime, descriptions: $descriptions, createdDateTime: $createdDateTime}';
+  }
 }

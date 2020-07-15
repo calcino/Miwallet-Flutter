@@ -9,4 +9,9 @@ class Bank {
   final String createdDateTime;
 
   Bank({this.id, @required this.name, @required this.createdDateTime});
+
+  @override
+  String toString() {
+    return 'Bank: {id: $id, name: $name, createdDateTime: $createdDateTime}';
+  }
 }

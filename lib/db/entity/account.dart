@@ -21,4 +21,10 @@ class Account {
       @required this.balance,
       @required this.descriptions,
       @required this.createdDateTime});
+
+  @override
+  String toString() {
+    return 'Account: {id: $id,bankId: $bankId, name: $name, balance: $balance,'
+        ' descriptions: $descriptions,createdDateTime: $createdDateTime}';
+  }
 }

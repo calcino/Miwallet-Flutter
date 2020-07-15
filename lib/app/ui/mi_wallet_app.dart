@@ -30,7 +30,7 @@ class MiWalletApp extends StatelessWidget {
       home: ChangeNotifierProvider<WalletsProvider>(
           create: (ctx) =>
               WalletsProvider( Provider.of<AppProvider>(ctx,listen: false).db),
-          child: AccountsScreen()),
+          child: AccountTransaction()),
     );
   }
 }

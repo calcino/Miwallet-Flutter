@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
+import 'package:provider/provider.dart';
 
 class EditWallet extends StatefulWidget {
   @override
@@ -15,6 +17,13 @@ class EditWallet extends StatefulWidget {
 class _EditWalletState extends State<EditWallet> {
   bool isSavaing = true;
   bool isShowing = true;
+  WalletsProvider _provider;
+
+  @override
+  void initState() {
+    _provider = Provider.of<WalletsProvider>(context, listen: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +31,7 @@ class _EditWalletState extends State<EditWallet> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(context, bottomCalcAppBar(), Strings.editWallet),
+        appBar: appBar(context, bottomCalcAppBar(), Strings.editWallet,),
         body: _body(context),
       ),
     );
@@ -71,8 +80,8 @@ class _EditWalletState extends State<EditWallet> {
                   })),
           switchBoxRow(Strings.showInTotalBalance, isShowing,
               onChanged: (bool) => setState(() {
-                isShowing = !isShowing;
-              })),
+                    isShowing = !isShowing;
+                  })),
         ],
       ),
     );

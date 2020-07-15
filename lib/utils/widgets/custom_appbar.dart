@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 
-Widget appBar(BuildContext context, PreferredSize bottom, String title) {
+Widget appBar(BuildContext context, PreferredSize bottom, String title,{saveOnTap}) {
   ScreenUtil.init(width: 360, height: 640);
   return AppBar(
     elevation: 0,
@@ -22,6 +22,7 @@ Widget appBar(BuildContext context, PreferredSize bottom, String title) {
           right: ScreenUtil().setWidth(21),
         ),
         child: GestureDetector(
+          onTap: saveOnTap,
           child: Text(
             Strings.save,
             textAlign: TextAlign.center,

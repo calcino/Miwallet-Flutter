@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage>
       bottom: _tabBar(),
       title: Text(
         Strings.appName,
-        style: TextStyle(fontSize: ScreenUtil().setSp(DimenRes.largeText)),
+        style: TextStyle(fontSize: ScreenUtil().setSp(largeText)),
       ),
     );
   }
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage>
   Widget _tabBar() {
     //TODO get data from DB
     return TabBar(
-      indicatorColor: ColorRes.orangeColor,
+      indicatorColor: orangeColor,
       controller: _tabController,
       tabs: [
         Tab(
@@ -105,16 +105,16 @@ class _HomePageState extends State<HomePage>
           labelText: title,
           labelHasShadow: false,
           labelBackgroundColor: Colors.transparent,
-          labelFontSize: ScreenUtil().setSp(DimenRes.normalText),
-          labelColor: ColorRes.blueColor,
+          labelFontSize: ScreenUtil().setSp(normalText),
+          labelColor: blueColor,
           currentButton: FloatingActionButton(
             heroTag: title,
             elevation: 10,
-            backgroundColor: ColorRes.veryLightBlueColor,
+            backgroundColor: veryLightBlueColor,
             mini: true,
             child: Icon(
               iconData,
-              color: ColorRes.blueColor,
+              color: blueColor,
             ),
             onPressed: onPressed,
           ));
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage>
 
     return UnicornDialer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),
-        parentButtonBackground: ColorRes.darkOrangeColor,
+        parentButtonBackground: darkOrangeColor,
         orientation: UnicornOrientation.VERTICAL,
         parentButton: Icon(Icons.add, color: Colors.white),
         childButtons: childButtons);

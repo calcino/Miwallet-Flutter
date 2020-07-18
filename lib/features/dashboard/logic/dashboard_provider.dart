@@ -13,8 +13,8 @@ class DashboardProvider extends ChangeNotifier {
   double totalExpense = 0;
   double totalIncome = 0;
   double totalBalance = 0;
+
   List<AccountTransaction> transactions = [];
-  bool isLoading = false;
 
   DashboardProvider(this._db);
 
@@ -26,23 +26,17 @@ class DashboardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   void getAccountTransactions() async {
-    isLoading = true;
-    transactions = await _db.accountTransactionDao.findAllAccountTransaction();
-    totalIncome = 0;
-    totalExpense = 0;
-    transactions.forEach((transaction) {
-      if (transaction.isIncome)
-        totalIncome += transaction.amount;
-      else
-        totalExpense += transaction.amount;
+    _db.accountTransactionDao.findAllAccountTransaction().then((value) {
+      value.forEach((element) {
+        Logger.log(element.toString());
+      });
     });
-    isLoading = false;
-    notifyListeners();
   }
 
   void insertFakeTransfer() async {
-    _db.transferDao.insertTransfer(Transfer(
+    await _db.transferDao.insertTransfer(Transfer(
         sourceAccountId: 1,
         destinationAccountId: 1,
         amount: 1001,
@@ -78,56 +72,51 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   void insertFakeCategory() async {
-    for (var i = 0; i < 20; i++) {
-      _db.categoryDao
-          .insertCategory(Category(
-              name: "category $i",
-              imagePath: 'category/img/$i',
-              createdDateTime: DateTime.now().toIso8601String()))
-          .then((value) => Logger.log('inserted a fake category $i'));
-    }
+    _db.categoryDao
+        .insertCategory(Category(
+            name: "category 0",
+            imagePath: 'category/img',
+            createdDateTime: DateTime.now().toIso8601String()))
+        .then((value) => Logger.log('inserted a fake category'));
   }
 
   void insertFakeSubcategory() async {
-    for (var i = 0; i < 10; i++)
-      _db.subcategoryDao
-          .insertSubcategory(Subcategory(
-              categoryId: i + 1,
-              name: "subcategory $i",
-              imagePath: "subcategory/path/$i",
-              createdDateTime: DateTime.now().toIso8601String()))
-          .then((value) => Logger.log('inserted fake subcategory $i'));
+    _db.subcategoryDao
+        .insertSubcategory(Subcategory(
+            categoryId: 1,
+            name: "subcategory 0",
+            imagePath: "subcategory/path",
+            createdDateTime: DateTime.now().toIso8601String()))
+        .then((value) => Logger.log('inserted fake subcategory'));
   }
 
   void insertFakeBank() async {
-    for (var i = 0; i < 20; i++)
-      _db.bankDao.insertBank(Bank(
-          name: "bank saderat $i",
-          createdDateTime: DateTime.now().toIso8601String()));
+    _db.bankDao.insertBank(Bank(
+        name: "bank saderat",
+        createdDateTime: DateTime.now().toIso8601String()));
   }
 
   void insertFakeAccount() async {
-    for (var i = 0; i < 10; i++)
-      _db.accountDao.insertAccount(Account(
-          bankId: 1,
-          name: "account khodmam $i",
-          balance: 20000000 + i.toDouble(),
-          descriptions: "barye kharj khodam $i",
-          createdDateTime: DateTime.now().toIso8601String()));
+    _db.accountDao.insertAccount(Account(
+        bankId: 1,
+        name: "account khodmam",
+        balance: 20000000,
+        descriptions: "barye kharj khodam",
+        createdDateTime: DateTime.now().toIso8601String()));
   }
 
+
   void insertFakeAccountTransactions() async {
-    for (var i = 0; i < 20; i++)
-      _db.accountTransactionDao
-          .insertAccountTransaction(AccountTransaction(
-              accountId: i + 1,
-              amount: i * 2.400,
-              receiptImagePath: 'recipt/path',
-              categoryId: 1,
-              subcategoryId: 1,
-              createdDateTime: DateTime.now().toIso8601String(),
-              dateTime: DateTime.now().toIso8601String(),
-              isIncome: i % 2 == 0))
-          .then((value) => Logger.log('inserted fake account transaction $i'));
+    _db.accountTransactionDao
+        .insertAccountTransaction(AccountTransaction(
+        accountId: 1,
+        amount: 1 * 2.400,
+        receiptImagePath: 'recipt/path',
+        categoryId: 1,
+        subcategoryId: 1,
+        createdDateTime: DateTime.now().toIso8601String(),
+        dateTime: DateTime.now().toIso8601String(),
+        isIncome: 1 % 2 == 0))
+        .then((value) => Logger.log('inserted fake account transaction'));
   }
 }

@@ -105,7 +105,7 @@ class _EditWalletState extends State<EditWallet> {
                   children: <Widget>[
                     categoryListField("Melli"),
                     Divider(
-                      color: ColorRes.hintColor,
+                      color: hintColor,
                       height: ScreenUtil().setHeight(1),
                     ),
                   ],
@@ -130,10 +130,10 @@ class _EditWalletState extends State<EditWallet> {
           Text(
             text,
             style:
-                TextStyle(fontSize: ScreenUtil().setSp(14), color: ColorRes.blueColor),
+                TextStyle(fontSize: ScreenUtil().setSp(14), color: blueColor),
           ),
           CupertinoSwitch(
-            activeColor: ColorRes.blueColor,
+            activeColor: blueColor,
             value: value,
             onChanged: onChanged,
           ),

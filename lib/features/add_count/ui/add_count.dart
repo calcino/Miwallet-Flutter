@@ -129,7 +129,7 @@ class _AddCountState extends State<AddCount> {
           ),
           Divider(
             height: ScreenUtil().setWidth(1),
-            color: ColorRes.hintColor,
+            color: hintColor,
           ),
           _imagePickerButton(),
         ],
@@ -143,7 +143,7 @@ class _AddCountState extends State<AddCount> {
         height: ScreenUtil().setHeight(113),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: _isPicked ? ColorRes.hintColor : Colors.white,
+            color: _isPicked ? hintColor : Colors.white,
             borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))),
         margin: EdgeInsets.only(
           top: ScreenUtil().setHeight(40),
@@ -184,7 +184,7 @@ class _AddCountState extends State<AddCount> {
                 return Column(
                   children: <Widget>[
                     Divider(
-                      color: ColorRes.hintColor,
+                      color: hintColor,
                       height: ScreenUtil().setHeight(1),
                     ),
                     index == 0
@@ -218,7 +218,7 @@ class _AddCountState extends State<AddCount> {
             ),
             child: TextField(
               style: TextStyle(
-                color: ColorRes.hintColor,
+                color: hintColor,
                 fontSize: ScreenUtil().setSp(12),
               ),
               maxLines: 1,
@@ -267,7 +267,7 @@ class _AddCountState extends State<AddCount> {
       child: Text(
         label,
         style: TextStyle(
-          color: ColorRes.blueColor,
+          color: blueColor,
           fontSize: ScreenUtil().setSp(14),
         ),
       ),

@@ -90,7 +90,7 @@ class LegendOptions extends StatelessWidget {
           domainFn: (OrdinalSales sales, _) => sales.year,
           measureFn: (OrdinalSales sales, _) => sales.sales,
           data: desktopSalesData,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(ColorRes.orangeColor),
+          colorFn: (_, __) => charts.ColorUtil.fromDartColor(orangeColor),
           labelAccessorFn: (OrdinalSales sales, _) =>
               'expense: ${sales.sales.toString()}',
           displayName: "Expense"),
@@ -99,7 +99,7 @@ class LegendOptions extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: tabletSalesData,
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(ColorRes.blueColor),
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(blueColor),
         displayName: "Income",
       )..setAttribute(charts.measureAxisIdKey, secondaryMeasureAxisId),
     ];
@@ -163,7 +163,7 @@ class CustomLegendBuilder extends charts.LegendContentBuilder {
                 child: Icon(
                   Icons.tune,
                   size: 30,
-                  //color: Col,
+                  color: Colors.red,
                 ),
               )));
   }

@@ -8,7 +8,7 @@ Widget dateTimeShow(String dateTime) {
     alignment: Alignment.centerLeft,
     child: Text(
       dateTime,
-      style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
+      style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
     ),
   );
 }

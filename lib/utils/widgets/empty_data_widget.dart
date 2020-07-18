@@ -20,7 +20,7 @@ class EmptyDataWidget extends StatelessWidget {
             Text(
               Strings.emptyData,
               style: TextStyle(
-                  color: ColorRes.blueColor, fontSize: ScreenUtil().setSp(DimenRes.largeText)),
+                  color: blueColor, fontSize: ScreenUtil().setSp(largeText)),
             ),
             SizedBox(
               height: ScreenUtil().setWidth(30),

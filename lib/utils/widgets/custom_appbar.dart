@@ -92,7 +92,7 @@ Widget bottomCalcAppBar({bool isExpanded=false}) {
                   child: Text(
                     Strings.amount,
                     style: TextStyle(
-                        fontSize: ScreenUtil().setSp(14), color: textColor),
+                        fontSize: ScreenUtil().setSp(14), color: ColorRes.textColor),
                   ),
                 ),
                 Expanded(

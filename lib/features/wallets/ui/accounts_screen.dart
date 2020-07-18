@@ -116,7 +116,7 @@ class _AccountViewState extends State<AccountView>
           bottom: ScreenUtil().setHeight(12),
         ),
         decoration: BoxDecoration(
-          color: boxColor,
+          color: ColorRes.boxColor,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.5),
@@ -145,7 +145,7 @@ class _AccountViewState extends State<AccountView>
       ),
       height: ScreenUtil().setHeight(50),
       decoration: BoxDecoration(
-        color: boxColor,
+        color: ColorRes.boxColor,
         borderRadius: BorderRadius.circular(
           ScreenUtil().setWidth(10),
         ),
@@ -168,7 +168,7 @@ class _AccountViewState extends State<AccountView>
               child: Icon(
                 Icons.arrow_drop_down,
                 size: ScreenUtil().setWidth(31),
-                color: textColor,
+                color: ColorRes.textColor,
               ),
             ),
           ),
@@ -186,7 +186,7 @@ class _AccountViewState extends State<AccountView>
         ),
         Divider(
           height: ScreenUtil().setHeight(1),
-          color: blueColor.withOpacity(0.17),
+          color: ColorRes.blueColor.withOpacity(0.17),
         ),
         Container(
           height: ScreenUtil().setHeight(49),
@@ -195,14 +195,14 @@ class _AccountViewState extends State<AccountView>
             children: <Widget>[
               operatorContainer(Strings.moneyTransfer),
               VerticalDivider(
-                color: blueColor.withOpacity(0.17),
+                color: ColorRes.blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
               operatorContainer(Strings.transactions),
               VerticalDivider(
-                color: blueColor.withOpacity(0.17),
+                color: ColorRes.blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),

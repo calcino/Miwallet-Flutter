@@ -10,7 +10,7 @@ abstract class AccountTransactionDao {
   @Query('SELECT * FROM AccountTransaction WHERE id = :id')
   Future<AccountTransaction> findAccountTransaction(int id);
 
-  @Insert(onConflict: OnConflictStrategy.fail)
+  @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertAccountTransaction(AccountTransaction accountTransaction);
 
   @Update(onConflict: OnConflictStrategy.replace)

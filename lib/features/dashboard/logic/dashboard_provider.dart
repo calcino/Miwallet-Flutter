@@ -13,8 +13,8 @@ class DashboardProvider extends ChangeNotifier {
   double totalExpense = 0;
   double totalIncome = 0;
   double totalBalance = 0;
-
   List<AccountTransaction> transactions = [];
+  bool isLoading = false;
 
   DashboardProvider(this._db);
 
@@ -27,7 +27,17 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   void getAccountTransactions() async {
+    isLoading = true;
     transactions = await _db.accountTransactionDao.findAllAccountTransaction();
+    totalIncome = 0;
+    totalExpense = 0;
+    transactions.forEach((transaction) {
+      if (transaction.isIncome)
+        totalIncome += transaction.amount;
+      else
+        totalExpense += transaction.amount;
+    });
+    isLoading = false;
     notifyListeners();
   }
 
@@ -113,7 +123,7 @@ class DashboardProvider extends ChangeNotifier {
               accountId: i + 1,
               amount: i * 2.400,
               receiptImagePath: 'recipt/path',
-              categoryId:  1,
+              categoryId: 1,
               subcategoryId: 1,
               createdDateTime: DateTime.now().toIso8601String(),
               dateTime: DateTime.now().toIso8601String(),

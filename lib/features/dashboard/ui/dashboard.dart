@@ -67,7 +67,8 @@ class _DashboardState extends State<Dashboard> {
       title: Text(
         Strings.dashboard,
         style: TextStyle(
-            color: Colors.white, fontSize: ScreenUtil().setSp(DimenRes.largeText)),
+            color: Colors.white,
+            fontSize: ScreenUtil().setSp(DimenRes.largeText)),
       ),
       bottom: _totalBalanceWidget(),
     );
@@ -141,7 +142,8 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.white,
               ),
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil().setSp(DimenRes.smallText)),
+                  color: Colors.white,
+                  fontSize: ScreenUtil().setSp(DimenRes.smallText)),
               items: Strings.dashboardRangeOfDate
                   .map(
                     (String value) => DropdownMenuItem(
@@ -161,6 +163,16 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _body() {
+    return Center(
+      child: Selector<DashboardProvider, bool>(
+        selector: (_, provider) => provider.isLoading,
+        builder: (_, isLoading, ___) =>
+            isLoading ? CircularProgressIndicator() : _transactionList(),
+      ),
+    );
+  }
+
+  Widget _transactionList() {
     return Selector<DashboardProvider, List<AccountTransaction>>(
       selector: (ctx, provider) => provider.transactions,
       builder: (ctx, transactions, child) {
@@ -170,26 +182,16 @@ class _DashboardState extends State<Dashboard> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: List<Widget>()
-              ..add(_totalIncomeExpense())
+              ..add(TotalIncomeExpense(
+                income: _provider.totalIncome,
+                expense: _provider.totalExpense,
+              ))
               ..add(transactions.isEmpty ? Container() : _chartContainer())
               ..add(transactions.isEmpty ? _emptyWidget() : _piChartContainer())
               ..addAll(transactions.map<Widget>(
                   (AccountTransaction transaction) =>
                       _IncomeExpensePercentHistory(transaction))),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _totalIncomeExpense() {
-    return Selector<DashboardProvider, double>(
-      selector: (ctx, a) => _provider.totalIncome,
-      builder: (ctx, income, child) {
-        Logger.log('consumer TotalIncomeExpense');
-        return TotalIncomeExpense(
-          income: income,
-          expense: _provider.totalExpense,
         );
       },
     );
@@ -236,7 +238,8 @@ class _DashboardState extends State<Dashboard> {
         Text(
           Strings.emptyData,
           style: TextStyle(
-              color: ColorRes.blueColor, fontSize: ScreenUtil().setSp(DimenRes.largeText)),
+              color: ColorRes.blueColor,
+              fontSize: ScreenUtil().setSp(DimenRes.largeText)),
         ),
         SizedBox(
           height: ScreenUtil().setHeight(20),

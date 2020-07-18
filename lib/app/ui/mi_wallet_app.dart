@@ -22,7 +22,7 @@ class MiWalletApp extends StatelessWidget {
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: blueColor.toMaterial(), canvasColor: blueColor),
+          primarySwatch: ColorRes.blueColor.toMaterial(), canvasColor: ColorRes.blueColor),
       home: ChangeNotifierProvider<DashboardProvider>(
           create: (ctx) => DashboardProvider(_db), child: Dashboard()),
     );

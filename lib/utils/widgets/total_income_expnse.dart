@@ -61,9 +61,9 @@ class TotalIncomeExpense extends StatelessWidget {
 
   Widget _globalCostWidget({bool isIncome = true, double amount = 0.0}) {
     IconData _iconData = isIncome ? Icons.arrow_downward : Icons.arrow_upward;
-    Color _arrowColor = isIncome ? blueColor : orangeColor;
+    Color _arrowColor = isIncome ? ColorRes.blueColor : ColorRes.orangeColor;
     Color _backColor = _arrowColor.withOpacity(0.2);
-    Color _amountColor = isIncome ? greenColor : redColor;
+    Color _amountColor = isIncome ? ColorRes.greenColor : ColorRes.redColor;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -94,7 +94,7 @@ class TotalIncomeExpense extends StatelessWidget {
             Text(
               isIncome ? Strings.income : Strings.expense,
               style: TextStyle(
-                color: blueColor,
+                color: ColorRes.blueColor,
               ),
             ),
             SizedBox(

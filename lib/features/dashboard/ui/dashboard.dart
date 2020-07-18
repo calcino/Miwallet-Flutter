@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
@@ -20,7 +21,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   String _selectedRange = Strings.dashboardRangeOfDate[0];
-  bool _dataIsEmpty = false;
 
   DashboardProvider _provider;
 
@@ -44,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
     //_provider.getSubcategories();
     //_provider.getAllAccounts();
     //_provider.getAllBanks();
-    //_provider.getAccountTransactions();
+    _provider.getAccountTransactions();
     //_provider.getTransfers();
 
     Logger.log('dashboard build called: ${DateTime.now().toIso8601String()}');
@@ -67,7 +67,8 @@ class _DashboardState extends State<Dashboard> {
       title: Text(
         Strings.dashboard,
         style: TextStyle(
-            color: Colors.white, fontSize: ScreenUtil().setSp(largeText)),
+            color: Colors.white,
+            fontSize: ScreenUtil().setSp(DimenRes.largeText)),
       ),
       bottom: _totalBalanceWidget(),
     );
@@ -88,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
                   Text(
                     Strings.totalBalance,
                     style: TextStyle(
-                        fontSize: ScreenUtil().setSp(normalText),
+                        fontSize: ScreenUtil().setSp(DimenRes.normalText),
                         color: Colors.white),
                   ),
                   _dateRangeWidget(),
@@ -102,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
                   return Text(
                     '\$${totalBalance[0].addSeparator()}.${totalBalance[1]}',
                     style: TextStyle(
-                        fontSize: ScreenUtil().setSp(largeText),
+                        fontSize: ScreenUtil().setSp(DimenRes.largeText),
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   );
@@ -118,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
       child: Container(
         height: ScreenUtil().setWidth(25),
         decoration: BoxDecoration(
-            color: blueColor,
+            color: ColorRes.blueColor,
             border: Border.all(color: Colors.white),
             borderRadius: BorderRadius.all(
               Radius.circular(
@@ -141,7 +142,8 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.white,
               ),
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil().setSp(smallText)),
+                  color: Colors.white,
+                  fontSize: ScreenUtil().setSp(DimenRes.smallText)),
               items: Strings.dashboardRangeOfDate
                   .map(
                     (String value) => DropdownMenuItem(
@@ -161,52 +163,46 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _body() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Selector<DashboardProvider, double>(
-            selector: (ctx, a) => _provider.totalIncome,
-            builder: (ctx, income, child) {
-              Logger.log('consumer TotalIncomeExpense');
-              return TotalIncomeExpense(
-                income: income,
-                expense: _provider.totalExpense,
-              );
-            },
-          ),
-          _dataIsEmpty ? _emptyWidget() : _dataListWidget()
-        ]);
+    return Center(
+      child: Selector<DashboardProvider, bool>(
+        selector: (_, provider) => provider.isLoading,
+        builder: (_, isLoading, ___) =>
+            isLoading ? CircularProgressIndicator() : _transactionList(),
+      ),
+    );
   }
 
-  Widget _dataListWidget() {
-    return Expanded(
-      flex: 20,
-      child: Selector<DashboardProvider, List<AccountTransaction>>(
-        selector: (ctx,provider) => provider.transactions,
-        builder: (ctx,transactions,child) {
-          return ListView.builder(
-            itemBuilder: (ctx, index) {
-              if (index == 0) {
-                return _chartContainer();
-              } else if (index == 1) {
-                return _piChartContainer();
-              } else {
-                return _IncomeExpensePercentHistory();
-              }
-            },
-            itemCount: transactions.length + 2,
-          );
-        },
-      ),
+  Widget _transactionList() {
+    return Selector<DashboardProvider, List<AccountTransaction>>(
+      selector: (ctx, provider) => provider.transactions,
+      builder: (ctx, transactions, child) {
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: List<Widget>()
+              ..add(TotalIncomeExpense(
+                income: _provider.totalIncome,
+                expense: _provider.totalExpense,
+              ))
+              ..add(transactions.isEmpty ? Container() : _chartContainer())
+              ..add(transactions.isEmpty ? _emptyWidget() : _piChartContainer())
+              ..addAll(transactions.map<Widget>(
+                  (AccountTransaction transaction) =>
+                      _IncomeExpensePercentHistory(transaction))),
+          ),
+        );
+      },
     );
   }
 
   Widget _chartContainer() {
     return Container(
       margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
-      height: ScreenUtil().setHeight(180),
+      height: ScreenUtil().setWidth(200),
+      width: ScreenUtil().setWidth(300),
+      alignment: Alignment.center,
       child: LegendOptions.withSampleData(),
     );
   }
@@ -214,7 +210,9 @@ class _DashboardState extends State<Dashboard> {
   Widget _piChartContainer() {
     return Container(
       margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
-      height: ScreenUtil().setHeight(180),
+      height: ScreenUtil().setWidth(120),
+      width: ScreenUtil().setWidth(120),
+      alignment: Alignment.center,
       child: DonutAutoLabelChart.withSampleData(),
     );
   }
@@ -240,7 +238,8 @@ class _DashboardState extends State<Dashboard> {
         Text(
           Strings.emptyData,
           style: TextStyle(
-              color: blueColor, fontSize: ScreenUtil().setSp(largeText)),
+              color: ColorRes.blueColor,
+              fontSize: ScreenUtil().setSp(DimenRes.largeText)),
         ),
         SizedBox(
           height: ScreenUtil().setHeight(20),
@@ -252,6 +251,10 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class _IncomeExpensePercentHistory extends StatelessWidget {
+  final AccountTransaction _accountTransaction;
+
+  const _IncomeExpensePercentHistory(this._accountTransaction);
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 360);
@@ -277,22 +280,22 @@ class _IncomeExpensePercentHistory extends StatelessWidget {
           ),
           Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 'title',
                 style: TextStyle(
-                  color: blueColor,
+                  color: ColorRes.blueColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: ScreenUtil().setSp(smallText),
+                  fontSize: ScreenUtil().setSp(DimenRes.smallText),
                 ),
               ),
               Text(
                 'subtitle',
                 style: TextStyle(
-                  color: blueColor,
-                  fontSize: ScreenUtil().setSp(smallText),
+                  color: ColorRes.blueColor,
+                  fontSize: ScreenUtil().setSp(DimenRes.smallText),
                 ),
               ),
             ],
@@ -300,15 +303,15 @@ class _IncomeExpensePercentHistory extends StatelessWidget {
           Spacer(),
           Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Text(
                 '9%',
                 style: TextStyle(
-                  color: blueColor,
+                  color: ColorRes.blueColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: ScreenUtil().setSp(smallText),
+                  fontSize: ScreenUtil().setSp(DimenRes.smallText),
                 ),
               ),
               Container(
@@ -318,8 +321,8 @@ class _IncomeExpensePercentHistory extends StatelessWidget {
                   child: Text(
                     '\$' + '${20038374.toString().addSeparator()}',
                     style: TextStyle(
-                      color: blueColor,
-                      fontSize: ScreenUtil().setSp(smallText),
+                      color: ColorRes.blueColor,
+                      fontSize: ScreenUtil().setSp(DimenRes.smallText),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

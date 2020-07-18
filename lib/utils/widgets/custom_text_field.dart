@@ -32,12 +32,12 @@ Widget customTextBox(
               onPressed: onPressed,
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
-              highlightedBorderColor: hintColor,
-              color: textColor,
+              highlightedBorderColor: ColorRes.hintColor,
+              color: ColorRes.textColor,
               borderSide: BorderSide(
-                color: blueColor.withOpacity(0.55),
+                color: ColorRes.blueColor.withOpacity(0.55),
               ),
-              disabledBorderColor: blueColor.withOpacity(0.55),
+              disabledBorderColor: ColorRes.blueColor.withOpacity(0.55),
               child: childWidget,
             ),
           ),
@@ -57,7 +57,7 @@ Widget customTextBox(
               child: Text(
                 label,
                 style: TextStyle(
-                    fontSize: ScreenUtil().setSp(14), color: textColor),
+                    fontSize: ScreenUtil().setSp(14), color: ColorRes.textColor),
               ),
             ),
           ),
@@ -71,7 +71,7 @@ Widget descTextField() {
   return TextField(
     minLines: 1,
     maxLines: 6,
-    style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
+    style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
     decoration: InputDecoration(
       border: InputBorder.none,
     ),
@@ -84,7 +84,7 @@ Widget chooseBottomSheet(String hint) {
     children: <Widget>[
       Text(
         hint,
-        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: hintColor),
+        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
       ),
       Icon(Icons.arrow_drop_down),
     ],

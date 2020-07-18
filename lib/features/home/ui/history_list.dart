@@ -15,7 +15,10 @@ class HistoryList extends StatelessWidget {
     ScreenUtil.init(width: 320, height: 640);
     return Column(
       children: <Widget>[
-        TotalIncomeExpense(expense: 1000,income: 398383,),
+        TotalIncomeExpense(
+          expense: 1000,
+          income: 398383,
+        ),
         _sectionedList(),
         //EmptyDataWidget()
       ],
@@ -43,7 +46,6 @@ class HistoryList extends StatelessWidget {
           },
         ));
   }
-
 }
 
 class _HistoryItem extends StatelessWidget {
@@ -78,7 +80,8 @@ class _HistoryItem extends StatelessWidget {
               Text(
                 costHistory.title,
                 style: TextStyle(
-                    color: blueColor, fontSize: ScreenUtil().setSp(smallText)),
+                    color: ColorRes.blueColor,
+                    fontSize: ScreenUtil().setSp(DimenRes.smallText)),
               ),
               SizedBox(
                 height: ScreenUtil().setWidth(7),
@@ -86,8 +89,8 @@ class _HistoryItem extends StatelessWidget {
               Text(
                 costHistory.subtitle,
                 style: TextStyle(
-                  color: blueColor,
-                  fontSize: ScreenUtil().setSp(verySmallText),
+                  color: ColorRes.blueColor,
+                  fontSize: ScreenUtil().setSp(DimenRes.verySmallText),
                 ),
               ),
             ],
@@ -109,8 +112,8 @@ class _HistoryItem extends StatelessWidget {
                         '${costHistory.amount.toString().split('.')[1]}',
                     style: TextStyle(
                         color: (costHistory.costType == CostType.INCOME)
-                            ? greenColor
-                            : redColor),
+                            ? ColorRes.greenColor
+                            : ColorRes.redColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -122,8 +125,8 @@ class _HistoryItem extends StatelessWidget {
               Text(
                 '${DateFormat('HH:mm').format(DateTime.parse(costHistory.createDate))}',
                 style: TextStyle(
-                  color: blueColor,
-                  fontSize: ScreenUtil().setSp(verySmallText),
+                  color: ColorRes.blueColor,
+                  fontSize: ScreenUtil().setSp(DimenRes.verySmallText),
                 ),
               ),
             ],
@@ -156,7 +159,7 @@ class _HistoryHeader extends StatelessWidget {
           right: ScreenUtil().setWidth(15)),
       padding: EdgeInsets.all(ScreenUtil().setWidth(5)),
       decoration: BoxDecoration(
-          color: veryLightBlueColor,
+          color: ColorRes.veryLightBlueColor,
           boxShadow: [
             BoxShadow(
                 color: Colors.grey[350], offset: Offset(0, -2), blurRadius: 4)
@@ -171,7 +174,8 @@ class _HistoryHeader extends StatelessWidget {
           Text(
             DateFormat('EEEE, dd MMM').format(dateTime),
             style: TextStyle(
-                color: blueColor, fontSize: ScreenUtil().setSp(normalText)),
+                color: ColorRes.blueColor,
+                fontSize: ScreenUtil().setSp(DimenRes.normalText)),
           ),
           SizedBox(
             height: ScreenUtil().setWidth(9),
@@ -187,7 +191,7 @@ class _HistoryHeader extends StatelessWidget {
                     Strings.income,
                     style: TextStyle(
                         color: Colors.grey[500],
-                        fontSize: ScreenUtil().setSp(smallText)),
+                        fontSize: ScreenUtil().setSp(DimenRes.smallText)),
                   ),
                   SizedBox(
                     height: ScreenUtil().setWidth(5),
@@ -196,7 +200,7 @@ class _HistoryHeader extends StatelessWidget {
                     Strings.expense,
                     style: TextStyle(
                       color: Colors.grey[500],
-                      fontSize: ScreenUtil().setSp(smallText),
+                      fontSize: ScreenUtil().setSp(DimenRes.smallText),
                     ),
                   ),
                 ],

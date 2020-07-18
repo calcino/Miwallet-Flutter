@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/db/entity/account.dart';
+import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
+import 'package:provider/provider.dart';
 
 class AccountsScreen extends StatefulWidget {
   @override
@@ -14,6 +17,18 @@ class AccountsScreen extends StatefulWidget {
 }
 
 class _AccountsScreenState extends State<AccountsScreen> {
+  WalletsProvider _provider;
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = Provider.of<WalletsProvider>(context, listen: false);
+//    _provider.insertFakeBank();
+//    _provider.insertAccount();
+    _provider.getAllAccounts();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 360, height: 640);
@@ -45,24 +60,37 @@ class _AccountsScreenState extends State<AccountsScreen> {
   }
 
   Widget _body() {
-    return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(21),),
-            child: AccountView(),
-          );
-        });
+    return Selector<WalletsProvider, List<Account>>(
+      selector: (ctx, provider) => _provider.accounts,
+      builder: (ctx, accounts, child) {
+        return ListView.builder(
+            itemCount: accounts.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: ScreenUtil().setWidth(21),
+                  left: ScreenUtil().setWidth(21),
+                  top: index == 0 ? ScreenUtil().setHeight(23) : 0,
+                ),
+                child: AccountView(accounts[index]),
+              );
+            });
+      },
+    );
   }
 }
 
 class AccountView extends StatefulWidget {
   @override
   _AccountViewState createState() => _AccountViewState();
+  Account _account;
+
+  AccountView(this._account);
 }
 
 class _AccountViewState extends State<AccountView>
     with SingleTickerProviderStateMixin {
+  Account _account;
   var isExpanded = false;
   AnimationController _controller;
   Animation<double> _rotateAnim;
@@ -101,7 +129,7 @@ class _AccountViewState extends State<AccountView>
         ),
         child: Stack(
           children: <Widget>[
-            _accountOperaterView(),
+            _accountOperatorView(),
             _accountView(),
           ],
         ),
@@ -147,7 +175,7 @@ class _AccountViewState extends State<AccountView>
     );
   }
 
-  Widget _accountOperaterView() {
+  Widget _accountOperatorView() {
     return Column(
       children: <Widget>[
         AnimatedContainer(
@@ -185,7 +213,7 @@ class _AccountViewState extends State<AccountView>
     );
   }
 
-  Widget operatorContainer(String text) {
+  Widget operatorContainer(String text, {onTap}) {
     return Expanded(
       child: Container(
         alignment: Alignment.center,

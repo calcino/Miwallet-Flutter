@@ -67,8 +67,9 @@ Widget customTextBox(
   );
 }
 
-Widget descTextField() {
+Widget descTextField(Function(String) onSubmitted) {
   return TextField(
+    onSubmitted: onSubmitted,
     minLines: 1,
     maxLines: 6,
     style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),

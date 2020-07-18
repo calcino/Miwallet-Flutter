@@ -1,12 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/db/entity/account_transaction.dart';
+import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
+import 'package:provider/provider.dart';
 
-class AccountTransaction extends StatelessWidget {
+class AccountTransactionScreen extends StatefulWidget {
+  @override
+  _AccountTransactionScreenState createState() => _AccountTransactionScreenState();
+}
+
+class _AccountTransactionScreenState extends State<AccountTransactionScreen> {
+  WalletsProvider _provider;
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = Provider.of<WalletsProvider>(context, listen: false);
+//    _provider.insertFakeBank();
+//    _provider.insertAccount();
+//    _provider.insertCategory();
+//  _provider.insertSubCategory();
+//  _provider.insertTransaction();
+  _provider.getAllTransaction();
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 360, height: 640);
@@ -38,22 +62,31 @@ class AccountTransaction extends StatelessWidget {
   }
 
   Widget _body() {
-    return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: index==0?ScreenUtil().setHeight(22):0,
-              left: ScreenUtil().setWidth(15.5),
-              right: ScreenUtil().setWidth(15.5),
-            ),
-            child: _accountsField(),
-          );
-        }
+    return Selector<WalletsProvider, List<AccountTransaction>>(
+      selector: (ctx, provider) => _provider.transactions,
+      builder: (ctx,transaction,child){
+        return ListView.builder(
+            itemCount: transaction.length,
+            itemBuilder: (context, index) {
+              _provider.findSubCategory(transaction[index].subcategoryId);
+              _provider.findSubCategory(transaction[index].subcategoryId);
+              var name = _provider.subcategoryName;
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: index==0?ScreenUtil().setHeight(22):0,
+                  left: ScreenUtil().setWidth(15.5),
+                  right: ScreenUtil().setWidth(15.5),
+                ),
+                child: _accountsField(transaction[index],name),
+              );
+            }
+        );
+      }
     );
   }
 
-  Widget _accountsField() {
+  Widget _accountsField(AccountTransaction transaction,name) {
+    _provider.findSubCategory(transaction.id);
     return Container(
       margin: EdgeInsets.only(
         bottom: ScreenUtil().setHeight(8),

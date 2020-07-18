@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:input_calculator/input_calculator.dart';
 
-Widget appBar(BuildContext context, PreferredSize bottom, String title) {
+Widget appBar(BuildContext context, PreferredSize bottom, String title,{saveOnTap}) {
   ScreenUtil.init(width: 360, height: 640);
   return AppBar(
     elevation: 0,
@@ -22,6 +23,7 @@ Widget appBar(BuildContext context, PreferredSize bottom, String title) {
           right: ScreenUtil().setWidth(21),
         ),
         child: GestureDetector(
+          onTap: saveOnTap,
           child: Text(
             Strings.save,
             textAlign: TextAlign.center,
@@ -38,7 +40,7 @@ Widget appBar(BuildContext context, PreferredSize bottom, String title) {
   );
 }
 
-Widget bottomCalcAppBar({bool isExpanded=false}) {
+Widget bottomCalcAppBar({bool isExpanded=false,Function(double) onSubmitted}) {
   ScreenUtil.init(width: 360, height: 640);
   return PreferredSize(
     child: Container(
@@ -95,9 +97,9 @@ Widget bottomCalcAppBar({bool isExpanded=false}) {
                   ),
                 ),
                 Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                  child: CalculatorTextFormField(
+                    onSubmitted: onSubmitted,
+                    inputDecoration: InputDecoration(
                       hintText: "\$0.00",
                       suffixIcon: Image.asset(
                         "assets/images/calculator.png",

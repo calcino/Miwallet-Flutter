@@ -8,7 +8,7 @@ abstract class SubcategoryDao {
   Future<List<Subcategory>> findAll();
 
   @Query('SELECT * FROM Subcategory WHERE id = :id')
-  Stream<Subcategory> findSubcategory(int id);
+  Future<Subcategory> findSubcategory(int id);
 
   @Insert(onConflict: OnConflictStrategy.fail)
   Future<void> insertSubcategory(Subcategory subcategory);

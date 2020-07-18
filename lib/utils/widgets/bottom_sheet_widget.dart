@@ -91,5 +91,23 @@ Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =
         ],
       ),
     ),
+    height: ScreenUtil().setHeight(51),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Icon(
+          icon,
+          size: ScreenUtil().setWidth(31),
+          color: ColorRes.blueColor,
+        ),
+        SizedBox(
+          width: ScreenUtil().setWidth(10),
+        ),
+        Text(
+          name,
+          style: TextStyle(fontSize: ScreenUtil().setSp(14), color: ColorRes.hintColor),
+        ),
+      ],
+    ),
   );
 }

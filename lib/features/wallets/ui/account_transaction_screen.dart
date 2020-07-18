@@ -118,12 +118,12 @@ class _AccountTransactionScreenState extends State<AccountTransactionScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  bottomText(name, size: 12, color: textColor),
-                  bottomText(transaction.dateTime, size: 9, color: textColor),
+                  bottomText(name, size: 12, color: ColorRes.textColor),
+                  bottomText(transaction.dateTime, size: 9, color: ColorRes.textColor),
                 ],
               ),
               space: 8),
-          bottomText("-\$${transaction.amount}", size: 12, color: textColor),
+          bottomText("-\$${transaction.amount}", size: 12, color: ColorRes.textColor),
         ],
       ),
     );

@@ -75,7 +75,7 @@ Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =
             child: Icon(
               icon,
               size: ScreenUtil().setWidth(31),
-              color: blueColor,
+              color: ColorRes.blueColor,
             ),
           ),
           Visibility(
@@ -86,28 +86,10 @@ Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =
           ),
           Text(
             name,
-            style: TextStyle(fontSize: ScreenUtil().setSp(14), color: hintColor),
+            style: TextStyle(fontSize: ScreenUtil().setSp(14), color: ColorRes.hintColor),
           ),
         ],
       ),
-    ),
-    height: ScreenUtil().setHeight(51),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Icon(
-          icon,
-          size: ScreenUtil().setWidth(31),
-          color: ColorRes.blueColor,
-        ),
-        SizedBox(
-          width: ScreenUtil().setWidth(10),
-        ),
-        Text(
-          name,
-          style: TextStyle(fontSize: ScreenUtil().setSp(14), color: ColorRes.hintColor),
-        ),
-      ],
     ),
   );
 }

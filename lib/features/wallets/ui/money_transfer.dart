@@ -181,7 +181,7 @@ class _MoneyTransferState extends State<MoneyTransfer> {
                       child: categoryListField(banks[index].name),
                     ),
                     Divider(
-                      color: hintColor,
+                      color: ColorRes.hintColor,
                       height: ScreenUtil().setHeight(1),
                     ),
                   ],

@@ -157,11 +157,11 @@ class _AccountViewState extends State<AccountView>
               Icons.image,
               size: ScreenUtil().setWidth(31),
             ),
-            bottomText(widget._account.name, size: 12, color: textColor),
+            bottomText(widget._account.name, size: 12, color: ColorRes.textColor),
           ),
           rowWithTwoChild(
             bottomText("\$" + widget._account.balance.toString(),
-                size: 12, color: textColor),
+                size: 12, color: ColorRes.textColor),
             Transform.rotate(
               angle: _rotateAnim.value,
               child: Icon(
@@ -220,7 +220,7 @@ class _AccountViewState extends State<AccountView>
         onTap: onTap,
         child: Container(
           alignment: Alignment.center,
-          child: bottomText(text, size: 12, color: textColor),
+          child: bottomText(text, size: 12, color: ColorRes.textColor),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/db/entity/transaction.dart';
+import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -9,12 +9,12 @@ import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class AccountTransaction extends StatefulWidget {
+class AccountTransactionScreen extends StatefulWidget {
   @override
-  _AccountTransactionState createState() => _AccountTransactionState();
+  _AccountTransactionScreenState createState() => _AccountTransactionScreenState();
 }
 
-class _AccountTransactionState extends State<AccountTransaction> {
+class _AccountTransactionScreenState extends State<AccountTransactionScreen> {
   WalletsProvider _provider;
 
   @override
@@ -62,19 +62,22 @@ class _AccountTransactionState extends State<AccountTransaction> {
   }
 
   Widget _body() {
-    return Selector<WalletsProvider, List<Transaction>>(
+    return Selector<WalletsProvider, List<AccountTransaction>>(
       selector: (ctx, provider) => _provider.transactions,
       builder: (ctx,transaction,child){
         return ListView.builder(
             itemCount: transaction.length,
             itemBuilder: (context, index) {
+              _provider.findSubCategory(transaction[index].subcategoryId);
+              _provider.findSubCategory(transaction[index].subcategoryId);
+              var name = _provider.subcategoryName;
               return Padding(
                 padding: EdgeInsets.only(
                   top: index==0?ScreenUtil().setHeight(22):0,
                   left: ScreenUtil().setWidth(15.5),
                   right: ScreenUtil().setWidth(15.5),
                 ),
-                child: _accountsField(transaction[index]),
+                child: _accountsField(transaction[index],name),
               );
             }
         );
@@ -82,7 +85,8 @@ class _AccountTransactionState extends State<AccountTransaction> {
     );
   }
 
-  Widget _accountsField(Transaction transaction) {
+  Widget _accountsField(AccountTransaction transaction,name) {
+    _provider.findSubCategory(transaction.id);
     return Container(
       margin: EdgeInsets.only(
         bottom: ScreenUtil().setHeight(8),
@@ -114,7 +118,7 @@ class _AccountTransactionState extends State<AccountTransaction> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  bottomText("Restaurant", size: 12, color: textColor),
+                  bottomText(name, size: 12, color: textColor),
                   bottomText(transaction.dateTime, size: 9, color: textColor),
                 ],
               ),

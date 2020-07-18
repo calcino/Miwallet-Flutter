@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/database.dart';
+import 'package:fluttermiwallet/features/add_count/logic/add_count_provider.dart';
+import 'package:fluttermiwallet/features/add_count/ui/add_count.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
-import 'package:fluttermiwallet/features/wallets/ui/account_transaction.dart';
+import 'package:fluttermiwallet/features/wallets/ui/account_transaction_screen.dart';
 import 'package:fluttermiwallet/features/wallets/ui/accounts_screen.dart';
+import 'package:fluttermiwallet/features/wallets/ui/edit_wallet.dart';
+import 'package:fluttermiwallet/features/wallets/ui/money_transfer.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +31,10 @@ class MiWalletApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: blueColor.toMaterial(), canvasColor: blueColor),
-      home: ChangeNotifierProvider<WalletsProvider>(
+      home: ChangeNotifierProvider<AddCountProvider>(
           create: (ctx) =>
-              WalletsProvider( Provider.of<AppProvider>(ctx,listen: false).db),
-          child: AccountTransaction()),
+              AddCountProvider( Provider.of<AppProvider>(ctx,listen: false).db),
+          child: AddCount()),
     );
   }
 }

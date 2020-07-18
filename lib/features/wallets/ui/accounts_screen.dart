@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
-import 'package:fluttermiwallet/features/wallets/ui/account_transaction.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';

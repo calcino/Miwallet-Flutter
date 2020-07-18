@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_provider/flutter_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttermiwallet/db/entity/account.dart';
+import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/features/add_count/logic/add_count_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -28,10 +30,16 @@ class _AddCountState extends State<AddCount> {
   ImagePicker _pickedFile = ImagePicker();
   bool _isPicked = false;
   AddCountProvider _provider;
+  bool _isCategorySelected = false;
+  bool _isSubCategorySelected = false;
+  String _catNameSelected = Strings.choose;
+  String _subCatSelected = Strings.choose;
+  double _amount;
+  String _description;
 
   @override
   void initState() {
-    _provider = Provider.of<AddCountProvider>(context, listen: false);
+//    _provider = Provider.of<AddCountProvider>(context, listen: false);
     super.initState();
   }
 
@@ -44,11 +52,16 @@ class _AddCountState extends State<AddCount> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(
-          context,
-          bottomCalcAppBar(),
-          Strings.addExpense,
-        ),
+        appBar: appBar(context, bottomCalcAppBar(), Strings.addExpense,
+            saveOnTap: () => _provider.insertTransaction(AccountTransaction(
+                accountId: null,
+                amount: _amount,
+                dateTime: _date.toString() + _time.toString(),
+                receiptImagePath: null,
+                categoryId: null,
+                subcategoryId: null,
+                createdDateTime: null,
+                isIncome: null))),
         body: _body(context),
       ),
     );
@@ -64,6 +77,7 @@ class _AddCountState extends State<AddCount> {
               childWidget: chooseBottomSheet(Strings.choose),
               onPressed: () {
                 showModalBottomSheet(
+                  backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(
@@ -125,7 +139,7 @@ class _AddCountState extends State<AddCount> {
             label: Strings.description,
             marginBottom: 23.5,
             height: 84,
-            childWidget: descTextField(),
+            childWidget: descTextField((text) => _description = text),
           ),
           Divider(
             height: ScreenUtil().setWidth(1),
@@ -134,6 +148,23 @@ class _AddCountState extends State<AddCount> {
           _imagePickerButton(),
         ],
       ),
+    );
+  }
+
+  void showBtmSheet(Widget bottomSheetUi){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(
+            ScreenUtil().setWidth(25),
+          ),
+        ),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return bottomSheetUi;
+      },
     );
   }
 
@@ -176,7 +207,7 @@ class _AddCountState extends State<AddCount> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          categoryAppBar(Strings.chooseCategory, false, context),
+          categoryAppBar(Strings.chooseCategory,context),
           Expanded(
             child: ListView.builder(
               itemCount: 5,
@@ -188,7 +219,22 @@ class _AddCountState extends State<AddCount> {
                       height: ScreenUtil().setHeight(1),
                     ),
                     index == 0
-                        ? categoryListField(Strings.addNewCategory, icon: Icons.add)
+                        ? categoryListField(Strings.addNewCategory,
+                            icon: Icons.add,onTap: (){showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(
+                                ScreenUtil().setWidth(25),
+                              ),
+                            ),
+                          ),
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return _addCategoryBtmSheet();
+                          },
+                        );})
                         : categoryListField("Food"),
                   ],
                 );
@@ -210,7 +256,7 @@ class _AddCountState extends State<AddCount> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          categoryAppBar(Strings.addCategory, true, context),
+          categoryAppBar(Strings.addCategory,context,isBackable: true,hasDone: true),
           _labelText(Strings.nameCategory, marginTop: 20, marginBottom: 6),
           Padding(
             padding: EdgeInsets.symmetric(

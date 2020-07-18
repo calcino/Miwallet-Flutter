@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/db/entity/account.dart';
+import 'package:fluttermiwallet/db/entity/bank.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -15,13 +17,22 @@ class EditWallet extends StatefulWidget {
 }
 
 class _EditWalletState extends State<EditWallet> {
-  bool isSavaing = true;
-  bool isShowing = true;
+  bool _isSavaing = true;
+  bool _isShowing = true;
   WalletsProvider _provider;
+  bool _isAccountSelected = false;
+  bool _isBankSelected = false;
+  String _accountNameSelected = Strings.choose;
+  String _accountBankSelected = Strings.choose;
+  double _amount;
+  String _description;
 
   @override
   void initState() {
     _provider = Provider.of<WalletsProvider>(context, listen: false);
+//    _provider.insertFakeBank();
+    _provider.findAllBank();
+    _provider.getAllAccounts();
     super.initState();
   }
 
@@ -31,7 +42,13 @@ class _EditWalletState extends State<EditWallet> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: appBar(context, bottomCalcAppBar(), Strings.editWallet,),
+        appBar: appBar(context, bottomCalcAppBar(onSubmitted: (amount)=>_amount=amount), Strings.editWallet,
+            saveOnTap: () => _provider.updateAccount(Account(
+                bankId: null,
+                name: _accountNameSelected,
+                balance: _amount,
+                descriptions: _description,
+                createdDateTime: null))),
         body: _body(context),
       ),
     );
@@ -41,28 +58,75 @@ class _EditWalletState extends State<EditWallet> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          customTextBox(
-            marginTop: 19,
-            label: Strings.accountName,
-            childWidget: chooseBottomSheet("Saderat"),
-          ),
-          customTextBox(
-            marginTop: 10,
-            label: Strings.bank,
-            childWidget: chooseBottomSheet(Strings.choose),
-            onPressed: () {
-              showModalBottomSheet(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(
-                      ScreenUtil().setWidth(25),
+          Selector<WalletsProvider, List<Account>>(
+            selector: (ctx, provider) => _provider.accounts,
+            builder: (ctx, accounts, child) {
+              return customTextBox(
+                marginTop: 19,
+                label: Strings.accountName,
+                childWidget: chooseBottomSheet(_accountNameSelected),
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(
+                          ScreenUtil().setWidth(25),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                context: context,
-                isScrollControlled: true,
-                builder: (context) {
-                  return _chooseBankBtmSheet(context);
+                    context: ctx,
+                    isScrollControlled: true,
+                    builder: (contxt) {
+                      return StatefulBuilder(
+                        builder: (BuildContext contextz, StateSetter setState) {
+                          return _chooseBtmSheet(ctx, accounts, (name) {
+                            WidgetsBinding.instance.addPostFrameCallback(
+                              (_) {
+                                _isAccountSelected = true;
+                                _accountNameSelected =name;
+                                Navigator.of(context).pop(ctx);
+
+                              },
+
+                            );
+                          });
+                        }
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+          Selector<WalletsProvider, List<Bank>>(
+            selector: (ctx, provider) => _provider.banks,
+            builder: (ctx, banks, child) {
+              return customTextBox(
+                marginTop: 10,
+                label: Strings.bank,
+                childWidget: chooseBottomSheet(_accountBankSelected),
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(
+                          ScreenUtil().setWidth(25),
+                        ),
+                      ),
+                    ),
+                    context: ctx,
+                    isScrollControlled: true,
+                    builder: (contxt) {
+                      return _chooseBtmSheet(ctx, banks,(name){
+                        setState(() {
+                          _isBankSelected = true;
+                          _accountBankSelected = name;
+                        });
+                      });
+                    },
+                  );
                 },
               );
             },
@@ -72,22 +136,23 @@ class _EditWalletState extends State<EditWallet> {
             label: Strings.description,
             marginBottom: 0,
             height: 84,
-            childWidget: descTextField(),
+            childWidget: descTextField((text)=>_description = text),
           ),
-          switchBoxRow(Strings.savingsAccount, isSavaing,
+          switchBoxRow(Strings.savingsAccount, _isSavaing,
               onChanged: (bool) => setState(() {
-                    isSavaing = !isSavaing;
+                    _isSavaing = !_isSavaing;
                   })),
-          switchBoxRow(Strings.showInTotalBalance, isShowing,
+          switchBoxRow(Strings.showInTotalBalance, _isShowing,
               onChanged: (bool) => setState(() {
-                    isShowing = !isShowing;
+                    _isShowing = !_isShowing;
                   })),
         ],
       ),
     );
   }
 
-  Widget _chooseBankBtmSheet(BuildContext context) {
+  Widget _chooseBtmSheet(
+      BuildContext context, var banks, Function(String) onTap) {
     return ConstrainedBox(
       constraints: BoxConstraints(
         minHeight: 0,
@@ -96,14 +161,17 @@ class _EditWalletState extends State<EditWallet> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          categoryAppBar(Strings.selectBank, false, context),
+          categoryAppBar(Strings.selectBank, context,isBackable: false),
           Expanded(
             child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
+              itemCount: banks.length,
+              itemBuilder: (ctx, index) {
                 return Column(
                   children: <Widget>[
-                    categoryListField("Melli"),
+                    InkWell(
+                      onTap: onTap(banks[index].name),
+                      child: categoryListField(banks[index].name),
+                    ),
                     Divider(
                       color: ColorRes.hintColor,
                       height: ScreenUtil().setHeight(1),

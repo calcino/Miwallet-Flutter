@@ -2,13 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
+import 'package:fluttermiwallet/res/strings.dart';
 
-Widget categoryAppBar(String title, bool isBackable, BuildContext context,) {
+Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false,bool hasDone=false, onTap}) {
   return Container(
     decoration: BoxDecoration(
       color: ColorRes.blueColor,
       borderRadius: BorderRadius.vertical(top: Radius.circular(ScreenUtil().setWidth(25),),),
     ),
+    padding: EdgeInsets.only(right: ScreenUtil().setWidth(21),),
     height: ScreenUtil().setHeight(60.78),
     child: Stack(
       children: <Widget>[
@@ -34,17 +36,60 @@ Widget categoryAppBar(String title, bool isBackable, BuildContext context,) {
                 onPressed: () => Navigator.of(context).pop()),
           ),
         ),
+        Visibility(
+          visible: hasDone,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: InkWell(
+              onTap: onTap,
+              child: Text(
+                Strings.ok,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(14),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        )
       ],
     ),
   );
 }
 
-Widget categoryListField(String name,{IconData icon = Icons.image}) {
+Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =true,Function onTap}) {
   ScreenUtil.init(width: 360, height: 640);
-  return Container(
-    alignment: Alignment.center,
-    padding: EdgeInsets.symmetric(
-      horizontal: ScreenUtil().setWidth(21),
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(21),
+      ),
+      height: ScreenUtil().setHeight(51),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Visibility(
+            visible: hasIcon,
+            child: Icon(
+              icon,
+              size: ScreenUtil().setWidth(31),
+              color: blueColor,
+            ),
+          ),
+          Visibility(
+            visible: hasIcon,
+            child: SizedBox(
+              width: ScreenUtil().setWidth(10),
+            ),
+          ),
+          Text(
+            name,
+            style: TextStyle(fontSize: ScreenUtil().setSp(14), color: hintColor),
+          ),
+        ],
+      ),
     ),
     height: ScreenUtil().setHeight(51),
     child: Row(

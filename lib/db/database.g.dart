@@ -346,7 +346,7 @@ class _$CategoryDao extends CategoryDao {
 
 class _$SubcategoryDao extends SubcategoryDao {
   _$SubcategoryDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _subcategoryInsertionAdapter = InsertionAdapter(
             database,
             'Subcategory',
@@ -356,8 +356,7 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'name': item.name,
                   'imagePath': item.imagePath,
                   'createdDateTime': item.createdDateTime
-                },
-            changeListener),
+                }),
         _subcategoryUpdateAdapter = UpdateAdapter(
             database,
             'Subcategory',
@@ -368,8 +367,7 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'name': item.name,
                   'imagePath': item.imagePath,
                   'createdDateTime': item.createdDateTime
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -395,12 +393,9 @@ class _$SubcategoryDao extends SubcategoryDao {
   }
 
   @override
-  Stream<Subcategory> findSubcategory(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Subcategory WHERE id = ?',
-        arguments: <dynamic>[id],
-        queryableName: 'Subcategory',
-        isView: false,
-        mapper: _subcategoryMapper);
+  Future<Subcategory> findSubcategory(int id) async {
+    return _queryAdapter.query('SELECT * FROM Subcategory WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _subcategoryMapper);
   }
 
   @override

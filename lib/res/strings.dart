@@ -12,6 +12,7 @@ class Strings {
   static const String transactions = 'Transactions';
   static const String editWallet = 'Edit Wallet';
   static const String save = 'save';
+  static const String ok = 'Ok';
   static const String category = 'Category';
   static const String choose = 'Choose';
   static const String subcategory = 'Subcategory';

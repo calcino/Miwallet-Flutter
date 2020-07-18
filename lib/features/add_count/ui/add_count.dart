@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:flutter_provider/flutter_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttermiwallet/features/add_count/logic/add_count_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
@@ -25,6 +27,13 @@ class _AddCountState extends State<AddCount> {
   PickedFile _imageFile;
   ImagePicker _pickedFile = ImagePicker();
   bool _isPicked = false;
+  AddCountProvider _provider;
+
+  @override
+  void initState() {
+    _provider = Provider.of<AddCountProvider>(context, listen: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +129,7 @@ class _AddCountState extends State<AddCount> {
           ),
           Divider(
             height: ScreenUtil().setWidth(1),
-            color: hintColor,
+            color: ColorRes.hintColor,
           ),
           _imagePickerButton(),
         ],
@@ -134,7 +143,7 @@ class _AddCountState extends State<AddCount> {
         height: ScreenUtil().setHeight(113),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: _isPicked ? hintColor : Colors.white,
+            color: _isPicked ? ColorRes.hintColor : Colors.white,
             borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10))),
         margin: EdgeInsets.only(
           top: ScreenUtil().setHeight(40),
@@ -175,7 +184,7 @@ class _AddCountState extends State<AddCount> {
                 return Column(
                   children: <Widget>[
                     Divider(
-                      color: hintColor,
+                      color: ColorRes.hintColor,
                       height: ScreenUtil().setHeight(1),
                     ),
                     index == 0
@@ -209,7 +218,7 @@ class _AddCountState extends State<AddCount> {
             ),
             child: TextField(
               style: TextStyle(
-                color: hintColor,
+                color: ColorRes.hintColor,
                 fontSize: ScreenUtil().setSp(12),
               ),
               maxLines: 1,
@@ -258,7 +267,7 @@ class _AddCountState extends State<AddCount> {
       child: Text(
         label,
         style: TextStyle(
-          color: blueColor,
+          color: ColorRes.blueColor,
           fontSize: ScreenUtil().setSp(14),
         ),
       ),

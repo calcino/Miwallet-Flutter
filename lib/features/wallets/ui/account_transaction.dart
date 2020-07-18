@@ -21,7 +21,12 @@ class _AccountTransactionState extends State<AccountTransaction> {
   void initState() {
     super.initState();
     _provider = Provider.of<WalletsProvider>(context, listen: false);
-    _provider.getAllTransaction();
+//    _provider.insertFakeBank();
+//    _provider.insertAccount();
+//    _provider.insertCategory();
+//  _provider.insertSubCategory();
+//  _provider.insertTransaction();
+  _provider.getAllTransaction();
 
 
   }
@@ -110,7 +115,7 @@ class _AccountTransactionState extends State<AccountTransaction> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   bottomText("Restaurant", size: 12, color: textColor),
-                  bottomText("16:10 , 2020/05/04", size: 9, color: textColor),
+                  bottomText(transaction.dateTime, size: 9, color: textColor),
                 ],
               ),
               space: 8),

@@ -1,12 +1,10 @@
 import 'package:floor/floor.dart';
-import 'package:flutter/foundation.dart';
-import 'package:fluttermiwallet/db/entity/category.dart' as category;
+import 'package:flutter/foundation.dart' hide Category;
+import 'package:fluttermiwallet/db/entity/category.dart';
 
 @Entity(foreignKeys: [
   ForeignKey(
-      childColumns: ['categoryId'],
-      parentColumns: ['id'],
-      entity: category.Category)
+      childColumns: ['categoryId'], parentColumns: ['id'], entity: Category)
 ])
 class Subcategory {
   @PrimaryKey(autoGenerate: true)
@@ -23,4 +21,10 @@ class Subcategory {
       @required this.name,
       @required this.imagePath,
       @required this.createdDateTime});
+
+  @override
+  String toString() {
+    return 'Subcategory: {id: $id, categoryId: $categoryId, name: $name,'
+        'imagePath: $imagePath, createdDateTime: $createdDateTime}';
+  }
 }

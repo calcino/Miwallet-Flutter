@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:fluttermiwallet/utils/widgets/show_date_time_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class MoneyTransfer extends StatefulWidget {
   @override
@@ -14,6 +16,12 @@ class MoneyTransfer extends StatefulWidget {
 class _MoneyTransferState extends State<MoneyTransfer> {
   DateTime _time;
   DateTime _date;
+  WalletsProvider _provider;
+  @override
+  void initState() {
+    _provider = Provider.of<WalletsProvider>(context, listen: false);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(

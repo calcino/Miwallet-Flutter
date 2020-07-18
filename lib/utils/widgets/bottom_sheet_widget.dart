@@ -6,7 +6,7 @@ import 'package:fluttermiwallet/res/colors.dart';
 Widget categoryAppBar(String title, bool isBackable, BuildContext context,) {
   return Container(
     decoration: BoxDecoration(
-      color: blueColor,
+      color: ColorRes.blueColor,
       borderRadius: BorderRadius.vertical(top: Radius.circular(ScreenUtil().setWidth(25),),),
     ),
     height: ScreenUtil().setHeight(60.78),
@@ -53,14 +53,14 @@ Widget categoryListField(String name,{IconData icon = Icons.image}) {
         Icon(
           icon,
           size: ScreenUtil().setWidth(31),
-          color: blueColor,
+          color: ColorRes.blueColor,
         ),
         SizedBox(
           width: ScreenUtil().setWidth(10),
         ),
         Text(
           name,
-          style: TextStyle(fontSize: ScreenUtil().setSp(14), color: hintColor),
+          style: TextStyle(fontSize: ScreenUtil().setSp(14), color: ColorRes.hintColor),
         ),
       ],
     ),

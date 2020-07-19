@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttermiwallet/app/logic/app_provider.dart';
+import 'package:fluttermiwallet/features/home/logic/home_provider.dart';
 import 'package:fluttermiwallet/features/home/ui/history_list.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
+import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:unicorndial/unicorndial.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -18,10 +22,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  HomeProvider _homeProvider;
 
   @override
   void initState() {
     super.initState();
+    var appProvider = context.read<AppProvider>();
+    _homeProvider = HomeProvider(appProvider.db);
     _tabController = TabController(length: 5, vsync: this);
   }
 
@@ -53,7 +60,7 @@ class _HomePageState extends State<HomePage>
     return AppBar(
       centerTitle: true,
       leading: InkWell(
-        onTap: (){
+        onTap: () {
           print('menu tapped');
         },
         child: SvgPicture.asset(
@@ -122,8 +129,14 @@ class _HomePageState extends State<HomePage>
 
     var childButtons = List<UnicornButton>();
 
-    childButtons.add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {}));
-    childButtons.add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {}));
+    childButtons
+        .add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {
+      Navigator.pushNamed(context, RouteName.addTransactionPage);
+    }));
+    childButtons
+        .add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {
+      Navigator.pushNamed(context, RouteName.addTransactionPage);
+    }));
 
     return UnicornDialer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),

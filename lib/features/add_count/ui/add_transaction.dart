@@ -18,18 +18,18 @@ import 'package:fluttermiwallet/utils/widgets/show_date_time_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class AddCount extends StatefulWidget {
+class AddTransactionPage extends StatefulWidget {
   @override
-  _AddCountState createState() => _AddCountState();
+  _AddTransactionPageState createState() => _AddTransactionPageState();
 }
 
-class _AddCountState extends State<AddCount> {
+class _AddTransactionPageState extends State<AddTransactionPage> {
   DateTime _time;
   DateTime _date;
   PickedFile _imageFile;
   ImagePicker _pickedFile = ImagePicker();
   bool _isPicked = false;
-  AddCountProvider _provider;
+  AddTransactionProvider _provider;
   bool _isCategorySelected = false;
   bool _isSubCategorySelected = false;
   String _catNameSelected = Strings.choose;

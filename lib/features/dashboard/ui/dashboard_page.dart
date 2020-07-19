@@ -14,12 +14,12 @@ import 'package:fluttermiwallet/utils/widgets/series_legend_options.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
 import 'package:provider/provider.dart';
 
-class Dashboard extends StatefulWidget {
+class DashboardPage extends StatefulWidget {
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardPageState createState() => _DashboardPageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardPageState extends State<DashboardPage> {
   String _selectedRange = Strings.dashboardRangeOfDate[0];
 
   DashboardProvider _provider;

@@ -7,11 +7,11 @@ import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/db/entity/bank.dart';
 import 'package:fluttermiwallet/db/entity/transfer.dart';
 
-class AddCountProvider with ChangeNotifier {
+class AddTransactionProvider with ChangeNotifier {
   final AppDatabase _db;
 
 
-  AddCountProvider(this._db);
+  AddTransactionProvider(this._db);
 
   void insertTransaction(AccountTransaction transaction) async {
     await _db.accountTransactionDao.insertAccountTransaction(transaction);

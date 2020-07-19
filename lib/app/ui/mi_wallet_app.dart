@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/database.dart';
-import 'package:fluttermiwallet/features/add_count/logic/add_count_provider.dart';
-import 'package:fluttermiwallet/features/add_count/ui/add_count.dart';
-import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
-import 'package:fluttermiwallet/features/wallets/ui/account_transaction_screen.dart';
-import 'package:fluttermiwallet/features/wallets/ui/accounts_screen.dart';
-import 'package:fluttermiwallet/features/wallets/ui/edit_wallet.dart';
-import 'package:fluttermiwallet/features/wallets/ui/money_transfer.dart';
 import 'package:fluttermiwallet/res/colors.dart';
+import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/navigator/navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttermiwallet/utils/extentions/color_extentions.dart';
 
@@ -26,15 +22,14 @@ class MiWalletApp extends StatelessWidget {
   }
 
   Widget _materialApp(BuildContext context) {
+    ScreenUtil.init(width: 320,height: 640,allowFontScaling: true);
     return MaterialApp(
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: ColorRes.blueColor.toMaterial(), canvasColor: ColorRes.blueColor),
-      home: ChangeNotifierProvider<AddCountProvider>(
-          create: (ctx) =>
-              AddCountProvider( Provider.of<AppProvider>(ctx,listen: false).db),
-          child: AddCount()),
+      onGenerateRoute: Navigation.generateRoute,
+      initialRoute: RouteName.homePage,
     );
   }
 }

@@ -11,12 +11,12 @@ import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class AccountsScreen extends StatefulWidget {
+class AccountsPage extends StatefulWidget {
   @override
-  _AccountsScreenState createState() => _AccountsScreenState();
+  _AccountsPageState createState() => _AccountsPageState();
 }
 
-class _AccountsScreenState extends State<AccountsScreen> {
+class _AccountsPageState extends State<AccountsPage> {
   WalletsProvider _provider;
 
   @override

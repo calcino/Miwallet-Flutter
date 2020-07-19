@@ -13,12 +13,12 @@ import 'package:fluttermiwallet/utils/widgets/show_date_time_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class MoneyTransfer extends StatefulWidget {
+class MoneyTransferPage extends StatefulWidget {
   @override
-  _MoneyTransferState createState() => _MoneyTransferState();
+  _MoneyTransferPageState createState() => _MoneyTransferPageState();
 }
 
-class _MoneyTransferState extends State<MoneyTransfer> {
+class _MoneyTransferPageState extends State<MoneyTransferPage> {
   DateTime _time;
   DateTime _date;
   WalletsProvider _provider;

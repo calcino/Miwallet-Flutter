@@ -11,13 +11,13 @@ import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class EditWallet extends StatefulWidget {
+class EditWalletPage extends StatefulWidget {
   @override
-  _EditWalletState createState() => _EditWalletState();
+  _EditWalletPageState createState() => _EditWalletPageState();
 }
 
-class _EditWalletState extends State<EditWallet> {
-  bool _isSavaing = true;
+class _EditWalletPageState extends State<EditWalletPage> {
+  bool _isSaving = true;
   bool _isShowing = true;
   WalletsProvider _provider;
   bool _isAccountSelected = false;
@@ -138,9 +138,9 @@ class _EditWalletState extends State<EditWallet> {
             height: 84,
             childWidget: descTextField((text)=>_description = text),
           ),
-          switchBoxRow(Strings.savingsAccount, _isSavaing,
+          switchBoxRow(Strings.savingsAccount, _isSaving,
               onChanged: (bool) => setState(() {
-                    _isSavaing = !_isSavaing;
+                    _isSaving = !_isSaving;
                   })),
           switchBoxRow(Strings.showInTotalBalance, _isShowing,
               onChanged: (bool) => setState(() {

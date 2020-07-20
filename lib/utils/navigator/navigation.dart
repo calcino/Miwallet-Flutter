@@ -38,10 +38,10 @@ class Navigation {
         break;
       default:
         return MaterialPageRoute(
-            builder: (ctx) => Scaffold(
-                  body: Center(
-                    child: Text('no route defined for ${settings.name}'),
-                  ),
+            builder: (ctx) => Container(
+              color: Colors.white,
+                  alignment: Alignment.center,
+                  child: Text('no route defined for ${settings.name}'),
                 ));
         break;
     }

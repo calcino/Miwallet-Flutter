@@ -7,4 +7,7 @@ class RouteName {
   static const accountsPage = 'accountsPage';
   static const moneyTransferPage = 'moneyTransferPage';
   static const addWalletPage = 'addWalletPage';
+  static const walletPage = 'walletPage';
+  static const historyPage = 'historyPage';
+  static const settingsPage = 'settingsPage';
 }

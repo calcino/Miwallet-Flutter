@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
@@ -27,7 +28,8 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    _provider = context.read<DashboardProvider>();
+    var appProvider = context.read<AppProvider>();
+    _provider = DashboardProvider(appProvider.db);
   }
 
   @override
@@ -48,15 +50,18 @@ class _DashboardPageState extends State<DashboardPage> {
     //_provider.getTransfers();
 
     Logger.log('dashboard build called: ${DateTime.now().toIso8601String()}');
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _appbar(),
-      body: _body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _provider.changeData();
-        },
-        child: Icon(Icons.add),
+    return ChangeNotifierProvider<DashboardProvider>(
+      create: (_) => _provider,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: _appbar(),
+        body: _body(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _provider.changeData();
+          },
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }

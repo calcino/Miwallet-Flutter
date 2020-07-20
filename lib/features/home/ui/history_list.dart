@@ -13,38 +13,38 @@ class HistoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 640);
-    return Column(
-      children: <Widget>[
-        TotalIncomeExpense(
-          expense: 1000,
-          income: 398383,
-        ),
-        _sectionedList(),
-        //EmptyDataWidget()
-      ],
+    return SingleChildScrollView(
+      child: Wrap(
+        children: List()
+          ..add(TotalIncomeExpense(
+            expense: 1000,
+            income: 398383,
+          ))
+          ..add(_sectionedList()),
+      ),
     );
   }
 
   Widget _sectionedList() {
     final fakeList = CostHistory.generateFakeData();
-    return Expanded(
-        flex: 10,
-        child: GroupedListView<CostHistory, DateTime>(
-          elements: fakeList,
-          groupBy: (CostHistory item) {
-            return DateTime.parse(item.createDate);
-          },
-          groupSeparatorBuilder: (dateTime) {
-            return _HistoryHeader(
-              dateTime: dateTime,
-              sumOfExpense: 48363220.0,
-              sumOfIncome: 10000000,
-            );
-          },
-          itemBuilder: (ctx, element) {
-            return _HistoryItem(costHistory: element);
-          },
-        ));
+    return GroupedListView<CostHistory, DateTime>(
+      elements: fakeList,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      groupBy: (CostHistory item) {
+        return DateTime.parse(item.createDate);
+      },
+      groupSeparatorBuilder: (dateTime) {
+        return _HistoryHeader(
+          dateTime: dateTime,
+          sumOfExpense: 48363220.0,
+          sumOfIncome: 10000000,
+        );
+      },
+      itemBuilder: (ctx, element) {
+        return _HistoryItem(costHistory: element);
+      },
+    );
   }
 }
 

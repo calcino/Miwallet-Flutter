@@ -41,7 +41,10 @@ Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false
           child: Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-              onTap: onTap,
+              onTap: (){
+                onTap;
+                Navigator.pop(context);
+              },
               child: Text(
                 Strings.ok,
                 style: TextStyle(
@@ -94,3 +97,22 @@ Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =
 
   );
 }
+
+void showModalBottomSheetWidget(BuildContext context,Widget childWidget) {
+  showModalBottomSheet(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(
+          ScreenUtil().setWidth(25),
+        ),
+      ),
+    ),
+    backgroundColor: Colors.white,
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return childWidget;
+    },
+  );
+}
+

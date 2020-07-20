@@ -26,11 +26,11 @@ class WalletsProvider with ChangeNotifier {
     _db.bankDao.insertBank(Bank(name: "ayande", createdDateTime: DateTime.now().toIso8601String()));
   }
 
-  void insertAccount() async {
-//    await _db.accountDao.insertAccount(account);
-    await _db.accountDao.insertAccount(
-      Account(id: 1,bankId: 1, name: "my acc", balance: 1000, descriptions: "chettori", createdDateTime: DateTime.now().toIso8601String()),
-    );
+  void insertAccount(Account account) async {
+    await _db.accountDao.insertAccount(account);
+//    await _db.accountDao.insertAccount(
+//      Account(id: 1,bankId: 1, name: "my acc", balance: 1000, descriptions: "chettori", createdDateTime: DateTime.now().toIso8601String()),
+//    );
     notifyListeners();
   }
 
@@ -48,44 +48,45 @@ class WalletsProvider with ChangeNotifier {
 
   void getAllTransaction() async {
     transactions = await _db.accountTransactionDao.findAllAccountTransaction();
+    print(transactions.toString());
+    notifyListeners();
   }
 
   void insertTransaction() async {
     await _db.accountTransactionDao.insertAccountTransaction(AccountTransaction(
-      id: 1,
         accountId: 1,
         amount: 25686,
         dateTime: DateTime.now().toIso8601String(),
         receiptImagePath: "null",
         categoryId: 1,
-        subcategoryId: 1,
+        subcategoryId: 7,
         createdDateTime: DateTime.now().toIso8601String(),
         isIncome: true)).then((value) => Logger.log('inserted fake transa'));
     await _db.accountTransactionDao.insertAccountTransaction(AccountTransaction(
         accountId: 1,
-        amount: 25686,
+        amount: 4538,
         dateTime: DateTime.now().toIso8601String(),
         receiptImagePath: "null",
         categoryId: 1,
-        subcategoryId: 1,
+        subcategoryId: 4,
         createdDateTime: DateTime.now().toIso8601String(),
         isIncome: true));
     await _db.accountTransactionDao.insertAccountTransaction(AccountTransaction(
         accountId: 1,
-        amount: 25686,
+        amount: 45378,
         dateTime: DateTime.now().toIso8601String(),
         receiptImagePath: "null",
         categoryId: 1,
-        subcategoryId: 1,
+        subcategoryId: 6,
         createdDateTime: DateTime.now().toIso8601String(),
         isIncome: false));
     await _db.accountTransactionDao.insertAccountTransaction(AccountTransaction(
         accountId: 1,
-        amount: 25686,
+        amount: 45354,
         dateTime: DateTime.now().toIso8601String(),
         receiptImagePath: "null",
         categoryId: 1,
-        subcategoryId: 1,
+        subcategoryId: 5,
         createdDateTime: DateTime.now().toIso8601String(),
         isIncome: true));
   }

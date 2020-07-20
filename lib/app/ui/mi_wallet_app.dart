@@ -29,7 +29,7 @@ class MiWalletApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: ColorRes.blueColor.toMaterial(), canvasColor: ColorRes.blueColor),
       onGenerateRoute: Navigation.generateRoute,
-      initialRoute: RouteName.homePage,
+      initialRoute: RouteName.addTransactionPage,
     );
   }
 }

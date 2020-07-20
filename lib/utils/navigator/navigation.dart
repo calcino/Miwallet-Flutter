@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fluttermiwallet/features/add_count/ui/add_transaction.dart';
+import 'package:fluttermiwallet/features/add_count/ui/add_transaction_screen.dart';
 import 'package:fluttermiwallet/features/dashboard/ui/dashboard_page.dart';
 import 'package:fluttermiwallet/features/home/ui/home_page.dart';
 import 'package:fluttermiwallet/features/wallets/ui/account_transaction_page.dart';
 import 'package:fluttermiwallet/features/wallets/ui/accounts_page.dart';
-import 'package:fluttermiwallet/features/wallets/ui/edit_wallet_page.dart';
+import 'package:fluttermiwallet/features/wallets/ui/new_wallet_page.dart';
 import 'package:fluttermiwallet/features/wallets/ui/money_transfer_page.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 
@@ -20,19 +20,21 @@ class Navigation {
         return MaterialPageRoute(builder: (ctx) => AccountsPage());
         break;
       case RouteName.accountTransactionsPage:
-        return MaterialPageRoute(builder: (ctx) => AccountTransactionPage());
+        int _id = settings.arguments;
+        return MaterialPageRoute(builder: (ctx) => AccountTransactionPage(_id));
         break;
       case RouteName.addTransactionPage:
         return MaterialPageRoute(builder: (ctx) => AddTransactionPage());
         break;
       case RouteName.addWalletPage:
-        return MaterialPageRoute(builder: (ctx) => EditWalletPage());
+        return MaterialPageRoute(builder: (ctx) => AddWalletPage());
         break;
       case RouteName.dashboardPage:
         return MaterialPageRoute(builder: (ctx) => DashboardPage());
         break;
       case RouteName.moneyTransferPage:
-        return MaterialPageRoute(builder: (ctx) => MoneyTransferPage());
+        int _id = settings.arguments;
+        return MaterialPageRoute(builder: (ctx) => MoneyTransferPage(_id));
         break;
       default:
         return MaterialPageRoute(

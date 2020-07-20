@@ -132,11 +132,11 @@ class _HomePageState extends State<HomePage>
     childButtons
         .add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {
       Navigator.pushNamed(context, RouteName.addTransactionPage);
-    }));
+    },),);
     childButtons
         .add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {
       Navigator.pushNamed(context, RouteName.addTransactionPage);
-    }));
+    },),);
 
     return UnicornDialer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),

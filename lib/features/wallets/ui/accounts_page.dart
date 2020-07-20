@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
+import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
@@ -22,9 +24,8 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   void initState() {
     super.initState();
-    _provider = Provider.of<WalletsProvider>(context, listen: false);
-//    _provider.insertFakeBank();
-//    _provider.insertAccount();
+    var appProvider = context.read<AppProvider>();
+    _provider = WalletsProvider(appProvider.db);
     _provider.getAllAccounts();
 
   }
@@ -36,7 +37,13 @@ class _AccountsPageState extends State<AccountsPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: _appBar(),
-        body: _body(),
+        body: ChangeNotifierProvider(
+          create: (ctx)=>WalletsProvider(
+              Provider.of<AppProvider>(ctx, listen: false).db),
+          builder: (_, __) {
+            return _body();
+          }
+        ),
       ),
     );
   }
@@ -157,10 +164,10 @@ class _AccountViewState extends State<AccountView>
               Icons.image,
               size: ScreenUtil().setWidth(31),
             ),
-            bottomText("Accounts Name", size: 12, color: ColorRes.textColor),
+            bottomText(widget._account.name, size: 12, color: ColorRes.textColor),
           ),
           rowWithTwoChild(
-            bottomText("\$1500.00", size: 12, color: ColorRes.textColor),
+            bottomText("\$"+widget._account.balance.toString(), size: 12, color: ColorRes.textColor),
             Transform.rotate(
               angle: _rotateAnim.value,
               child: Icon(
@@ -191,21 +198,21 @@ class _AccountViewState extends State<AccountView>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              operatorContainer(Strings.moneyTransfer),
+              operatorContainer(Strings.moneyTransfer,onTap: ()=>Navigator.pushNamed(context, RouteName.moneyTransferPage,arguments: widget._account.id),),
               VerticalDivider(
                 color: ColorRes.blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
-              operatorContainer(Strings.transactions),
+              operatorContainer(Strings.transactions,onTap: ()=>Navigator.pushNamed(context, RouteName.accountTransactionsPage,arguments: widget._account.id),),
               VerticalDivider(
                 color: ColorRes.blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
-              operatorContainer(Strings.edit),
+              operatorContainer(Strings.edit,onTap: ()=>Navigator.pushNamed(context, RouteName.addWalletPage,arguments: widget._account.id),),
             ],
           ),
         ),
@@ -215,9 +222,12 @@ class _AccountViewState extends State<AccountView>
 
   Widget operatorContainer(String text, {onTap}) {
     return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        child: bottomText(text, size: 12, color: ColorRes.textColor),
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          alignment: Alignment.center,
+          child: bottomText(text, size: 12, color: ColorRes.textColor),
+        ),
       ),
     );
   }

@@ -67,7 +67,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         AccountTransaction(
             accountId: accId,
             amount: _amount,
-            dateTime: "${_date.toString()}T${_time.toString()}",
+            dateTime: "${DateTime(_date.year,_date.month,_date.day,_time.hour,_time.minute)}",
             //yyy-MM-ddTHH:mm:ss
             receiptImagePath: _imageFile.toString(),
             categoryId: catId,

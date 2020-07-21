@@ -9,28 +9,26 @@ class EmptyDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 640);
-    return Expanded(
-      flex: 10,
-      child: Container(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              Strings.emptyData,
-              style: TextStyle(
-                  color: ColorRes.blueColor, fontSize: ScreenUtil().setSp(DimenRes.largeText)),
-            ),
-            SizedBox(
-              height: ScreenUtil().setWidth(30),
-            ),
-            SvgPicture.asset(
-              'assets/images/empty_history.svg',
-              width: ScreenUtil().setWidth(160),
-            ),
-          ],
-        ),
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            Strings.emptyData,
+            style: TextStyle(
+                color: ColorRes.blueColor,
+                fontSize: ScreenUtil().setSp(DimenRes.largeText)),
+          ),
+          SizedBox(
+            height: ScreenUtil().setWidth(30),
+          ),
+          SvgPicture.asset(
+            'assets/images/empty_history.svg',
+            width: ScreenUtil().setWidth(160),
+          ),
+        ],
       ),
     );
   }

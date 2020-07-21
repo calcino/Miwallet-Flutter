@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
+import 'package:fluttermiwallet/features/home/logic/history_provider.dart';
 import 'package:fluttermiwallet/features/home/logic/home_provider.dart';
 import 'package:fluttermiwallet/features/home/ui/history_list.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:intl/intl.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:provider/provider.dart';
 
@@ -44,13 +46,34 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _body() {
+    var currentDateTime = DateTime.now();
+
     return TabBarView(
       children: [
-        HistoryList(),
-        HistoryList(),
-        HistoryList(),
-        HistoryList(),
-        HistoryList(),
+        HistoryList(
+          fromDate: DateTime(currentDateTime.year, currentDateTime.month, 1),
+          toDate: DateTime(currentDateTime.year, currentDateTime.month, 31),
+        ),
+        HistoryList(
+          fromDate:
+              DateTime(currentDateTime.year, currentDateTime.month - 1, 1),
+          toDate: DateTime(currentDateTime.year, currentDateTime.month - 1, 31),
+        ),
+        HistoryList(
+          fromDate:
+              DateTime(currentDateTime.year, currentDateTime.month - 2, 1),
+          toDate: DateTime(currentDateTime.year, currentDateTime.month - 2, 31),
+        ),
+        HistoryList(
+          fromDate:
+              DateTime(currentDateTime.year, currentDateTime.month - 3, 1),
+          toDate: DateTime(currentDateTime.year, currentDateTime.month - 3, 31),
+        ),
+        HistoryList(
+          fromDate:
+              DateTime(currentDateTime.year, currentDateTime.month - 4, 1),
+          toDate: DateTime(currentDateTime.year, currentDateTime.month - 4, 31),
+        ),
       ],
       controller: _tabController,
     );
@@ -80,25 +103,31 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _tabBar() {
-    //TODO get data from DB
+    var dateFormatter = DateFormat('MMMM');
+    var currentDateTime = DateTime.now();
+
     return TabBar(
       indicatorColor: ColorRes.orangeColor,
       controller: _tabController,
       tabs: [
         Tab(
-          text: "June",
+          text: dateFormatter.format(currentDateTime),
         ),
         Tab(
-          text: "May",
+          text: dateFormatter.format(DateTime(currentDateTime.year,
+              currentDateTime.month - 1, currentDateTime.day)),
         ),
         Tab(
-          text: "April",
+          text: dateFormatter.format(DateTime(currentDateTime.year,
+              currentDateTime.month - 2, currentDateTime.day)),
         ),
         Tab(
-          text: "March",
+          text: dateFormatter.format(DateTime(currentDateTime.year,
+              currentDateTime.month - 3, currentDateTime.day)),
         ),
         Tab(
-          text: "February",
+          text: dateFormatter.format(DateTime(currentDateTime.year,
+              currentDateTime.month - 4, currentDateTime.day)),
         ),
       ],
     );

@@ -102,6 +102,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `AccountTransaction` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `accountId` INTEGER, `amount` REAL, `dateTime` TEXT, `receiptImagePath` TEXT, `categoryId` INTEGER, `subcategoryId` INTEGER, `createdDateTime` TEXT, `isIncome` INTEGER, FOREIGN KEY (`accountId`) REFERENCES `Account` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`categoryId`) REFERENCES `Category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subcategoryId`) REFERENCES `Subcategory` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
+        await database.execute(
+            '''CREATE VIEW IF NOT EXISTS `AccountTransactionView` AS SELECT AccountTransaction.id AS accountTransactionId, AccountTransaction.accountId AS accountId, AccountTransaction.categoryId AS categoryId, AccountTransaction.subcategoryId AS subcategoryId, AccountTransaction.dateTime AS dateTime, AccountTransaction.isIncome AS isIncome, AccountTransaction.amount AS amount, AccountTransaction.receiptImagePath AS receiptImagePath, Account.name AS accountName, Subcategory.name AS subcategoryName, Category.name AS categoryName FROM AccountTransaction JOIN Category ON AccountTransaction.categoryId = Category.id JOIN Subcategory ON AccountTransaction.subcategoryId = Subcategory.id JOIN Account ON AccountTransaction.accountId = Account.id ''');
+
         await callback?.onCreate?.call(database, version);
       },
     );
@@ -356,7 +359,8 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'name': item.name,
                   'imagePath': item.imagePath,
                   'createdDateTime': item.createdDateTime
-                }),
+                },
+            changeListener),
         _subcategoryUpdateAdapter = UpdateAdapter(
             database,
             'Subcategory',
@@ -367,7 +371,8 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'name': item.name,
                   'imagePath': item.imagePath,
                   'createdDateTime': item.createdDateTime
-                });
+                },
+            changeListener);
 
   final sqflite.DatabaseExecutor database;
 
@@ -489,7 +494,7 @@ class _$TransferDao extends TransferDao {
 
 class _$AccountTransactionDao extends AccountTransactionDao {
   _$AccountTransactionDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+      : _queryAdapter = QueryAdapter(database, changeListener),
         _accountTransactionInsertionAdapter = InsertionAdapter(
             database,
             'AccountTransaction',
@@ -504,7 +509,8 @@ class _$AccountTransactionDao extends AccountTransactionDao {
                   'createdDateTime': item.createdDateTime,
                   'isIncome':
                       item.isIncome == null ? null : (item.isIncome ? 1 : 0)
-                }),
+                },
+            changeListener),
         _accountTransactionUpdateAdapter = UpdateAdapter(
             database,
             'AccountTransaction',
@@ -520,7 +526,8 @@ class _$AccountTransactionDao extends AccountTransactionDao {
                   'createdDateTime': item.createdDateTime,
                   'isIncome':
                       item.isIncome == null ? null : (item.isIncome ? 1 : 0)
-                });
+                },
+            changeListener);
 
   final sqflite.DatabaseExecutor database;
 
@@ -541,28 +548,47 @@ class _$AccountTransactionDao extends AccountTransactionDao {
           isIncome:
               row['isIncome'] == null ? null : (row['isIncome'] as int) != 0);
 
+  static final _accountTransactionViewMapper = (Map<String, dynamic> row) =>
+      AccountTransactionView(
+          accountTransactionId: row['accountTransactionId'] as int,
+          accountId: row['accountId'] as int,
+          categoryId: row['categoryId'] as int,
+          subcategoryId: row['subcategoryId'] as int,
+          isIncome:
+              row['isIncome'] == null ? null : (row['isIncome'] as int) != 0,
+          amount: row['amount'] as double,
+          dateTime: row['dateTime'] as String,
+          receiptImagePath: row['receiptImagePath'] as String,
+          accountName: row['accountName'] as String,
+          subcategoryName: row['subcategoryName'] as String,
+          categoryName: row['categoryName'] as String);
+
   final InsertionAdapter<AccountTransaction>
       _accountTransactionInsertionAdapter;
 
   final UpdateAdapter<AccountTransaction> _accountTransactionUpdateAdapter;
 
   @override
-  Future<List<AccountTransaction>> findAllAccountTransaction() async {
-    return _queryAdapter.queryList('SELECT * FROM AccountTransaction',
-        mapper: _accountTransactionMapper);
+  Future<AccountTransaction> findWithId(int id) async {
+    return _queryAdapter.query('SELECT * FROM AccountTransaction WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _accountTransactionMapper);
   }
 
   @override
-  Future<AccountTransaction> findAccountTransaction(int id) async {
-    return _queryAdapter.query('SELECT * FROM AccountTransaction WHERE id = ?',
-        arguments: <dynamic>[id], mapper: _accountTransactionMapper);
+  Stream<List<AccountTransactionView>> findAll(String fromDate, String toDate) {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM AccountTransactionView WHERE dateTime > ? AND dateTime < ?',
+        arguments: <dynamic>[fromDate, toDate],
+        queryableName: 'AccountTransactionView',
+        isView: true,
+        mapper: _accountTransactionViewMapper);
   }
 
   @override
   Future<void> insertAccountTransaction(
       AccountTransaction accountTransaction) async {
     await _accountTransactionInsertionAdapter.insert(
-        accountTransaction, OnConflictStrategy.fail);
+        accountTransaction, OnConflictStrategy.replace);
   }
 
   @override

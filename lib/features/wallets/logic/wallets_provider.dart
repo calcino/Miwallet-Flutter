@@ -1,6 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:fluttermiwallet/db/dao/account_dao.dart';
-import 'package:fluttermiwallet/db/dao/bank_dao.dart';
 import 'package:fluttermiwallet/db/database.dart';
 import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/db/entity/account_transaction.dart';
@@ -8,12 +6,13 @@ import 'package:fluttermiwallet/db/entity/bank.dart';
 import 'package:fluttermiwallet/db/entity/category.dart' as category;
 import 'package:fluttermiwallet/db/entity/subcategory.dart';
 import 'package:fluttermiwallet/db/entity/transfer.dart';
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/utils/logger/logger.dart';
 
 class WalletsProvider with ChangeNotifier {
   final AppDatabase _db;
   List<Account> accounts = [];
-  List<AccountTransaction> transactions = [];
+  List<AccountTransactionView> transactions = [];
   List<Bank> banks = [];
   String subcategoryName="";
 
@@ -47,9 +46,13 @@ class WalletsProvider with ChangeNotifier {
   }
 
   void getAllTransaction() async {
-    transactions = await _db.accountTransactionDao.findAllAccountTransaction();
+    _db.accountTransactionDao.findAll(DateTime(2000, 1, 1).toIso8601String(),
+        DateTime.now().toIso8601String()).listen((event) {
+    transactions = event;
     print(transactions.toString());
     notifyListeners();
+    });
+
   }
 
   void insertTransaction() async {

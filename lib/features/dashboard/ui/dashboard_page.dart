@@ -35,8 +35,8 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 640);
-    //_provider.insertFakeSubcategory();
     //_provider.insertFakeCategory();
+    //_provider.insertFakeSubcategory();
     //_provider.insertFakeBank();
     //_provider.insertFakeAccount();
     //_provider.insertFakeTransfer();
@@ -46,8 +46,9 @@ class _DashboardPageState extends State<DashboardPage> {
     //_provider.getSubcategories();
     //_provider.getAllAccounts();
     //_provider.getAllBanks();
-    _provider.getAccountTransactions();
+    //_provider.getAccountTransactions();
     //_provider.getTransfers();
+    //_provider.getTransactionView();
 
     Logger.log('dashboard build called: ${DateTime.now().toIso8601String()}');
     return ChangeNotifierProvider<DashboardProvider>(

@@ -1,57 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/db/entity/cost_history.dart';
+import 'package:fluttermiwallet/app/logic/app_provider.dart';
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
+import 'package:fluttermiwallet/features/home/logic/history_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
+import 'package:fluttermiwallet/utils/widgets/empty_data_widget.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HistoryList extends StatelessWidget {
+  final DateTime fromDate, toDate;
+  HistoryProvider _historyProvider;
+
+  HistoryList({Key key, @required this.fromDate, @required this.toDate})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 640);
-    return SingleChildScrollView(
-      child: Wrap(
-        children: List()
-          ..add(TotalIncomeExpense(
-            expense: 1000,
-            income: 398383,
-          ))
-          ..add(_sectionedList()),
-      ),
-    );
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    _historyProvider =
+        HistoryProvider(db: appProvider.db, fromDate: fromDate, toDate: toDate);
+    return StreamBuilder<List<AccountTransactionView>>(
+        stream: _historyProvider.getAllTransaction(),
+        initialData: null,
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            return _buildList(snapshot.data);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
-  Widget _sectionedList() {
-    final fakeList = CostHistory.generateFakeData();
-    return GroupedListView<CostHistory, DateTime>(
-      elements: fakeList,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      groupBy: (CostHistory item) {
-        return DateTime.parse(item.createDate);
-      },
-      groupSeparatorBuilder: (dateTime) {
-        return _HistoryHeader(
-          dateTime: dateTime,
-          sumOfExpense: 48363220.0,
-          sumOfIncome: 10000000,
-        );
-      },
-      itemBuilder: (ctx, element) {
-        return _HistoryItem(costHistory: element);
-      },
-    );
+  Widget _buildList(List<AccountTransactionView> data) {
+    final String headSign = '1000-01-20 00:00:00.000';
+    var totalIncome = 0.0;
+    var totalExpense = 0.0;
+    if (data != null && data.isNotEmpty) {
+      var incomeExpense = _historyProvider.getTotalIncomeExpense(data);
+      totalIncome = incomeExpense[0];
+      totalExpense = incomeExpense[1];
+    }
+    return data.isEmpty
+        ? EmptyDataWidget()
+        : GroupedListView<AccountTransactionView, DateTime>(
+            elements: data..add(AccountTransactionView(dateTime: headSign)),
+            groupBy: (AccountTransactionView item) {
+              var dateTime = DateTime.parse(item.dateTime);
+              return DateTime(dateTime.year, dateTime.month, dateTime.day);
+            },
+            groupSeparatorBuilder: (dateTime) {
+              //print("fucking: $dateTime");
+              if (headSign == dateTime.toString()) {
+                return TotalIncomeExpense(
+                    income: totalIncome, expense: totalExpense);
+              } else {
+                var totals = _historyProvider.getTotalIncomeExpense(
+                    data, DateFormat('yyyy-MM-dd').format(dateTime));
+                var groupIncome = totals[0];
+                var groupExpense = totals[1];
+                return _HistoryHeader(
+                  dateTime: dateTime,
+                  sumOfExpense: groupExpense,
+                  sumOfIncome: groupIncome,
+                );
+              }
+            },
+            indexedItemBuilder: (ctx, element, index) {
+              return element.accountId != null
+                  ? _HistoryItem(
+                      accountTransaction: element,
+                      isLastItem: index == data.length - 1)
+                  : Container();
+            },
+          );
   }
 }
 
 class _HistoryItem extends StatelessWidget {
-  final CostHistory costHistory;
+  final AccountTransactionView accountTransaction;
+  final bool isLastItem;
 
-  const _HistoryItem({Key key, @required this.costHistory}) : super(key: key);
+  const _HistoryItem(
+      {Key key, @required this.accountTransaction, this.isLastItem = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +99,9 @@ class _HistoryItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
       margin: EdgeInsets.only(
-          left: ScreenUtil().setWidth(15), right: ScreenUtil().setWidth(15)),
+          left: ScreenUtil().setWidth(15),
+          right: ScreenUtil().setWidth(15),
+          bottom: isLastItem ? ScreenUtil().setWidth(12) : 0),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(color: Colors.grey[350], offset: Offset(0, 3), blurRadius: 4)
       ]),
@@ -78,7 +120,7 @@ class _HistoryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                costHistory.title,
+                '${accountTransaction.categoryName}',
                 style: TextStyle(
                     color: ColorRes.blueColor,
                     fontSize: ScreenUtil().setSp(DimenRes.smallText)),
@@ -87,7 +129,7 @@ class _HistoryItem extends StatelessWidget {
                 height: ScreenUtil().setWidth(7),
               ),
               Text(
-                costHistory.subtitle,
+                '${accountTransaction.subcategoryName}',
                 style: TextStyle(
                   color: ColorRes.blueColor,
                   fontSize: ScreenUtil().setSp(DimenRes.verySmallText),
@@ -107,11 +149,11 @@ class _HistoryItem extends StatelessWidget {
                 child: FittedBox(
                   child: Text(
                     '\$' +
-                        '${costHistory.amount.toString().split('.')[0].addSeparator()}' +
+                        '${accountTransaction.amount.toString().split('.')[0].addSeparator()}' +
                         '.' +
-                        '${costHistory.amount.toString().split('.')[1]}',
+                        '${accountTransaction.amount.toString().split('.')[1]}',
                     style: TextStyle(
-                        color: (costHistory.costType == CostType.INCOME)
+                        color: accountTransaction.isIncome
                             ? ColorRes.greenColor
                             : ColorRes.redColor),
                     maxLines: 1,
@@ -123,7 +165,7 @@ class _HistoryItem extends StatelessWidget {
                 height: ScreenUtil().setWidth(7),
               ),
               Text(
-                '${DateFormat('HH:mm').format(DateTime.parse(costHistory.createDate))}',
+                '${DateFormat('HH:mm').format(DateTime.parse(accountTransaction.dateTime))}',
                 style: TextStyle(
                   color: ColorRes.blueColor,
                   fontSize: ScreenUtil().setSp(DimenRes.verySmallText),

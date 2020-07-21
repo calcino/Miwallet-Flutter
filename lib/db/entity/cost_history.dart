@@ -20,8 +20,6 @@ class CostHistory {
       @required this.createDate,
       @required this.iconPath});
 
-  
-
   static List<CostHistory> generateFakeData() {
     List<CostHistory> costHistories = [];
     costHistories.add(CostHistory(

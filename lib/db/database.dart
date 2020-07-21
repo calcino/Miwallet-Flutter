@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'dao/account_dao.dart';
@@ -18,9 +19,16 @@ import 'entity/account_transaction.dart';
 
 part 'database.g.dart'; // the generated code will be there
 
-@Database(
-    version: 1,
-    entities: [Account, Bank, Category, Subcategory, Transfer,AccountTransaction])
+@Database(version: 1, entities: [
+  Account,
+  Bank,
+  Category,
+  Subcategory,
+  Transfer,
+  AccountTransaction
+], views: [
+  AccountTransactionView
+])
 abstract class AppDatabase extends FloorDatabase {
   AccountDao get accountDao;
 

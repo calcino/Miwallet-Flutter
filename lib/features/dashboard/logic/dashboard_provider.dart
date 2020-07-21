@@ -28,17 +28,19 @@ class DashboardProvider extends ChangeNotifier {
 
   void getAccountTransactions() async {
     isLoading = true;
-    transactions = await _db.accountTransactionDao.findAllAccountTransaction();
-    totalIncome = 0;
-    totalExpense = 0;
-    transactions.forEach((transaction) {
-      if (transaction.isIncome)
-        totalIncome += transaction.amount;
-      else
-        totalExpense += transaction.amount;
+    _db.accountTransactionDao.findAll(DateTime(2000, 1, 1).toIso8601String(),
+        DateTime.now().toIso8601String()).listen((event) {
+      totalIncome = 0;
+      totalExpense = 0;
+      transactions.forEach((transaction) {
+        if (transaction.isIncome)
+          totalIncome += transaction.amount;
+        else
+          totalExpense += transaction.amount;
+      });
+      isLoading = false;
+      notifyListeners();
     });
-    isLoading = false;
-    notifyListeners();
   }
 
   void insertFakeTransfer() async {
@@ -49,6 +51,15 @@ class DashboardProvider extends ChangeNotifier {
         dateTime: DateTime.now().toIso8601String(),
         descriptions: "khodam bara khodam enteghal dadam",
         createdDateTime: DateTime.now().toIso8601String()));
+  }
+
+  void getTransactionView() {
+    _db.accountTransactionDao
+        .findAll(DateTime(2000, 1, 1).toIso8601String(),
+            DateTime.now().toIso8601String())
+        .listen((event) {
+      print('fuck : ${event.length}');
+    });
   }
 
   void getTransfers() async {
@@ -117,7 +128,7 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   void insertFakeAccountTransactions() async {
-    for (var i = 0; i < 20; i++)
+    for (var i = 0; i < 10; i++)
       _db.accountTransactionDao
           .insertAccountTransaction(AccountTransaction(
               accountId: i + 1,
@@ -126,7 +137,7 @@ class DashboardProvider extends ChangeNotifier {
               categoryId: 1,
               subcategoryId: 1,
               createdDateTime: DateTime.now().toIso8601String(),
-              dateTime: DateTime.now().toIso8601String(),
+              dateTime: DateTime(2020, i, i).toIso8601String(),
               isIncome: i % 2 == 0))
           .then((value) => Logger.log('inserted fake account transaction $i'));
   }

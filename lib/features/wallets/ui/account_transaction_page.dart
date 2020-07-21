@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/entity/account_transaction.dart';
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -68,7 +69,7 @@ class _AccountTransactionPageState extends State<AccountTransactionPage> {
   }
 
   Widget _body() {
-    return Selector<WalletsProvider, List<AccountTransaction>>(
+    return Selector<WalletsProvider, List<AccountTransactionView>>(
         selector: (ctx, provider) => _provider.transactions,
         builder: (ctx, transaction, child) {
           return ListView.builder(
@@ -92,7 +93,7 @@ class _AccountTransactionPageState extends State<AccountTransactionPage> {
     _provider.findSubCategory(id);
   }
 
-  Widget _accountsField(AccountTransaction transaction, name) {
+  Widget _accountsField(AccountTransactionView transaction, name) {
     String transactiontType = transaction.isIncome ? "-" : '+';
     String _date = (transaction.dateTime==null)?"":" "+DateFormat("yyyy/MM/dd").format(DateTime.parse(transaction.dateTime));
     String _time = (transaction.dateTime==null)?"":DateFormat("HH:mm").format(DateTime.parse(transaction.dateTime))+" ,";

@@ -5,7 +5,7 @@ import 'package:fluttermiwallet/db/entity/category.dart';
 abstract class CategoryDao {
 
   @Query('SELECT * FROM Category')
-  Future<List<Category>> findAll();
+  Stream<List<Category>> findAll();
 
   @Query('SELECT * FROM Category WHERE id = :id')
   Stream<Category> findCategory(int id);

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/bank.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -22,44 +21,51 @@ class _AddWalletPageState extends State<AddWalletPage> {
   bool _isSaving = true;
   bool _isShowing = true;
   WalletsProvider _provider;
-  bool _isAccountSelected = false;
-  bool _isBankSelected = false;
   int accId;
   int bankId;
   String _accountNameSelected = Strings.choose;
-  String _accountBankSelected = Strings.choose;
+  String _bankNameSelected = Strings.choose;
   double _amount;
-  String _description;
+  TextEditingController _descController;
   bool _isChoosedAccount = false;
   bool _isChoosedBank = false;
 
   @override
   void initState() {
+    _descController = TextEditingController();
     var appProvider = context.read<AppProvider>();
     _provider = WalletsProvider(appProvider.db);
     super.initState();
   }
 
-  _isEmptyField() {
-    if (_accountNameSelected == Strings.choose) {
-      _isChoosedAccount = true;
-    }
-    if (_accountNameSelected == Strings.choose) {
-      _isChoosedBank = true;
-    } else {
-      _isChoosedAccount = false;
-      _isChoosedBank = false;
+  _isEmpty() {
+    if (_accountNameSelected != Strings.choose &&
+        _bankNameSelected != Strings.choose) {
       _provider.updateAccount(
         Account(
           bankId: bankId,
           name: _accountNameSelected,
           balance: _amount,
-          descriptions: _description,
+          descriptions: _descController.text,
           createdDateTime: DateTime.now().toIso8601String(),
         ),
       );
+      Navigator.of(context).pop();
+    } else {
+      if (_accountNameSelected == Strings.choose) {
+        setState(() {
+          _isChoosedAccount = true;
+        });
+      }
+      if (_bankNameSelected == Strings.choose) {
+        setState(() {
+          _isChoosedBank = true;
+        });
+      }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +79,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
           Strings.newWallets,
           saveOnTap: () {
             setState(() {
-              _isEmptyField();
+              _isEmpty();
             });
           },
         ),
@@ -108,7 +114,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
                       (account) {
                     setState(
                       () {
-                        _isAccountSelected = true;
                         _accountNameSelected = account.name;
                         accId = account.sourceId;
                       },
@@ -122,7 +127,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
           customTextBox(
             marginTop: 10,
             label: Strings.bank,
-            childWidget: chooseBottomSheet(_accountBankSelected),
+            childWidget: chooseBottomSheet(_bankNameSelected),
             onPressed: () {
               setState(() {
                 _isChoosedBank= false;
@@ -133,8 +138,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   value: _provider,
                   child: _chooseBtmSheet(context, Strings.bank, false, (bank) {
                     setState(() {
-                      _isBankSelected = true;
-                      _accountBankSelected = bank.name;
+                      _bankNameSelected = bank.name;
                       bankId = bank.sourceId;
                     });
                   }),
@@ -147,7 +151,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
             label: Strings.description,
             marginBottom: 0,
             height: 84,
-            childWidget: descTextField((text) => _description = text),
+            childWidget: descTextField((controller) => _descController = controller),
           ),
           switchBoxRow(Strings.savingsAccount, _isSaving,
               onChanged: (bool) => setState(() {

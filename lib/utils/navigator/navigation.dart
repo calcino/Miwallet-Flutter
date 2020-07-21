@@ -24,7 +24,8 @@ class Navigation {
         return MaterialPageRoute(builder: (ctx) => AccountTransactionPage(_id));
         break;
       case RouteName.addTransactionPage:
-        return MaterialPageRoute(builder: (ctx) => AddTransactionPage());
+        bool _isIncome = settings.arguments;
+        return MaterialPageRoute(builder: (ctx) => AddTransactionPage(_isIncome));
         break;
       case RouteName.addWalletPage:
         return MaterialPageRoute(builder: (ctx) => AddWalletPage());

@@ -5,7 +5,7 @@ import 'package:fluttermiwallet/db/entity/subcategory.dart';
 abstract class SubcategoryDao {
 
   @Query('SELECT * FROM Subcategory')
-  Future<List<Subcategory>> findAll();
+  Stream<List<Subcategory>> findAll();
 
   @Query('SELECT * FROM Subcategory WHERE id = :id')
   Future<Subcategory> findSubcategory(int id);

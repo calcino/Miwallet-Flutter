@@ -4,13 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 
-Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false,bool hasDone=false, onTap}) {
+Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false,bool hasDone=false,Function onTap}) {
   return Container(
     decoration: BoxDecoration(
       color: ColorRes.blueColor,
       borderRadius: BorderRadius.vertical(top: Radius.circular(ScreenUtil().setWidth(25),),),
     ),
-    padding: EdgeInsets.only(right: ScreenUtil().setWidth(21),),
     height: ScreenUtil().setHeight(60.78),
     child: Stack(
       children: <Widget>[
@@ -42,14 +41,17 @@ Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false
             alignment: Alignment.centerRight,
             child: InkWell(
               onTap: (){
-                onTap;
+                onTap();
                 Navigator.pop(context);
               },
-              child: Text(
-                Strings.ok,
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(14),
-                  color: Colors.white,
+              child: Container(
+                padding: EdgeInsets.only(right: ScreenUtil().setWidth(21),),
+                child: Text(
+                  Strings.ok,
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(14),
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

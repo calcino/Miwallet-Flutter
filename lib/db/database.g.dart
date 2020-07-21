@@ -322,9 +322,9 @@ class _$CategoryDao extends CategoryDao {
   final UpdateAdapter<Category> _categoryUpdateAdapter;
 
   @override
-  Future<List<Category>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Category',
-        mapper: _categoryMapper);
+  Stream<List<Category>> findAll() {
+    return _queryAdapter.queryListStream('SELECT * FROM Category',
+        queryableName: 'Category', isView: false, mapper: _categoryMapper);
   }
 
   @override
@@ -349,7 +349,7 @@ class _$CategoryDao extends CategoryDao {
 
 class _$SubcategoryDao extends SubcategoryDao {
   _$SubcategoryDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+      : _queryAdapter = QueryAdapter(database, changeListener),
         _subcategoryInsertionAdapter = InsertionAdapter(
             database,
             'Subcategory',
@@ -392,8 +392,10 @@ class _$SubcategoryDao extends SubcategoryDao {
   final UpdateAdapter<Subcategory> _subcategoryUpdateAdapter;
 
   @override
-  Future<List<Subcategory>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Subcategory',
+  Stream<List<Subcategory>> findAll() {
+    return _queryAdapter.queryListStream('SELECT * FROM Subcategory',
+        queryableName: 'Subcategory',
+        isView: false,
         mapper: _subcategoryMapper);
   }
 

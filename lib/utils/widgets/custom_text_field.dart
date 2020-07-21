@@ -67,9 +67,13 @@ Widget customTextBox(
   );
 }
 
-Widget descTextField(Function(String) onSubmitted) {
+Widget descTextField(Function(TextEditingController) listener) {
+  TextEditingController controller = TextEditingController();
   return TextField(
-    onSubmitted: onSubmitted,
+    controller: controller,
+    onChanged: (text){
+      listener(controller);
+    },
     minLines: 1,
     maxLines: 6,
     style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),

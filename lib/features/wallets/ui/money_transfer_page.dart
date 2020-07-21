@@ -26,28 +26,28 @@ class MoneyTransferPage extends StatefulWidget {
 }
 
 class _MoneyTransferPageState extends State<MoneyTransferPage> {
-  DateTime _time;
-  DateTime _date;
+  DateTime _time = DateTime.now();
+  DateTime _date = DateTime.now();
   WalletsProvider _provider;
-  bool _isAccountSelected = false;
   String _accountNameSelected = Strings.choose;
   int _destinationAccId;
   double _amount;
-  String _description;
+  TextEditingController _descController;
   bool _isChoosedAccount = false;
 
   _isEmptyField() {
     if (_accountNameSelected == Strings.choose) {
-      _isChoosedAccount = true;
+      setState(() {
+        _isChoosedAccount = true;
+      });
     } else {
-      _isChoosedAccount = false;
       _provider.insertTransfer(
         Transfer(
           sourceAccountId: widget._sourceId,
           destinationAccountId: _destinationAccId,
           amount: _amount,
-          dateTime: "${_date}T$_time",
-          descriptions: _description,
+          dateTime: "${DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute)}",
+          descriptions: _descController.text,
           createdDateTime: DateTime.now().toIso8601String(),
         ),
       );
@@ -56,6 +56,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
 
   @override
   void initState() {
+    _descController = TextEditingController();
     var appProvider = context.read<AppProvider>();
     _provider = WalletsProvider(appProvider.db);
     super.initState();
@@ -71,6 +72,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
             context,
             bottomCalcAppBar(
               isExpanded: true,
+                onSubmitted: (amount) => _amount = amount
             ),
             Strings.moneyTransfer, saveOnTap: () {
           setState(() {
@@ -113,7 +115,6 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
                           return _chooseBtmSheet(ctx, (account) {
                             setState(
                               () {
-                                _isAccountSelected = true;
                                 _accountNameSelected = account.name;
                                 _destinationAccId = account.id;
                               },
@@ -135,9 +136,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
                   marginTop: 0,
                   label: Strings.time,
                   marginRight: 3.5,
-                  childWidget: dateTimeShow(_time == null
-                      ? "00:00"
-                      : DateFormat("HH:mm").format(_time)),
+                  childWidget: dateTimeShow(DateFormat("HH:mm").format(_time)),
                   onPressed: () => showDatePickerWidget(
                     context,
                     DateTimePickerMode.time,
@@ -155,12 +154,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
                   marginTop: 0,
                   label: Strings.date,
                   marginLeft: 3.5,
-                  childWidget: dateTimeShow(
-                    _date == null
-                        ? DateFormat('dd MMMM,yyyy').format(
-                            DateTime.now(),
-                          )
-                        : DateFormat("dd MMMM,yyyy").format(_date),
+                  childWidget: dateTimeShow(DateFormat("dd MMMM,yyyy").format(_date),
                   ),
                   onPressed: () => showDatePickerWidget(
                     context,
@@ -181,7 +175,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
             label: Strings.description,
             marginBottom: 0,
             height: 84,
-            childWidget: descTextField((text) => _description = text),
+            childWidget: descTextField((controller) => _descController = controller),
           ),
         ],
       ),

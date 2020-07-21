@@ -160,11 +160,11 @@ class _HomePageState extends State<HomePage>
 
     childButtons
         .add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {
-      Navigator.pushNamed(context, RouteName.addTransactionPage);
+      Navigator.pushNamed(context, RouteName.addTransactionPage,arguments: false);
     },),);
     childButtons
         .add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {
-      Navigator.pushNamed(context, RouteName.addTransactionPage);
+      Navigator.pushNamed(context, RouteName.addTransactionPage,arguments: true);
     },),);
 
     return UnicornDialer(

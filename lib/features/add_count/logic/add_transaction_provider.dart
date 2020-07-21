@@ -18,8 +18,11 @@ class AddTransactionProvider with ChangeNotifier {
 
   AddTransactionProvider(this._db);
 
-  void insertAccount(Account account) async {
-    await _db.accountDao.insertAccount(account);
+  void insertAccount() async {
+//    await _db.accountDao.insertAccount(account);
+        await _db.accountDao.insertAccount(
+      Account(id: 1,bankId: 1, name: "my acc", balance: 1000, descriptions: "chettori", createdDateTime: DateTime.now().toIso8601String()),
+    );
     notifyListeners();
   }
 
@@ -27,6 +30,8 @@ class AddTransactionProvider with ChangeNotifier {
     await _db.accountTransactionDao.insertAccountTransaction(transaction);
     notifyListeners();
   }
+
+
 
 
 
@@ -45,14 +50,18 @@ class AddTransactionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void getAllCategory() async{
-    categories = await _db.categoryDao.findAll();
-    notifyListeners();
+  void getAllCategory() {
+    _db.categoryDao.findAll().listen((event) {
+      categories = event;
+      notifyListeners();
+    });
   }
 
-  void getAllSubCategory() async{
-    subCategories = await _db.subcategoryDao.findAll();
-    notifyListeners();
+  void getAllSubCategory() {
+    _db.subcategoryDao.findAll().listen((event) {
+      subCategories = event;
+      notifyListeners();
+    });
   }
 
 }

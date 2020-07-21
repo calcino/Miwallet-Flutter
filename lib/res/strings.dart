@@ -5,6 +5,7 @@ class Strings {
   static const String income = 'Income';
   static const String expense = 'Expense';
   static const String addExpense = 'Add Expense';
+  static const String addIncome = 'Add Income';
   static const String accounts = 'Accounts';
   static const String account = 'Account';
   static const String toWhichAccount = 'To Which Account';
@@ -32,6 +33,7 @@ class Strings {
   static const String addNewSubCategory = 'Add New SubCategory';
   static const String addCategory = 'Add Category';
   static const String nameCategory = 'Name Category';
+  static const String nameSubCategory = 'Name SubCategory';
   static const String time = 'Time';
   static const String date = 'Date';
   static const String fromWhichAccount = 'From Which Account';

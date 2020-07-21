@@ -4,7 +4,7 @@ import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:input_calculator/input_calculator.dart';
 
-Widget appBar(BuildContext context, PreferredSize bottom, String title,{saveOnTap}) {
+Widget appBar(BuildContext context, PreferredSize bottom, String title,{Function saveOnTap}) {
   ScreenUtil.init(width: 360, height: 640);
   return AppBar(
     elevation: 0,
@@ -22,7 +22,7 @@ Widget appBar(BuildContext context, PreferredSize bottom, String title,{saveOnTa
         padding: EdgeInsets.only(
           right: ScreenUtil().setWidth(21),
         ),
-        child: GestureDetector(
+        child: InkWell(
           onTap: saveOnTap,
           child: Text(
             Strings.save,

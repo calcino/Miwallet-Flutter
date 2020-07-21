@@ -66,12 +66,12 @@ class DashboardProvider extends ChangeNotifier {
     _db.transferDao.findAll().then((value) => Logger.log(value.toString()));
   }
 
-  void getCategories() async {
-    _db.categoryDao.findAll().then((value) => Logger.log(value.toString()));
+  void getCategories()  {
+    _db.categoryDao.findAll().listen((value) => Logger.log(value.toString()));
   }
 
-  void getSubcategories() async {
-    _db.subcategoryDao.findAll().then((value) => Logger.log(value.toString()));
+  void getSubcategories()  {
+    _db.subcategoryDao.findAll().listen((value) => Logger.log(value.toString()));
   }
 
   void getAllAccounts() async {

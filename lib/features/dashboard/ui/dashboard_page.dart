@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/entity/account_transaction.dart';
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
@@ -46,7 +47,7 @@ class _DashboardPageState extends State<DashboardPage> {
     //_provider.getSubcategories();
     //_provider.getAllAccounts();
     //_provider.getAllBanks();
-    //_provider.getAccountTransactions();
+    _provider.getAccountTransactions();
     //_provider.getTransfers();
     //_provider.getTransactionView();
 
@@ -57,12 +58,6 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: Colors.white,
         appBar: _appbar(),
         body: _body(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _provider.changeData();
-          },
-          child: Icon(Icons.add),
-        ),
       ),
     );
   }
@@ -179,9 +174,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _transactionList() {
-    return Selector<DashboardProvider, List<AccountTransaction>>(
+    return Selector<DashboardProvider, List<AccountTransactionView>>(
       selector: (ctx, provider) => provider.transactions,
-      builder: (ctx, transactions, child) {
+      builder: (ctx,List<AccountTransactionView> transactions, child) {
         return SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -192,10 +187,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 income: _provider.totalIncome,
                 expense: _provider.totalExpense,
               ))
-              ..add(transactions.isEmpty ? Container() : _chartContainer())
+              ..add(transactions.isEmpty
+                  ? Container()
+                  : _chartContainer(transactions))
               ..add(transactions.isEmpty ? _emptyWidget() : _piChartContainer())
               ..addAll(transactions.map<Widget>(
-                  (AccountTransaction transaction) =>
+                  (AccountTransactionView transaction) =>
                       _IncomeExpensePercentHistory(transaction))),
           ),
         );
@@ -203,13 +200,13 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _chartContainer() {
+  Widget _chartContainer(List<AccountTransactionView> transactions) {
     return Container(
       margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
       height: ScreenUtil().setWidth(200),
       width: ScreenUtil().setWidth(300),
       alignment: Alignment.center,
-      child: LegendOptions.withSampleData(),
+      child: LegendOptions(transactions),
     );
   }
 
@@ -257,7 +254,7 @@ class _DashboardPageState extends State<DashboardPage> {
 }
 
 class _IncomeExpensePercentHistory extends StatelessWidget {
-  final AccountTransaction _accountTransaction;
+  final AccountTransactionView _accountTransaction;
 
   const _IncomeExpensePercentHistory(this._accountTransaction);
 
@@ -290,7 +287,7 @@ class _IncomeExpensePercentHistory extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'title',
+                _accountTransaction.categoryName,
                 style: TextStyle(
                   color: ColorRes.blueColor,
                   fontWeight: FontWeight.bold,
@@ -298,7 +295,7 @@ class _IncomeExpensePercentHistory extends StatelessWidget {
                 ),
               ),
               Text(
-                'subtitle',
+                _accountTransaction.subcategoryName,
                 style: TextStyle(
                   color: ColorRes.blueColor,
                   fontSize: ScreenUtil().setSp(DimenRes.smallText),
@@ -325,7 +322,9 @@ class _IncomeExpensePercentHistory extends StatelessWidget {
                     BoxConstraints(maxWidth: ScreenUtil().setWidth(70)),
                 child: FittedBox(
                   child: Text(
-                    '\$' + '${20038374.toString().addSeparator()}',
+                    '\$' +
+                        '${_accountTransaction.amount.toString().split('.')[0].addSeparator()}.'
+                            '${_accountTransaction.amount.toString().split('.')[1]}',
                     style: TextStyle(
                       color: ColorRes.blueColor,
                       fontSize: ScreenUtil().setSp(DimenRes.smallText),

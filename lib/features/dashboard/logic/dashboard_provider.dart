@@ -6,6 +6,7 @@ import 'package:fluttermiwallet/db/entity/bank.dart';
 import 'package:fluttermiwallet/db/entity/category.dart';
 import 'package:fluttermiwallet/db/entity/subcategory.dart';
 import 'package:fluttermiwallet/db/entity/transfer.dart';
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/utils/logger/logger.dart';
 
 class DashboardProvider extends ChangeNotifier {
@@ -13,7 +14,7 @@ class DashboardProvider extends ChangeNotifier {
   double totalExpense = 0;
   double totalIncome = 0;
   double totalBalance = 0;
-  List<AccountTransaction> transactions = [];
+  List<AccountTransactionView> transactions = [];
   bool isLoading = false;
 
   DashboardProvider(this._db);
@@ -28,11 +29,14 @@ class DashboardProvider extends ChangeNotifier {
 
   void getAccountTransactions() async {
     isLoading = true;
-    _db.accountTransactionDao.findAll(DateTime(2000, 1, 1).toIso8601String(),
-        DateTime.now().toIso8601String()).listen((event) {
+    _db.accountTransactionDao
+        .findAll(DateTime(2000, 1, 1).toIso8601String(),
+            DateTime.now().add(Duration(days: 1000)).toIso8601String())
+        .listen((event) {
       totalIncome = 0;
       totalExpense = 0;
-      transactions.forEach((transaction) {
+      transactions = event;
+      event.forEach((transaction) {
         if (transaction.isIncome)
           totalIncome += transaction.amount;
         else
@@ -66,12 +70,14 @@ class DashboardProvider extends ChangeNotifier {
     _db.transferDao.findAll().then((value) => Logger.log(value.toString()));
   }
 
-  void getCategories()  {
+  void getCategories() {
     _db.categoryDao.findAll().listen((value) => Logger.log(value.toString()));
   }
 
-  void getSubcategories()  {
-    _db.subcategoryDao.findAll().listen((value) => Logger.log(value.toString()));
+  void getSubcategories() {
+    _db.subcategoryDao
+        .findAll()
+        .listen((value) => Logger.log(value.toString()));
   }
 
   void getAllAccounts() async {

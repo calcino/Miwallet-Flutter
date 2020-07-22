@@ -3,23 +3,20 @@ import 'dart:math';
 import 'package:charts_common/src/chart/common/behavior/legend/legend.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as element;
+import 'package:intl/intl.dart';
 
 class LegendOptions extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  List<charts.Series> seriesList;
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
   final bool animate;
 
-  LegendOptions(this.seriesList, {this.animate});
-
-  factory LegendOptions.withSampleData() {
-    return LegendOptions(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
+  LegendOptions(List<AccountTransactionView> transactionViewList,
+      {this.animate = true}) {
+    this.seriesList = _createChartSeries(transactionViewList);
   }
 
   @override
@@ -65,32 +62,32 @@ class LegendOptions extends StatelessWidget {
     );
   }
 
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    final desktopSalesData = [
-      OrdinalSales('2/14', 29),
-      OrdinalSales('2/15', 25),
-      OrdinalSales('2/16', 100),
-      OrdinalSales('2/17', 75),
-      OrdinalSales('2/18', 70),
-      OrdinalSales('2/19', 70),
-    ];
+  static List<charts.Series<OrdinalSales, String>> _createChartSeries(
+      List<AccountTransactionView> list) {
+    List<OrdinalSales> expenseData = [];
 
-    final tabletSalesData = [
-      OrdinalSales('2/14', 10),
-      OrdinalSales('2/15', 25),
-      OrdinalSales('2/16', 8),
-      OrdinalSales('2/17', 20),
-      OrdinalSales('2/18', 38),
-      OrdinalSales('2/19', 70),
-    ];
+    List<OrdinalSales> incomeData = [];
+
+    list.forEach((element) {
+      if (element.isIncome) {
+        incomeData.add(OrdinalSales(
+            DateFormat('MM/dd').format(DateTime.parse(element.dateTime)),
+            element.amount));
+      } else {
+        expenseData.add(OrdinalSales(
+            DateFormat('MM/dd').format(DateTime.parse(element.dateTime)),
+            element.amount));
+      }
+    });
 
     return [
       charts.Series<OrdinalSales, String>(
           id: 'expense',
           domainFn: (OrdinalSales sales, _) => sales.year,
           measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: desktopSalesData,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(ColorRes.orangeColor),
+          data: expenseData,
+          colorFn: (_, __) =>
+              charts.ColorUtil.fromDartColor(ColorRes.orangeColor),
           labelAccessorFn: (OrdinalSales sales, _) =>
               'expense: ${sales.sales.toString()}',
           displayName: "Expense"),
@@ -98,7 +95,7 @@ class LegendOptions extends StatelessWidget {
         id: 'income',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: tabletSalesData,
+        data: incomeData,
         colorFn: (_, __) => charts.ColorUtil.fromDartColor(ColorRes.blueColor),
         displayName: "Income",
       )..setAttribute(charts.measureAxisIdKey, secondaryMeasureAxisId),
@@ -171,7 +168,7 @@ class CustomLegendBuilder extends charts.LegendContentBuilder {
 
 class OrdinalSales {
   final String year;
-  final int sales;
+  final double sales;
 
   OrdinalSales(this.year, this.sales);
 }

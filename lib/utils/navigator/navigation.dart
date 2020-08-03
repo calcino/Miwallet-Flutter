@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/features/add_count/ui/add_transaction_screen.dart';
 import 'package:fluttermiwallet/features/dashboard/ui/dashboard_page.dart';
 import 'package:fluttermiwallet/features/home/ui/home_page.dart';
+import 'package:fluttermiwallet/features/setting/ui/about_us.dart';
+import 'package:fluttermiwallet/features/setting/ui/backup_screen.dart';
 import 'package:fluttermiwallet/features/setting/ui/setting_screen.dart';
 import 'package:fluttermiwallet/features/wallets/ui/account_transaction_page.dart';
 import 'package:fluttermiwallet/features/wallets/ui/accounts_page.dart';
@@ -39,7 +41,13 @@ class Navigation {
         return MaterialPageRoute(builder: (ctx) => MoneyTransferPage(_id));
         break;
       case RouteName.settingsPage:
-        return MaterialPageRoute(builder: (ctx) => SettingScreen());
+        return MaterialPageRoute(builder: (ctx) => SettingPage());
+        break;
+      case RouteName.backUpPage:
+        return MaterialPageRoute(builder: (ctx) => BackupPage());
+        break;
+      case RouteName.aboutUsPage:
+        return MaterialPageRoute(builder: (ctx) => AboutUsPage());
         break;
       default:
         return MaterialPageRoute(

@@ -2,26 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
+import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
+import 'package:fluttermiwallet/utils/widgets/custom_radio_button.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:fluttermiwallet/utils/widgets/switch_box_row_widget.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 
-class SettingScreen extends StatefulWidget {
+class SettingPage extends StatefulWidget {
   @override
-  _SettingScreenState createState() => _SettingScreenState();
+  _SettingPageState createState() => _SettingPageState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _SettingPageState extends State<SettingPage> {
   bool _hasNotification = false;
   bool _hasDarkMode = false;
   bool _hasPassword = false;
   int _radioValue = -1;
   String _langNameSelected;
   String _currencyNameSelected;
-  bool _isChoosedLang = false;
-  bool _isChoosedCurrency = false;
 
   @override
   void initState() {
@@ -130,31 +129,59 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           _radioGroup(),
           _labelContainer(Strings.data),
-          boxRow(
-            Strings.backup,
-            marginTop: 15,
-            secondWidget: Icon(Icons.arrow_right),
-            height: 50,
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheetWidget(
+                context,
+                _chooseBtmSheet(context, Strings.backup, (backUp) {
+                  if (backUp == Strings.backuoOnGoogle) {
+                    Navigator.pushNamed(context, RouteName.backUpPage);
+                  }
+                }, backUpList),
+              );
+            },
+            child: boxRow(
+              Strings.backup,
+              marginTop: 15,
+              secondWidget: Icon(Icons.arrow_right),
+              height: 50,
+            ),
           ),
           boxRow(
             Strings.aboutMiWallet,
             marginTop: 10,
             marginBottom: 16,
-            secondWidget: Icon(Icons.arrow_right),
+            secondWidget: Icon(
+              Icons.arrow_right,
+              color: ColorRes.textColor,
+            ),
             height: 50,
           ),
           _labelContainer(Strings.data),
-          boxRow(
-            Strings.aboutUs,
-            marginTop: 15,
-            secondWidget: Icon(Icons.arrow_right),
-            height: 50,
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, RouteName.aboutUsPage),
+            child: boxRow(
+              Strings.aboutUs,
+              marginTop: 15,
+              secondWidget: Icon(
+                Icons.arrow_right,
+                color: ColorRes.textColor,
+              ),
+              height: 50,
+            ),
           ),
-          boxRow(
-            Strings.rateUs,
-            marginTop: 10,
-            secondWidget: Icon(Icons.arrow_right),
-            height: 50,
+          GestureDetector(
+            onTap: (){
+            },
+            child: boxRow(
+              Strings.rateUs,
+              marginTop: 10,
+              secondWidget: Icon(
+                Icons.arrow_right,
+                color: ColorRes.textColor,
+              ),
+              height: 50,
+            ),
           ),
           boxRow(
             Strings.appVersion,
@@ -248,14 +275,14 @@ class _SettingScreenState extends State<SettingScreen> {
               () => _radioValue = value,
             ),
           ),
-//          RadioButton(
-//            description: Strings.fingerPrint,
-//            value: 3,
-//            groupValue: _radioValue,
-//            onChanged: (value) => setState(
-//                  () => _radioValue = value,
-//            ),
-//          ),
+          RadioButton(
+            description: Strings.fingerPrint,
+            value: 3,
+            groupValue: _radioValue,
+            onChanged: (value) => setState(
+                  () => _radioValue = value,
+            ),
+          ),
         ],
       ),
     );

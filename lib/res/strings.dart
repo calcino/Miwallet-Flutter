@@ -24,6 +24,9 @@ class Strings {
   static const String darkMode = 'Dark Mode';
   static const String password = 'Password';
   static const String backup = 'Backup';
+  static const String automaticBackup = 'Automatic Backup';
+  static const String manualBackup = 'Manual Backup';
+  static const String lastBackup = 'Last Backup';
   static const String clearData = 'Clear Data';
   static const String aboutMiWallet = 'About Mi Wallet';
   static const String aboutUs = 'About Us';
@@ -33,8 +36,14 @@ class Strings {
   static const String dollar = 'Dollar';
   static const String euro = 'Euro';
   static const String rial = 'Rial';
+  static const String daily = 'Daily';
+  static const String monthly = 'Monthly';
+  static const String weekly = 'Weekly';
+  static const String yearly = 'Yearly';
   static const String backupOnDevice = 'Backup On Device';
   static const String backuoOnGoogle = 'Backup On Google Drive';
+  static const String backuoToGoogle = 'Backup To Google Drive';
+  static const String googleAccount = 'Google Account';
   static const String rateUs = 'Rate Us';
   static const String appVersion = 'App Version';
   static const String customize = 'Customize';
@@ -43,6 +52,7 @@ class Strings {
   static const String newWallets = 'New Wallets';
   static const String save = 'save';
   static const String ok = 'Ok';
+  static const String change = 'Change';
   static const String category = 'Category';
   static const String choose = 'Choose';
   static const String subcategory = 'Subcategory';

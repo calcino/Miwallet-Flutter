@@ -3,9 +3,8 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 
 Widget customTextBox(
-    {
-    double height = 50.0,
-    marginTop,
+    {double height = 50.0,
+    marginTop = 0,
     marginBottom = 0,
     marginRight = 21,
     marginLeft = 21,
@@ -15,10 +14,11 @@ Widget customTextBox(
   ScreenUtil.init(width: 360, height: 640);
   return Container(
     margin: EdgeInsets.only(
-        top: ScreenUtil().setHeight(marginTop),
-        bottom: ScreenUtil().setHeight(marginBottom),
-        right: ScreenUtil().setWidth(marginRight),
-        left: ScreenUtil().setWidth(marginLeft)),
+      top: ScreenUtil().setHeight(marginTop),
+      bottom: ScreenUtil().setHeight(marginBottom),
+      right: ScreenUtil().setWidth(marginRight),
+      left: ScreenUtil().setWidth(marginLeft),
+    ),
     height: ScreenUtil().setHeight(height),
     child: Stack(
       children: <Widget>[
@@ -57,7 +57,8 @@ Widget customTextBox(
               child: Text(
                 label,
                 style: TextStyle(
-                    fontSize: ScreenUtil().setSp(14), color: ColorRes.textColor),
+                    fontSize: ScreenUtil().setSp(14),
+                    color: ColorRes.textColor),
               ),
             ),
           ),
@@ -71,12 +72,13 @@ Widget descTextField(Function(TextEditingController) listener) {
   TextEditingController controller = TextEditingController();
   return TextField(
     controller: controller,
-    onChanged: (text){
+    onChanged: (text) {
       listener(controller);
     },
     minLines: 1,
     maxLines: 6,
-    style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
+    style:
+        TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
     decoration: InputDecoration(
       border: InputBorder.none,
     ),
@@ -89,14 +91,16 @@ Widget chooseBottomSheet(String hint) {
     children: <Widget>[
       Text(
         hint,
-        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(12), color: ColorRes.hintColor),
       ),
       Icon(Icons.arrow_drop_down),
     ],
   );
 }
 
-Widget rowWithTwoChild(Widget firstChild, Widget secondChild,{double space=10}) {
+Widget rowWithTwoChild(Widget firstChild, Widget secondChild,
+    {double space = 10}) {
   return Row(
     children: <Widget>[
       firstChild,

@@ -4,7 +4,8 @@ import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:input_calculator/input_calculator.dart';
 
-Widget appBar(BuildContext context, PreferredSize bottom, String title,{Function saveOnTap}) {
+Widget appBar(BuildContext context, PreferredSize bottom, String title,
+    {Function saveOnTap}) {
   ScreenUtil.init(width: 360, height: 640);
   return AppBar(
     elevation: 0,
@@ -40,7 +41,15 @@ Widget appBar(BuildContext context, PreferredSize bottom, String title,{Function
   );
 }
 
-Widget bottomCalcAppBar({bool isExpanded=false,Function(double) onSubmitted}) {
+Widget bottomCalcAppBar(
+    {bool isExpanded = false,
+    Function(double) onSubmitted,
+    String label = Strings.amount,
+    bool isCalculator = true,
+    Function onChangeGmail,
+      Function(TextEditingController) listener,
+    }) {
+  TextEditingController _controller = TextEditingController();
   ScreenUtil.init(width: 360, height: 640);
   return PreferredSize(
     child: Container(
@@ -56,13 +65,13 @@ Widget bottomCalcAppBar({bool isExpanded=false,Function(double) onSubmitted}) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(isExpanded?
-              Strings.from + "Saderat" + Strings.account:"",
+              Text(
+                isExpanded ? Strings.from + "Saderat" + Strings.account : "",
                 style: TextStyle(
                     fontSize: ScreenUtil().setSp(14), color: Colors.white),
               ),
-              Text(isExpanded?
-                "\$1000.00":"",
+              Text(
+                isExpanded ? "\$1000.00" : "",
                 style: TextStyle(
                     fontSize: ScreenUtil().setSp(14), color: Colors.white),
               ),
@@ -91,26 +100,52 @@ Widget bottomCalcAppBar({bool isExpanded=false,Function(double) onSubmitted}) {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    Strings.amount,
+                    label,
                     style: TextStyle(
-                        fontSize: ScreenUtil().setSp(14), color: ColorRes.textColor),
+                        fontSize: ScreenUtil().setSp(14),
+                        color: ColorRes.textColor),
                   ),
                 ),
                 Expanded(
-                  child: CalculatorTextFormField(
-                    onSubmitted: onSubmitted,
-                    inputDecoration: InputDecoration(
-                      hintText: "\$0.00",
-                      suffixIcon: Image.asset(
-                        "assets/images/calculator.png",
-                      ),
-                      counterStyle: TextStyle(
-                        color: Color(0xff0D47A1),
-                        fontSize: ScreenUtil().setSp(14),
+                    child: isCalculator
+                        ? CalculatorTextFormField(
+                            onSubmitted: onSubmitted,
+                            inputDecoration: InputDecoration(
+                              hintText: "\$0.00",
+                              suffixIcon: Image.asset(
+                                "assets/images/calculator.png",
+                              ),
+                              counterStyle: TextStyle(
+                                color: Color(0xff0D47A1),
+                                fontSize: ScreenUtil().setSp(14),
+                              ),
+                            ),
+                          )
+                        :  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                      controller: _controller,
+                      onChanged: (text){
+                                listener(_controller);
+                      },
+                      decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(fontSize: ScreenUtil().setSp(12),),
+                              hintText: "name@gmail.com",
+                              counterStyle: TextStyle(
+                                color: Color(0xff0D47A1),
+                                fontSize: ScreenUtil().setSp(14),
+                              ),
                       ),
                     ),
-                  ),
-                ),
+                            ),
+                            Text(Strings.change,style: TextStyle(color: ColorRes.textColor,fontSize: ScreenUtil().setSp(14),),)
+                          ],
+                        )
+                    ),
               ],
             ),
           ),
@@ -124,7 +159,8 @@ Widget bottomCalcAppBar({bool isExpanded=false,Function(double) onSubmitted}) {
   );
 }
 
-Widget bottomTextAppBar(Widget firstText,Widget secondText,{marginHorizontal=20}){
+Widget bottomTextAppBar(Widget firstText, Widget secondText,
+    {marginHorizontal = 20}) {
   return PreferredSize(
     preferredSize: Size(
       ScreenUtil().setWidth(318),
@@ -158,7 +194,7 @@ Widget bottomText(String text, {double size = 18, Color color = Colors.white}) {
   );
 }
 
-Widget backButton(BuildContext context){
+Widget backButton(BuildContext context) {
   return InkWell(
     onTap: () {
       Navigator.of(context).pop();

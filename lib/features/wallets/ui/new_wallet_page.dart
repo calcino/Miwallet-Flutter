@@ -10,6 +10,7 @@ import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:fluttermiwallet/utils/widgets/error_widget.dart';
+import 'package:fluttermiwallet/utils/widgets/switch_box_row_widget.dart';
 import 'package:provider/provider.dart';
 
 class AddWalletPage extends StatefulWidget {
@@ -64,8 +65,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 360, height: 640);
@@ -103,7 +102,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
             childWidget: chooseBottomSheet(_accountNameSelected),
             onPressed: () {
               setState(() {
-                _isChoosedAccount =false;
+                _isChoosedAccount = false;
               });
               showModalBottomSheetWidget(
                 context,
@@ -129,7 +128,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
             childWidget: chooseBottomSheet(_bankNameSelected),
             onPressed: () {
               setState(() {
-                _isChoosedBank= false;
+                _isChoosedBank = false;
               });
               showModalBottomSheetWidget(
                 context,
@@ -150,16 +149,33 @@ class _AddWalletPageState extends State<AddWalletPage> {
             label: Strings.description,
             marginBottom: 0,
             height: 84,
-            childWidget: descTextField((controller) => _descController = controller),
+            childWidget:
+                descTextField((controller) => _descController = controller),
           ),
-          switchBoxRow(Strings.savingsAccount, _isSaving,
-              onChanged: (bool) => setState(() {
-                    _isSaving = !_isSaving;
-                  })),
-          switchBoxRow(Strings.showInTotalBalance, _isShowing,
-              onChanged: (bool) => setState(() {
-                    _isShowing = !_isShowing;
-                  })),
+          boxRow(
+            Strings.savingsAccount,
+            secondWidget: CupertinoSwitch(
+              activeColor: ColorRes.blueColor,
+              value: _isSaving,
+              onChanged: (bool) => setState(
+                () {
+                  _isSaving = !_isSaving;
+                },
+              ),
+            ),
+          ),
+          boxRow(
+            Strings.showInTotalBalance,
+            secondWidget: CupertinoSwitch(
+              activeColor: ColorRes.blueColor,
+              value: _isShowing,
+              onChanged: (bool) => setState(
+                () {
+                  _isShowing = !_isShowing;
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -208,30 +224,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   ),
                 );
               }),
-        ],
-      ),
-    );
-  }
-
-  Widget switchBoxRow(String text, bool value, {Function onChanged}) {
-    return Padding(
-      padding: EdgeInsets.only(
-        right: ScreenUtil().setWidth(27),
-        left: ScreenUtil().setWidth(37),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            text,
-            style: TextStyle(
-                fontSize: ScreenUtil().setSp(14), color: ColorRes.blueColor),
-          ),
-          CupertinoSwitch(
-            activeColor: ColorRes.blueColor,
-            value: value,
-            onChanged: onChanged,
-          ),
         ],
       ),
     );

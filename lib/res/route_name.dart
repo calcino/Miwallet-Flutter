@@ -10,4 +10,6 @@ class RouteName {
   static const walletPage = 'walletPage';
   static const historyPage = 'historyPage';
   static const settingsPage = 'settingsPage';
+  static const aboutUsPage = 'aboutUsPage';
+  static const backUpPage = 'backUpPage';
 }

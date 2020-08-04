@@ -103,7 +103,9 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `AccountTransaction` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `accountId` INTEGER, `amount` REAL, `dateTime` TEXT, `receiptImagePath` TEXT, `categoryId` INTEGER, `subcategoryId` INTEGER, `createdDateTime` TEXT, `isIncome` INTEGER, FOREIGN KEY (`accountId`) REFERENCES `Account` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`categoryId`) REFERENCES `Category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`subcategoryId`) REFERENCES `Subcategory` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
         await database.execute(
-            '''CREATE VIEW IF NOT EXISTS `AccountTransactionView` AS SELECT AccountTransaction.id AS accountTransactionId, AccountTransaction.accountId AS accountId, AccountTransaction.categoryId AS categoryId, AccountTransaction.subcategoryId AS subcategoryId, AccountTransaction.dateTime AS dateTime, AccountTransaction.isIncome AS isIncome, AccountTransaction.amount AS amount, AccountTransaction.receiptImagePath AS receiptImagePath, Account.name AS accountName, Subcategory.name AS subcategoryName, Category.name AS categoryName FROM AccountTransaction JOIN Category ON AccountTransaction.categoryId = Category.id JOIN Subcategory ON AccountTransaction.subcategoryId = Subcategory.id JOIN Account ON AccountTransaction.accountId = Account.id ''');
+            '''CREATE VIEW IF NOT EXISTS `AccountTransactionView` AS SELECT AccountTransaction.id AS accountTransactionId, AccountTransaction.accountId AS accountId, AccountTransaction.categoryId AS categoryId, AccountTransaction.subcategoryId AS subcategoryId, AccountTransaction.dateTime AS dateTime, AccountTransaction.isIncome AS isIncome, AccountTransaction.amount AS amount, AccountTransaction.receiptImagePath AS receiptImagePath, Account.name AS accountName, Subcategory.name AS subcategoryName, Category.name AS categoryName, Category.hexColor AS categoryHexColor FROM AccountTransaction JOIN Category ON AccountTransaction.categoryId = Category.id JOIN Subcategory ON AccountTransaction.subcategoryId = Subcategory.id JOIN Account ON AccountTransaction.accountId = Account.id ''');
+        await database.execute(
+            '''CREATE VIEW IF NOT EXISTS `TransactionGroupedByCategory` AS SELECT categoryId,dateTime,categoryHexColor, sum(amount) as amountSum FROM AccountTransactionView GROUP BY categoryId''');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -556,7 +558,15 @@ class _$AccountTransactionDao extends AccountTransactionDao {
           receiptImagePath: row['receiptImagePath'] as String,
           accountName: row['accountName'] as String,
           subcategoryName: row['subcategoryName'] as String,
-          categoryName: row['categoryName'] as String);
+          categoryName: row['categoryName'] as String,
+          categoryHexColor: row['categoryHexColor'] as String);
+
+  static final _transactionGroupedByCategoryMapper =
+      (Map<String, dynamic> row) => TransactionGroupedByCategory(
+          row['categoryId'] as int,
+          row['amountSum'] as double,
+          row['categoryHexColor'] as String,
+          row['dateTime'] as String);
 
   final InsertionAdapter<AccountTransaction>
       _accountTransactionInsertionAdapter;
@@ -577,6 +587,17 @@ class _$AccountTransactionDao extends AccountTransactionDao {
         queryableName: 'AccountTransactionView',
         isView: true,
         mapper: _accountTransactionViewMapper);
+  }
+
+  @override
+  Stream<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
+      String fromDate, String toDate) {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM TransactionGroupedByCategory WHERE dateTime > ? AND dateTime < ?',
+        arguments: <dynamic>[fromDate, toDate],
+        queryableName: 'TransactionGroupedByCategory',
+        isView: true,
+        mapper: _transactionGroupedByCategoryMapper);
   }
 
   @override

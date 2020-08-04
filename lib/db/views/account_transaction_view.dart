@@ -12,7 +12,8 @@ import 'package:flutter/cupertino.dart';
     'AccountTransaction.receiptImagePath AS receiptImagePath, '
     'Account.name AS accountName, '
     'Subcategory.name AS subcategoryName, '
-    'Category.name AS categoryName '
+    'Category.name AS categoryName, '
+    'Category.hexColor AS categoryHexColor '
     'FROM AccountTransaction '
     'JOIN Category ON AccountTransaction.categoryId = Category.id '
     'JOIN Subcategory ON AccountTransaction.subcategoryId = Subcategory.id '
@@ -30,6 +31,7 @@ class AccountTransactionView {
   final String accountName;
   final String subcategoryName;
   final String categoryName;
+  final String categoryHexColor;
 
   AccountTransactionView(
       {@required this.accountTransactionId,
@@ -43,6 +45,7 @@ class AccountTransactionView {
       @required this.accountName,
       @required this.subcategoryName,
       @required this.categoryName,
+      @required this.categoryHexColor,
       });
 
   @override
@@ -60,6 +63,7 @@ class AccountTransactionView {
     accountName: $accountName ,
     subcategoryName: $subcategoryName ,
     categoryName: $categoryName ,
+    categoryHexColor: $categoryHexColor ,
     }\n''';
   }
 }

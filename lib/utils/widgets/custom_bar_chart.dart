@@ -9,12 +9,12 @@ import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as element;
 import 'package:intl/intl.dart';
 
-class LegendOptions extends StatelessWidget {
+class CustomBarChart extends StatelessWidget {
   List<charts.Series> seriesList;
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
   final bool animate;
 
-  LegendOptions(List<AccountTransactionView> transactionViewList,
+  CustomBarChart(List<AccountTransactionView> transactionViewList,
       {this.animate = true}) {
     this.seriesList = _createChartSeries(transactionViewList);
   }

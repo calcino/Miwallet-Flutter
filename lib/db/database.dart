@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
+import 'package:fluttermiwallet/db/views/transaction_grouped_by_category.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'dao/account_dao.dart';
@@ -25,9 +26,10 @@ part 'database.g.dart'; // the generated code will be there
   Category,
   Subcategory,
   Transfer,
-  AccountTransaction
+  AccountTransaction,
 ], views: [
-  AccountTransactionView
+  AccountTransactionView,
+  TransactionGroupedByCategory
 ])
 abstract class AppDatabase extends FloorDatabase {
   AccountDao get accountDao;

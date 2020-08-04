@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
 import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
+import 'package:fluttermiwallet/db/views/transaction_grouped_by_category.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
@@ -11,8 +12,8 @@ import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/custom_paint/custom_rock_painter.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 import 'package:fluttermiwallet/utils/logger/logger.dart';
-import 'package:fluttermiwallet/utils/widgets/auto_label.dart';
-import 'package:fluttermiwallet/utils/widgets/series_legend_options.dart';
+import 'package:fluttermiwallet/utils/widgets/donut_auto_label_chart.dart';
+import 'package:fluttermiwallet/utils/widgets/custom_bar_chart.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
     //_provider.insertFakeAccount();
     //_provider.insertFakeTransfer();
     //_provider.insertFakeAccountTransactions();
+    _provider.getAllTransactionGroupedByCategoryId();
 
     //_provider.getCategories();
     //_provider.getSubcategories();
@@ -176,7 +178,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _transactionList() {
     return Selector<DashboardProvider, List<AccountTransactionView>>(
       selector: (ctx, provider) => provider.transactions,
-      builder: (ctx,List<AccountTransactionView> transactions, child) {
+      builder: (ctx, List<AccountTransactionView> transactions, child) {
         return SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -190,7 +192,9 @@ class _DashboardPageState extends State<DashboardPage> {
               ..add(transactions.isEmpty
                   ? Container()
                   : _chartContainer(transactions))
-              ..add(transactions.isEmpty ? _emptyWidget() : _piChartContainer())
+              ..add(transactions.isEmpty
+                  ? _emptyWidget()
+                  : _piChartContainer())
               ..addAll(transactions.map<Widget>(
                   (AccountTransactionView transaction) =>
                       _IncomeExpensePercentHistory(transaction))),
@@ -206,7 +210,7 @@ class _DashboardPageState extends State<DashboardPage> {
       height: ScreenUtil().setWidth(200),
       width: ScreenUtil().setWidth(300),
       alignment: Alignment.center,
-      child: LegendOptions(transactions),
+      child: CustomBarChart(transactions),
     );
   }
 
@@ -216,7 +220,14 @@ class _DashboardPageState extends State<DashboardPage> {
       height: ScreenUtil().setWidth(200),
       width: ScreenUtil().setWidth(200),
       alignment: Alignment.center,
-      child: DonutAutoLabelChart.withSampleData(),
+      child: Selector<DashboardProvider, List<TransactionGroupedByCategory>>(
+          selector: (_, provider) => provider.transactionsGroupedByCategory,
+          builder: (ctx, list, child) {
+            if (list == null || list.isEmpty)
+              return Container();
+            else
+              return DonutAutoLabelChart(list);
+          }),
     );
   }
 

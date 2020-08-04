@@ -4,7 +4,7 @@ import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/db/entity/category.dart';
 import 'package:fluttermiwallet/db/entity/subcategory.dart';
 
-@Entity(tableName: 'AccountTransaction',foreignKeys: [
+@Entity(tableName: 'AccountTransaction', foreignKeys: [
   ForeignKey(
       childColumns: ['accountId'], parentColumns: ['id'], entity: Account),
   ForeignKey(
@@ -23,19 +23,18 @@ class AccountTransaction {
   final String receiptImagePath;
   final int categoryId;
   final int subcategoryId;
-  final String createdDateTime;
+  final String createdDateTime = DateTime.now().toIso8601String();
   final bool isIncome;
 
   AccountTransaction(
       {this.id,
-        @required this.accountId,
-        @required this.amount,
-        @required this.dateTime,
-        @required this.receiptImagePath,
-        @required this.categoryId,
-        @required this.subcategoryId,
-        @required this.createdDateTime,
-        @required this.isIncome});
+      @required this.accountId,
+      @required this.amount,
+      @required this.dateTime,
+      @required this.receiptImagePath,
+      @required this.categoryId,
+      @required this.subcategoryId,
+      @required this.isIncome});
 
   @override
   String toString() {

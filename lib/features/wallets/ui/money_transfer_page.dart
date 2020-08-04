@@ -48,7 +48,6 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
           amount: _amount,
           dateTime: "${DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute)}",
           descriptions: _descController.text,
-          createdDateTime: DateTime.now().toIso8601String(),
         ),
       );
     }

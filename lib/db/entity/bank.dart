@@ -6,9 +6,9 @@ class Bank {
   @PrimaryKey(autoGenerate: true)
   final int id;
   final String name;
-  final String createdDateTime;
+  final String createdDateTime = DateTime.now().toIso8601String();
 
-  Bank({this.id, @required this.name, @required this.createdDateTime});
+  Bank({this.id, @required this.name});
 
   @override
   String toString() {

@@ -94,9 +94,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Bank` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `createdDateTime` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `imagePath` TEXT, `createdDateTime` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `hexColor` TEXT, `createdDateTime` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Subcategory` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryId` INTEGER, `name` TEXT, `imagePath` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`categoryId`) REFERENCES `Category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `Subcategory` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryId` INTEGER, `name` TEXT, `hexColor` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`categoryId`) REFERENCES `Category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Transfer` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `sourceAccountId` INTEGER, `destinationAccountId` INTEGER, `amount` REAL, `dateTime` TEXT, `descriptions` TEXT, `createdDateTime` TEXT, FOREIGN KEY (`sourceAccountId`) REFERENCES `Account` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`destinationAccountId`) REFERENCES `Account` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
@@ -184,8 +184,7 @@ class _$AccountDao extends AccountDao {
       bankId: row['bankId'] as int,
       name: row['name'] as String,
       balance: row['balance'] as double,
-      descriptions: row['descriptions'] as String,
-      createdDateTime: row['createdDateTime'] as String);
+      descriptions: row['descriptions'] as String);
 
   final InsertionAdapter<Account> _accountInsertionAdapter;
 
@@ -246,10 +245,8 @@ class _$BankDao extends BankDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _bankMapper = (Map<String, dynamic> row) => Bank(
-      id: row['id'] as int,
-      name: row['name'] as String,
-      createdDateTime: row['createdDateTime'] as String);
+  static final _bankMapper = (Map<String, dynamic> row) =>
+      Bank(id: row['id'] as int, name: row['name'] as String);
 
   final InsertionAdapter<Bank> _bankInsertionAdapter;
 
@@ -289,7 +286,7 @@ class _$CategoryDao extends CategoryDao {
             (Category item) => <String, dynamic>{
                   'id': item.id,
                   'name': item.name,
-                  'imagePath': item.imagePath,
+                  'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
                 },
             changeListener),
@@ -300,7 +297,7 @@ class _$CategoryDao extends CategoryDao {
             (Category item) => <String, dynamic>{
                   'id': item.id,
                   'name': item.name,
-                  'imagePath': item.imagePath,
+                  'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
                 },
             changeListener);
@@ -314,8 +311,7 @@ class _$CategoryDao extends CategoryDao {
   static final _categoryMapper = (Map<String, dynamic> row) => Category(
       id: row['id'] as int,
       name: row['name'] as String,
-      imagePath: row['imagePath'] as String,
-      createdDateTime: row['createdDateTime'] as String);
+      hexColor: row['hexColor'] as String);
 
   final InsertionAdapter<Category> _categoryInsertionAdapter;
 
@@ -357,7 +353,7 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'id': item.id,
                   'categoryId': item.categoryId,
                   'name': item.name,
-                  'imagePath': item.imagePath,
+                  'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
                 },
             changeListener),
@@ -369,7 +365,7 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'id': item.id,
                   'categoryId': item.categoryId,
                   'name': item.name,
-                  'imagePath': item.imagePath,
+                  'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
                 },
             changeListener);
@@ -384,8 +380,7 @@ class _$SubcategoryDao extends SubcategoryDao {
       id: row['id'] as int,
       categoryId: row['categoryId'] as int,
       name: row['name'] as String,
-      imagePath: row['imagePath'] as String,
-      createdDateTime: row['createdDateTime'] as String);
+      hexColor: row['hexColor'] as String);
 
   final InsertionAdapter<Subcategory> _subcategoryInsertionAdapter;
 
@@ -461,8 +456,7 @@ class _$TransferDao extends TransferDao {
       destinationAccountId: row['destinationAccountId'] as int,
       amount: row['amount'] as double,
       dateTime: row['dateTime'] as String,
-      descriptions: row['descriptions'] as String,
-      createdDateTime: row['createdDateTime'] as String);
+      descriptions: row['descriptions'] as String);
 
   final InsertionAdapter<Transfer> _transferInsertionAdapter;
 
@@ -546,7 +540,6 @@ class _$AccountTransactionDao extends AccountTransactionDao {
           receiptImagePath: row['receiptImagePath'] as String,
           categoryId: row['categoryId'] as int,
           subcategoryId: row['subcategoryId'] as int,
-          createdDateTime: row['createdDateTime'] as String,
           isIncome:
               row['isIncome'] == null ? null : (row['isIncome'] as int) != 0);
 

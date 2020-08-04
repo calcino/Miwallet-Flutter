@@ -21,7 +21,7 @@ class AddTransactionProvider with ChangeNotifier {
   void insertAccount() async {
 //    await _db.accountDao.insertAccount(account);
         await _db.accountDao.insertAccount(
-      Account(id: 1,bankId: 1, name: "my acc", balance: 1000, descriptions: "chettori", createdDateTime: DateTime.now().toIso8601String()),
+      Account(id: 1,bankId: 1, name: "my acc", balance: 1000, descriptions: "chettori"),
     );
     notifyListeners();
   }

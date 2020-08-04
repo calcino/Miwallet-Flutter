@@ -17,6 +17,7 @@
 /// the middle.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
+
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
@@ -66,30 +67,20 @@ class DonutAutoLabelChart extends StatelessWidget {
       )
     ];
   }
+
   // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(seriesList,
         animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
-        //
-        // [ArcLabelDecorator] will automatically position the label inside the
-        // arc if the label will fit. If the label will not fit, it will draw
-        // outside of the arc with a leader line. Labels can always display
-        // inside or outside using [LabelPosition].
-        //
-        // Text style for inside / outside can be controlled independently by
-        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
-        //
-        // Example configuring different styles for inside/outside:
-        //       new charts.ArcLabelDecorator(
-        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
         defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 60,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
+            strokeWidthPx: 0,
+            arcWidth: 40,
+            arcRendererDecorators: [
+              new charts.ArcLabelDecorator(
+                  labelPosition: charts.ArcLabelPosition.auto)
+            ]));
   }
 
   /// Create one series with sample hard coded data.
@@ -106,9 +97,10 @@ class DonutAutoLabelChart extends StatelessWidget {
         id: 'Sales',
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
+        colorFn: (LinearSales sales, _) =>
+            charts.ColorUtil.fromDartColor(Colors.red),
         data: data,
-        // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
+        labelAccessorFn: (LinearSales row, _) => '${row.sales}',
       )
     ];
   }

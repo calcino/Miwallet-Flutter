@@ -68,7 +68,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               receiptImagePath: _imageFile.toString(),
               categoryId: catId,
               subcategoryId: subId,
-              createdDateTime: DateTime.now().toIso8601String(),
               isIncome: widget._isIncome),
         );
         Navigator.of(context).pop();
@@ -363,16 +362,14 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     ? _provider.insertCategory(
                   Category(
                     name: _nameController.text,
-                    imagePath: "null",
-                    createdDateTime: DateTime.now().toIso8601String(),
+                    hexColor: "#ffff00",
                   ),
                 )
                     : _provider.insertSubCategory(
                   Subcategory(
                     categoryId: 1,
                     name: _nameController.text,
-                    imagePath: "null",
-                    createdDateTime: DateTime.now().toIso8601String(),
+                    hexColor: "#00ffff",
                   ),
                 );
               }),

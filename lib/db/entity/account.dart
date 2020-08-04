@@ -12,15 +12,14 @@ class Account {
   final String name;
   final double balance;
   final String descriptions;
-  final String createdDateTime;
+  final String createdDateTime = DateTime.now().toIso8601String();
 
   Account(
       {this.id,
       @required this.bankId,
       @required this.name,
       @required this.balance,
-      @required this.descriptions,
-      @required this.createdDateTime});
+      @required this.descriptions});
 
   @override
   String toString() {

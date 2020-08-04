@@ -213,8 +213,8 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _piChartContainer() {
     return Container(
       margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
-      height: ScreenUtil().setWidth(120),
-      width: ScreenUtil().setWidth(120),
+      height: ScreenUtil().setWidth(200),
+      width: ScreenUtil().setWidth(200),
       alignment: Alignment.center,
       child: DonutAutoLabelChart.withSampleData(),
     );

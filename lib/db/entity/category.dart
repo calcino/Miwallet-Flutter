@@ -6,17 +6,13 @@ class Category {
   @PrimaryKey(autoGenerate: true)
   final int id;
   final String name;
-  final String imagePath;
-  final String createdDateTime;
+  final String hexColor;
+  final String createdDateTime = DateTime.now().toIso8601String();
 
-  Category(
-      {this.id,
-      @required this.name,
-      @required this.imagePath,
-      @required this.createdDateTime});
+  Category({this.id, @required this.name, @required this.hexColor});
 
   @override
   String toString() {
-    return 'Category: {id: $id,name: $name, createdDateTime: $createdDateTime}';
+    return 'Category: {id: $id,name: $name,hexColor: $hexColor, createdDateTime: $createdDateTime}';
   }
 }

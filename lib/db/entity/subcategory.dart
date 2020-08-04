@@ -12,19 +12,18 @@ class Subcategory {
 
   final int categoryId;
   final String name;
-  final String imagePath;
-  final String createdDateTime;
+  final String hexColor;
+  final String createdDateTime = DateTime.now().toIso8601String();
 
   Subcategory(
       {this.id,
       @required this.categoryId,
       @required this.name,
-      @required this.imagePath,
-      @required this.createdDateTime});
+      @required this.hexColor});
 
   @override
   String toString() {
     return 'Subcategory: {id: $id, categoryId: $categoryId, name: $name,'
-        'imagePath: $imagePath, createdDateTime: $createdDateTime}';
+        'hexColor: $hexColor, createdDateTime: $createdDateTime}';
   }
 }

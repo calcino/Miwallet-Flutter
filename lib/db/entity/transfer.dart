@@ -20,7 +20,7 @@ class Transfer {
   final double amount;
   final String dateTime;
   final String descriptions;
-  final String createdDateTime;
+  final String createdDateTime = DateTime.now().toIso8601String();
 
   Transfer(
       {this.id,
@@ -28,8 +28,7 @@ class Transfer {
       @required this.destinationAccountId,
       @required this.amount,
       @required this.dateTime,
-      @required this.descriptions,
-      @required this.createdDateTime});
+      @required this.descriptions});
 
   @override
   String toString() {

@@ -47,7 +47,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
           name: _accountNameSelected,
           balance: _amount,
           descriptions: _descController.text,
-          createdDateTime: DateTime.now().toIso8601String(),
         ),
       );
       Navigator.of(context).pop();

@@ -19,14 +19,10 @@ class WalletsProvider with ChangeNotifier {
   WalletsProvider(this._db);
 
   void insertFakeBank() async {
-    _db.bankDao.insertBank(Bank(
-        name: "saderat", createdDateTime: DateTime.now().toIso8601String()));
-    _db.bankDao.insertBank(Bank(
-        name: "parsian", createdDateTime: DateTime.now().toIso8601String()));
-    _db.bankDao.insertBank(Bank(
-        name: "pasargad", createdDateTime: DateTime.now().toIso8601String()));
-    _db.bankDao.insertBank(Bank(
-        name: "ayande", createdDateTime: DateTime.now().toIso8601String()));
+    _db.bankDao.insertBank(Bank(name: "saderat"));
+    _db.bankDao.insertBank(Bank(name: "parsian"));
+    _db.bankDao.insertBank(Bank(name: "pasargad"));
+    _db.bankDao.insertBank(Bank(name: "ayande"));
   }
 
   void insertAccount(Account account) async {

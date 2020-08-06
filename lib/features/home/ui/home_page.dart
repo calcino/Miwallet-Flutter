@@ -9,6 +9,7 @@ import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:intl/intl.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:provider/provider.dart';
@@ -51,29 +52,41 @@ class _HomePageState extends State<HomePage>
     return TabBarView(
       children: [
         HistoryList(
-          fromDate: DateTime(currentDateTime.year, currentDateTime.month, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month, 31),
+            dateRange: DateRange(
+          from: DateTime(currentDateTime.year, currentDateTime.month, 1)
+              .toIso8601String(),
+          to: DateTime(currentDateTime.year, currentDateTime.month, 31)
+              .toIso8601String(),
+        )),
+        HistoryList(
+            dateRange: DateRange(
+          from: DateTime(currentDateTime.year, currentDateTime.month - 1, 1)
+              .toIso8601String(),
+          to: DateTime(currentDateTime.year, currentDateTime.month - 1, 31)
+              .toIso8601String(),
+        )),
+        HistoryList(
+          dateRange: DateRange(
+              from: DateTime(currentDateTime.year, currentDateTime.month - 2, 1)
+                  .toIso8601String(),
+              to: DateTime(currentDateTime.year, currentDateTime.month - 2, 31)
+                  .toIso8601String()),
         ),
         HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 1, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 1, 31),
-        ),
+            dateRange: DateRange(
+          from: DateTime(currentDateTime.year, currentDateTime.month - 3, 1)
+              .toIso8601String(),
+          to: DateTime(currentDateTime.year, currentDateTime.month - 3, 31)
+              .toIso8601String(),
+        )),
         HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 2, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 2, 31),
-        ),
-        HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 3, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 3, 31),
-        ),
-        HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 4, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 4, 31),
-        ),
+            dateRange: DateRange(
+                from:
+                    DateTime(currentDateTime.year, currentDateTime.month - 4, 1)
+                        .toIso8601String(),
+                to: DateTime(
+                        currentDateTime.year, currentDateTime.month - 4, 31)
+                    .toIso8601String())),
       ],
       controller: _tabController,
     );
@@ -158,14 +171,26 @@ class _HomePageState extends State<HomePage>
 
     var childButtons = List<UnicornButton>();
 
-    childButtons
-        .add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {
-      Navigator.pushNamed(context, RouteName.addTransactionPage,arguments: false);
-    },),);
-    childButtons
-        .add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {
-      Navigator.pushNamed(context, RouteName.addTransactionPage,arguments: true);
-    },),);
+    childButtons.add(
+      _createUnicornButton(
+        Strings.expense,
+        Icons.arrow_upward,
+        () {
+          Navigator.pushNamed(context, RouteName.addTransactionPage,
+              arguments: false);
+        },
+      ),
+    );
+    childButtons.add(
+      _createUnicornButton(
+        Strings.income,
+        Icons.arrow_downward,
+        () {
+          Navigator.pushNamed(context, RouteName.addTransactionPage,
+              arguments: true);
+        },
+      ),
+    );
 
     return UnicornDialer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),

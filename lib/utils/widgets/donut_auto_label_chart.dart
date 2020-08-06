@@ -49,6 +49,11 @@ class DonutAutoLabelChart extends StatelessWidget {
   static List<charts.Series<TransactionGroupedByCategory, int>>
       _convertTransactionsToSeries(
           List<TransactionGroupedByCategory> transactions) {
+    double totalAmount = 0.0;
+    transactions.forEach((element) {
+      totalAmount += element.amountSum;
+    });
+
     return [
       new charts.Series<TransactionGroupedByCategory, int>(
         id: 'Transactions',
@@ -59,7 +64,8 @@ class DonutAutoLabelChart extends StatelessWidget {
         colorFn: (TransactionGroupedByCategory history, _) =>
             charts.Color.fromHex(code: history.categoryHexColor),
         data: transactions,
-        labelAccessorFn: (TransactionGroupedByCategory history, _) => '29%',
+        labelAccessorFn: (TransactionGroupedByCategory history, _) =>
+            ((history.amountSum / totalAmount) * 100).toStringAsFixed(1)+'%',
       )
     ];
   }

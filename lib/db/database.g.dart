@@ -105,7 +105,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             '''CREATE VIEW IF NOT EXISTS `AccountTransactionView` AS SELECT AccountTransaction.id AS accountTransactionId, AccountTransaction.accountId AS accountId, AccountTransaction.categoryId AS categoryId, AccountTransaction.subcategoryId AS subcategoryId, AccountTransaction.dateTime AS dateTime, AccountTransaction.isIncome AS isIncome, AccountTransaction.amount AS amount, AccountTransaction.receiptImagePath AS receiptImagePath, Account.name AS accountName, Subcategory.name AS subcategoryName, Category.name AS categoryName, Category.hexColor AS categoryHexColor FROM AccountTransaction JOIN Category ON AccountTransaction.categoryId = Category.id JOIN Subcategory ON AccountTransaction.subcategoryId = Subcategory.id JOIN Account ON AccountTransaction.accountId = Account.id ''');
         await database.execute(
-            '''CREATE VIEW IF NOT EXISTS `TransactionGroupedByCategory` AS SELECT categoryId,dateTime,categoryHexColor, sum(amount) as amountSum FROM AccountTransactionView GROUP BY categoryId''');
+            '''CREATE VIEW IF NOT EXISTS `TransactionGroupedByCategory` AS SELECT categoryId,isIncome,categoryName,dateTime,categoryHexColor, sum(amount) as amountSum FROM AccountTransactionView GROUP BY categoryId''');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -566,7 +566,9 @@ class _$AccountTransactionDao extends AccountTransactionDao {
           row['categoryId'] as int,
           row['amountSum'] as double,
           row['categoryHexColor'] as String,
-          row['dateTime'] as String);
+          row['dateTime'] as String,
+          row['isIncome'] == null ? null : (row['isIncome'] as int) != 0,
+          row['categoryName'] as String);
 
   final InsertionAdapter<AccountTransaction>
       _accountTransactionInsertionAdapter;
@@ -582,7 +584,7 @@ class _$AccountTransactionDao extends AccountTransactionDao {
   @override
   Stream<List<AccountTransactionView>> findAll(String fromDate, String toDate) {
     return _queryAdapter.queryListStream(
-        'SELECT * FROM AccountTransactionView WHERE dateTime > ? AND dateTime < ?',
+        'SELECT * FROM AccountTransactionView WHERE dateTime >= ? AND dateTime <= ?',
         arguments: <dynamic>[fromDate, toDate],
         queryableName: 'AccountTransactionView',
         isView: true,
@@ -591,10 +593,10 @@ class _$AccountTransactionDao extends AccountTransactionDao {
 
   @override
   Stream<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
-      String fromDate, String toDate) {
+      String fromDate, String toDate, String isIncome) {
     return _queryAdapter.queryListStream(
-        'SELECT * FROM TransactionGroupedByCategory WHERE dateTime > ? AND dateTime < ?',
-        arguments: <dynamic>[fromDate, toDate],
+        'SELECT * FROM TransactionGroupedByCategory WHERE dateTime >= ? AND dateTime <= ? AND isIncome = ?',
+        arguments: <dynamic>[fromDate, toDate, isIncome],
         queryableName: 'TransactionGroupedByCategory',
         isView: true,
         mapper: _transactionGroupedByCategoryMapper);

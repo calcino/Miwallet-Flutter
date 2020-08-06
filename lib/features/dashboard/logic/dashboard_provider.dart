@@ -8,6 +8,7 @@ import 'package:fluttermiwallet/db/entity/subcategory.dart';
 import 'package:fluttermiwallet/db/entity/transfer.dart';
 import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/db/views/transaction_grouped_by_category.dart';
+import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/logger/logger.dart';
 
 class DashboardProvider extends ChangeNotifier {
@@ -16,15 +17,16 @@ class DashboardProvider extends ChangeNotifier {
   double totalIncome = 0;
   double totalBalance = 0;
   List<AccountTransactionView> transactions = [];
-  List<TransactionGroupedByCategory> transactionsGroupedByCategory = [];
+  List<TransactionGroupedByCategory> totalExpensesGroupedByCategory = [];
   bool isLoading = false;
 
   DashboardProvider(this._db);
 
-  void getAccountTransactions({String startDate = '1000-01-20 00:00:00.000',
-    String endDate = '9000-01-20 00:00:00.000'}) async {
+  void getAccountTransactions({DateRange dateRange = const DateRange()}) async {
     isLoading = true;
-    _db.accountTransactionDao.findAll(startDate, endDate).listen((event) {
+    _db.accountTransactionDao
+        .findAll(dateRange.from, dateRange.to)
+        .listen((event) {
       totalIncome = 0;
       totalExpense = 0;
       transactions = event;
@@ -40,10 +42,12 @@ class DashboardProvider extends ChangeNotifier {
     });
   }
 
-  void getAllTransactionGroupedByCategoryId({String startDate = '1000-01-20 00:00:00.000',
-    String endDate = '9000-01-20 00:00:00.000'}) {
-    _db.accountTransactionDao.findAllGroupedByCategoryId(startDate, endDate).listen((event) {
-      transactionsGroupedByCategory = event;
+  void getTotalExpensesGroupedByCategoryId(
+      {DateRange dateRange = const DateRange()}) {
+    _db.accountTransactionDao
+        .findAllGroupedByCategoryId(dateRange.from, dateRange.to,'0')
+        .listen((event) {
+      totalExpensesGroupedByCategory = event;
       notifyListeners();
     });
   }
@@ -62,7 +66,7 @@ class DashboardProvider extends ChangeNotifier {
   void getTransactionView() {
     _db.accountTransactionDao
         .findAll(DateTime(2000, 1, 1).toIso8601String(),
-        DateTime.now().toIso8601String())
+            DateTime.now().toIso8601String())
         .listen((event) {
       print('fuck : ${event.length}');
     });
@@ -108,7 +112,7 @@ class DashboardProvider extends ChangeNotifier {
     for (var i = 0; i < 10; i++)
       _db.subcategoryDao
           .insertSubcategory(Subcategory(
-          categoryId: i + 1, name: "subcategory $i", hexColor: "#892052"))
+              categoryId: i + 1, name: "subcategory $i", hexColor: "#892052"))
           .then((value) => Logger.log('inserted fake subcategory $i'));
   }
 
@@ -130,13 +134,13 @@ class DashboardProvider extends ChangeNotifier {
     for (var i = 0; i < 10; i++)
       _db.accountTransactionDao
           .insertAccountTransaction(AccountTransaction(
-          accountId: i + 1,
-          amount: i * 2.400,
-          receiptImagePath: 'recipt/path',
-          categoryId: i % 2 == 0 ? 1 : 2,
-          subcategoryId: 1,
-          dateTime: DateTime(2020, i, i).toIso8601String(),
-          isIncome: i % 2 == 0))
+              accountId: i + 1,
+              amount: i * 2.400,
+              receiptImagePath: 'recipt/path',
+              categoryId: i % 2 == 0 ? 1 : 2,
+              subcategoryId: 1,
+              dateTime: DateTime(2020, i, i).toIso8601String(),
+              isIncome: i % 2 == 0))
           .then((value) => Logger.log('inserted fake account transaction $i'));
   }
 }

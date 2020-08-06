@@ -84,13 +84,13 @@ class Strings {
   static const String totalBalance = 'Total Balance';
   static const String emptyData = 'Empty Data';
   static const String dashboard = 'Dashboard';
+  static const String totalExpensesByPercentage =
+      'Total Expneses By Percentage';
 
 //array
   static const List<String> dashboardRangeOfDate = [
     'Last Week',
     'Last Month',
-    'Last 3 Months',
     'Last Year',
-    'All'
   ];
 }

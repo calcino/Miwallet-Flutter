@@ -6,6 +6,7 @@ import 'package:fluttermiwallet/features/home/logic/history_provider.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 import 'package:fluttermiwallet/utils/widgets/empty_data_widget.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
@@ -14,10 +15,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HistoryList extends StatelessWidget {
-  final DateTime fromDate, toDate;
+  final DateRange dateRange;
   HistoryProvider _historyProvider;
 
-  HistoryList({Key key, @required this.fromDate, @required this.toDate})
+  HistoryList({Key key, @required this.dateRange})
       : super(key: key);
 
   @override
@@ -25,9 +26,9 @@ class HistoryList extends StatelessWidget {
     ScreenUtil.init(width: 320, height: 640);
     final appProvider = Provider.of<AppProvider>(context, listen: false);
     _historyProvider =
-        HistoryProvider(db: appProvider.db, fromDate: fromDate, toDate: toDate);
+        HistoryProvider(db: appProvider.db);
     return StreamBuilder<List<AccountTransactionView>>(
-        stream: _historyProvider.getAllTransaction(),
+        stream: _historyProvider.getAllTransaction(dateRange: dateRange),
         initialData: null,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
@@ -64,7 +65,7 @@ class HistoryList extends StatelessWidget {
                     income: totalIncome, expense: totalExpense);
               } else {
                 var totals = _historyProvider.getTotalIncomeExpense(
-                    data, DateFormat('yyyy-MM-dd').format(dateTime));
+                    data, dateRange: dateRange);
                 var groupIncome = totals[0];
                 var groupExpense = totals[1];
                 return _HistoryHeader(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account_transaction.dart';
 import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/db/views/transaction_grouped_by_category.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
@@ -10,10 +8,12 @@ import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/custom_paint/custom_rock_painter.dart';
+import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 import 'package:fluttermiwallet/utils/logger/logger.dart';
 import 'package:fluttermiwallet/utils/widgets/donut_auto_label_chart.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_bar_chart.dart';
+import 'package:fluttermiwallet/utils/widgets/empty_dashboard.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +24,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   String _selectedRange = Strings.dashboardRangeOfDate[0];
+  DateRange _selectedDateRange = DateRange();
 
   DashboardProvider _provider;
 
@@ -32,6 +33,7 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
     var appProvider = context.read<AppProvider>();
     _provider = DashboardProvider(appProvider.db);
+    _onSelectedDateRange(_selectedRange);
   }
 
   @override
@@ -43,17 +45,16 @@ class _DashboardPageState extends State<DashboardPage> {
     //_provider.insertFakeAccount();
     //_provider.insertFakeTransfer();
     //_provider.insertFakeAccountTransactions();
-    _provider.getAllTransactionGroupedByCategoryId();
+    _provider.getTotalExpensesGroupedByCategoryId(
+        dateRange: _selectedDateRange);
 
     //_provider.getCategories();
     //_provider.getSubcategories();
     //_provider.getAllAccounts();
     //_provider.getAllBanks();
-    _provider.getAccountTransactions();
+    _provider.getAccountTransactions(dateRange: _selectedDateRange);
     //_provider.getTransfers();
     //_provider.getTransactionView();
-
-    Logger.log('dashboard build called: ${DateTime.now().toIso8601String()}');
     return ChangeNotifierProvider<DashboardProvider>(
       create: (_) => _provider,
       child: Scaffold(
@@ -100,7 +101,6 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               Consumer<DashboardProvider>(
                 builder: (ctx, provider, child) {
-                  Logger.log('total balance consumer');
                   var totalBalance =
                       provider.totalBalance.toString().split('.');
                   return Text(
@@ -138,31 +138,48 @@ class _DashboardPageState extends State<DashboardPage> {
         child: ButtonTheme(
           alignedDropdown: true,
           child: DropdownButton(
-              value: _selectedRange,
-              elevation: 8,
-              icon: Icon(
-                Icons.keyboard_arrow_down,
+            value: _selectedRange,
+            elevation: 8,
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+            ),
+            style: TextStyle(
                 color: Colors.white,
-              ),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ScreenUtil().setSp(DimenRes.smallText)),
-              items: Strings.dashboardRangeOfDate
-                  .map(
-                    (String value) => DropdownMenuItem(
-                      child: Text(value),
-                      value: value,
-                    ),
-                  )
-                  .toList(),
-              onChanged: (v) {
-                setState(() {
-                  _selectedRange = v;
-                });
-              }),
+                fontSize: ScreenUtil().setSp(DimenRes.smallText)),
+            items: Strings.dashboardRangeOfDate
+                .map(
+                  (String value) => DropdownMenuItem(
+                    child: Text(value),
+                    value: value,
+                  ),
+                )
+                .toList(),
+            onChanged: _onSelectedDateRange,
+          ),
         ),
       ),
     );
+  }
+
+  void _onSelectedDateRange(String value) {
+    String toDate = DateTime.now().toIso8601String();
+    String fromDate =
+        DateTime.now().subtract(Duration(days: 730)).toIso8601String();
+    if (Strings.dashboardRangeOfDate[0] == value) {
+      fromDate = DateTime.now().subtract(Duration(days: 7)).toIso8601String();
+    } else if (Strings.dashboardRangeOfDate[1] == value) {
+      fromDate = DateTime.now().subtract(Duration(days: 30)).toIso8601String();
+    } else if (Strings.dashboardRangeOfDate[2] == value) {
+      fromDate = DateTime.now().subtract(Duration(days: 365)).toIso8601String();
+    } else {
+      fromDate = DateTime.now().subtract(Duration(days: 730)).toIso8601String();
+    }
+
+    setState(() {
+      _selectedRange = value;
+      _selectedDateRange = DateRange(from: fromDate, to: toDate);
+    });
   }
 
   Widget _body() {
@@ -192,9 +209,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ..add(transactions.isEmpty
                   ? Container()
                   : _chartContainer(transactions))
-              ..add(transactions.isEmpty
-                  ? _emptyWidget()
-                  : _piChartContainer())
+              ..add(transactions.isEmpty  ? EmptyDashboard() : _piChartContainer())
               ..addAll(transactions.map<Widget>(
                   (AccountTransactionView transaction) =>
                       _IncomeExpensePercentHistory(transaction))),
@@ -215,53 +230,31 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _piChartContainer() {
-    return Container(
-      margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
-      height: ScreenUtil().setWidth(200),
-      width: ScreenUtil().setWidth(200),
-      alignment: Alignment.center,
-      child: Selector<DashboardProvider, List<TransactionGroupedByCategory>>(
-          selector: (_, provider) => provider.transactionsGroupedByCategory,
-          builder: (ctx, list, child) {
-            if (list == null || list.isEmpty)
-              return Container();
-            else
-              return DonutAutoLabelChart(list);
-          }),
-    );
-  }
-
-  Widget _emptyWidget() {
-    Widget _rockWidget() {
-      return Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: ScreenUtil().setHeight(300),
-            width: double.infinity,
-            child: CustomPaint(
-              painter: CustomRockPainter(),
-            ),
-          ));
-    }
-
     return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(
-          Strings.emptyData,
+          Strings.totalExpensesByPercentage,
           style: TextStyle(
               color: ColorRes.blueColor,
-              fontSize: ScreenUtil().setSp(DimenRes.largeText)),
+              fontSize: ScreenUtil().setSp(DimenRes.normalText)),
         ),
-        SizedBox(
-          height: ScreenUtil().setHeight(20),
+        Container(
+          margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
+          height: ScreenUtil().setWidth(200),
+          width: ScreenUtil().setWidth(200),
+          alignment: Alignment.center,
+          child:
+              Selector<DashboardProvider, List<TransactionGroupedByCategory>>(
+                  selector: (_, provider) =>
+                      provider.totalExpensesGroupedByCategory,
+                  builder: (ctx, list, child) {
+                    return DonutAutoLabelChart(list);
+                  }),
         ),
-        _rockWidget(),
       ],
     );
   }
+
 }
 
 class _IncomeExpensePercentHistory extends StatelessWidget {

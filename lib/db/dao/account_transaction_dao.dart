@@ -9,13 +9,13 @@ abstract class AccountTransactionDao {
   Future<AccountTransaction> findWithId(int id);
 
   @Query(
-      'SELECT * FROM AccountTransactionView WHERE dateTime > :fromDate AND dateTime < :toDate')
+      'SELECT * FROM AccountTransactionView WHERE dateTime >= :fromDate AND dateTime <= :toDate')
   Stream<List<AccountTransactionView>> findAll(String fromDate, String toDate);
 
   @Query(
-      'SELECT * FROM TransactionGroupedByCategory WHERE dateTime > :fromDate AND dateTime < :toDate')
+      'SELECT * FROM TransactionGroupedByCategory WHERE dateTime >= :fromDate AND dateTime <= :toDate AND isIncome = :isIncome')
   Stream<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
-      String fromDate, String toDate);
+      String fromDate, String toDate,String isIncome);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertAccountTransaction(AccountTransaction accountTransaction);

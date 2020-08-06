@@ -53,11 +53,7 @@ class CustomBarChart extends StatelessWidget {
         })
       ],
       behaviors: [
-        charts.SeriesLegend.customLayout(
-          CustomLegendBuilder(),
-          position: charts.BehaviorPosition.top,
-          outsideJustification: charts.OutsideJustification.start,
-        ),
+        charts.SeriesLegend(),
       ],
     );
   }
@@ -145,7 +141,8 @@ class CustomLegendBuilder extends charts.LegendContentBuilder {
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       margin: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: Color.fromARGB(e.seriesColor.a, e.seriesColor.r,
+                            e.seriesColor.g, e.seriesColor.b),
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Text(

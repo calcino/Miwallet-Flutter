@@ -107,7 +107,7 @@ class TotalIncomeExpense extends StatelessWidget {
                   '\$' +
                       '${amount.toString().split('.')[0].addSeparator()}' +
                       '.' +
-                      '${amount.toString().split('.')[1]}',
+                      '${amount.toStringAsFixed(2).split('.')[1]}',
                   style: TextStyle(color: _amountColor),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

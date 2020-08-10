@@ -9,20 +9,26 @@ import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as element;
 import 'package:intl/intl.dart';
 
-class CustomBarChart extends StatelessWidget {
-  List<charts.Series> seriesList;
+class CustomChart extends StatelessWidget {
+  List<charts.Series<dynamic, String>> _barSeriesList;
+  List<charts.Series<dynamic, DateTime>> _pointSeriesList;
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
   final bool animate;
+  final bool isPointChart;
 
-  CustomBarChart(List<AccountTransactionView> transactionViewList,
-      {this.animate = true}) {
-    this.seriesList = _createChartSeries(transactionViewList);
+  CustomChart(List<AccountTransactionView> transactionViewList,
+      {this.isPointChart = false, this.animate = true}) {
+    _createChartSeries(transactionViewList);
   }
 
   @override
   Widget build(BuildContext context) {
+    return isPointChart ? _pointChart() : _barChart();
+  }
+
+  Widget _barChart() {
     return charts.BarChart(
-      seriesList,
+      _barSeriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,
       defaultRenderer: charts.BarRendererConfig(
@@ -58,39 +64,74 @@ class CustomBarChart extends StatelessWidget {
     );
   }
 
-  static List<charts.Series<OrdinalSales, String>> _createChartSeries(
-      List<AccountTransactionView> list) {
-    List<OrdinalSales> expenseData = [];
+  Widget _pointChart() {
+    return charts.TimeSeriesChart(
+      _pointSeriesList,
+      animate: animate,
+      defaultRenderer: new charts.LineRendererConfig(),
+      customSeriesRenderers: [
+        new charts.PointRendererConfig(
+            // ID used to link series to this renderer.
+            customRendererId: 'customPoint')
+      ],
+      dateTimeFactory: const charts.LocalDateTimeFactory(),
+    );
+  }
 
-    List<OrdinalSales> incomeData = [];
+  List<charts.Series<TransactionModel, DateTime>> _createChartSeries(
+      List<AccountTransactionView> list) {
+    List<TransactionModel> expenseData = [];
+
+    List<TransactionModel> incomeData = [];
 
     list.forEach((element) {
       if (element.isIncome) {
-        incomeData.add(OrdinalSales(
-            DateFormat('MM/dd').format(DateTime.parse(element.dateTime)),
-            element.amount));
+        incomeData.add(
+            TransactionModel(DateTime.parse(element.dateTime), element.amount));
       } else {
-        expenseData.add(OrdinalSales(
-            DateFormat('MM/dd').format(DateTime.parse(element.dateTime)),
-            element.amount));
+        expenseData.add(
+            TransactionModel(DateTime.parse(element.dateTime), element.amount));
       }
     });
 
-    return [
-      charts.Series<OrdinalSales, String>(
+    _pointSeriesList = [
+      charts.Series<TransactionModel, DateTime>(
           id: 'expense',
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
+          domainFn: (TransactionModel transaction, _) => transaction.date,
+          measureFn: (TransactionModel transaction, _) => transaction.amount,
           data: expenseData,
           colorFn: (_, __) =>
               charts.ColorUtil.fromDartColor(ColorRes.orangeColor),
-          labelAccessorFn: (OrdinalSales sales, _) =>
-              'expense: ${sales.sales.toString()}',
+          labelAccessorFn: (TransactionModel transaction, _) =>
+              'expense: ${transaction.amount.toString()}',
           displayName: "Expense"),
-      charts.Series<OrdinalSales, String>(
+      charts.Series<TransactionModel, DateTime>(
         id: 'income',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
+        domainFn: (TransactionModel transaction, _) => transaction.date,
+        measureFn: (TransactionModel transaction, _) => transaction.amount,
+        data: incomeData,
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(ColorRes.blueColor),
+        displayName: "Income",
+      )..setAttribute(charts.measureAxisIdKey, secondaryMeasureAxisId),
+    ];
+
+    _barSeriesList = [
+      charts.Series<TransactionModel, String>(
+          id: 'expense',
+          domainFn: (TransactionModel transaction, _) =>
+              DateFormat('yy-MM').format(transaction.date),
+          measureFn: (TransactionModel transaction, _) => transaction.amount,
+          data: expenseData,
+          colorFn: (_, __) =>
+              charts.ColorUtil.fromDartColor(ColorRes.orangeColor),
+          labelAccessorFn: (TransactionModel transaction, _) =>
+              'expense: ${transaction.amount.toString()}',
+          displayName: "Expense"),
+      charts.Series<TransactionModel, String>(
+        id: 'income',
+        domainFn: (TransactionModel transaction, _) =>
+            DateFormat('yy-MM').format(transaction.date),
+        measureFn: (TransactionModel transaction, _) => transaction.amount,
         data: incomeData,
         colorFn: (_, __) => charts.ColorUtil.fromDartColor(ColorRes.blueColor),
         displayName: "Income",
@@ -163,9 +204,9 @@ class CustomLegendBuilder extends charts.LegendContentBuilder {
   }
 }
 
-class OrdinalSales {
-  final String year;
-  final double sales;
+class TransactionModel {
+  final DateTime date;
+  final double amount;
 
-  OrdinalSales(this.year, this.sales);
+  TransactionModel(this.date, this.amount);
 }

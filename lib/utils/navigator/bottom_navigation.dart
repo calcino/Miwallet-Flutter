@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 
-enum TabItem { home, wallet, history, dashboard, settings }
+enum TabItem { home, wallet, report, dashboard, settings }
 
 Map<TabItem, String> tabName = {
   TabItem.home: 'Home',
   TabItem.wallet: 'Wallet',
-  TabItem.history: 'History',
+  TabItem.report: 'Report',
   TabItem.dashboard: 'Dashboard',
   TabItem.settings: 'Settings',
 };
@@ -35,7 +35,7 @@ class BottomNavigation extends StatelessWidget {
       items: [
         _buildItem(tabItem: TabItem.home),
         _buildItem(tabItem: TabItem.wallet),
-        _buildItem(tabItem: TabItem.history),
+        _buildItem(tabItem: TabItem.report),
         _buildItem(tabItem: TabItem.dashboard),
         _buildItem(tabItem: TabItem.settings),
       ],
@@ -69,8 +69,8 @@ class BottomNavigation extends StatelessWidget {
       case TabItem.wallet:
         return 'assets/images/menu/ic_wallet.svg';
         break;
-      case TabItem.history:
-        return 'assets/images/menu/ic_history.svg';
+      case TabItem.report:
+        return 'assets/images/menu/ic_report.svg';
         break;
       case TabItem.dashboard:
         return 'assets/images/menu/ic_dashboard.svg';

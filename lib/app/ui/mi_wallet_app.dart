@@ -28,7 +28,7 @@ class MiWalletApp extends StatelessWidget {
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: ColorRes.blueColor.toMaterial(),
+          primaryColor: ColorRes.blueColor.toMaterial(),
           canvasColor: ColorRes.blueColor),
       home: App(),
     );
@@ -45,7 +45,7 @@ class AppState extends State<App> {
   Map<TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
     TabItem.wallet: GlobalKey<NavigatorState>(),
-    TabItem.history: GlobalKey<NavigatorState>(),
+    TabItem.report: GlobalKey<NavigatorState>(),
     TabItem.dashboard: GlobalKey<NavigatorState>(),
     TabItem.settings: GlobalKey<NavigatorState>(),
   };
@@ -81,7 +81,7 @@ class AppState extends State<App> {
         body: Stack(children: <Widget>[
           _buildOffstageNavigator(TabItem.home),
           _buildOffstageNavigator(TabItem.wallet),
-          _buildOffstageNavigator(TabItem.history),
+          _buildOffstageNavigator(TabItem.report),
           _buildOffstageNavigator(TabItem.dashboard),
           _buildOffstageNavigator(TabItem.settings),
         ]),

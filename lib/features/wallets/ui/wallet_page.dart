@@ -13,12 +13,12 @@ import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class AccountsPage extends StatefulWidget {
+class WalletPage extends StatefulWidget {
   @override
-  _AccountsPageState createState() => _AccountsPageState();
+  _WalletPageState createState() => _WalletPageState();
 }
 
-class _AccountsPageState extends State<AccountsPage> {
+class _WalletPageState extends State<WalletPage> {
   WalletsProvider _provider;
 
   @override
@@ -27,7 +27,6 @@ class _AccountsPageState extends State<AccountsPage> {
     var appProvider = context.read<AppProvider>();
     _provider = WalletsProvider(appProvider.db);
     _provider.getAllAccounts();
-
   }
 
   @override
@@ -38,12 +37,11 @@ class _AccountsPageState extends State<AccountsPage> {
         backgroundColor: Colors.white,
         appBar: _appBar(),
         body: ChangeNotifierProvider(
-          create: (ctx)=>WalletsProvider(
-              Provider.of<AppProvider>(ctx, listen: false).db),
-          builder: (_, __) {
-            return _body();
-          }
-        ),
+            create: (ctx) => WalletsProvider(
+                Provider.of<AppProvider>(ctx, listen: false).db),
+            builder: (_, __) {
+              return _body();
+            }),
       ),
     );
   }
@@ -164,10 +162,12 @@ class _AccountViewState extends State<AccountView>
               Icons.image,
               size: ScreenUtil().setWidth(31),
             ),
-            bottomText(widget._account.name, size: 12, color: ColorRes.textColor),
+            bottomText(widget._account.name,
+                size: 12, color: ColorRes.textColor),
           ),
           rowWithTwoChild(
-            bottomText("\$"+widget._account.balance.toString(), size: 12, color: ColorRes.textColor),
+            bottomText("\$" + widget._account.balance.toString(),
+                size: 12, color: ColorRes.textColor),
             Transform.rotate(
               angle: _rotateAnim.value,
               child: Icon(
@@ -198,21 +198,35 @@ class _AccountViewState extends State<AccountView>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              operatorContainer(Strings.moneyTransfer,onTap: ()=>Navigator.pushNamed(context, RouteName.moneyTransferPage,arguments: widget._account.id),),
+              operatorContainer(
+                Strings.moneyTransfer,
+                onTap: () => Navigator.pushNamed(
+                    context, RouteName.moneyTransferPage,
+                    arguments: widget._account.id),
+              ),
               VerticalDivider(
                 color: ColorRes.blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
-              operatorContainer(Strings.transactions,onTap: ()=>Navigator.pushNamed(context, RouteName.accountTransactionsPage,arguments: widget._account.id),),
+              operatorContainer(
+                Strings.transactions,
+                onTap: () => Navigator.pushNamed(
+                    context, RouteName.accountTransactionsPage,
+                    arguments: widget._account.id),
+              ),
               VerticalDivider(
                 color: ColorRes.blueColor.withOpacity(0.17),
                 width: ScreenUtil().setHeight(1),
                 indent: ScreenUtil().setHeight(1),
                 endIndent: ScreenUtil().setHeight(1),
               ),
-              operatorContainer(Strings.edit,onTap: ()=>Navigator.pushNamed(context, RouteName.addWalletPage,arguments: widget._account.id),),
+              operatorContainer(
+                Strings.edit,
+                onTap: () => Navigator.pushNamed(context, RouteName.walletPage,
+                    arguments: widget._account.id),
+              ),
             ],
           ),
         ),

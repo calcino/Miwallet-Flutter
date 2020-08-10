@@ -27,8 +27,8 @@ class TabNavigator extends StatelessWidget {
       case TabItem.wallet:
         return RouteName.walletPage;
         break;
-      case TabItem.history:
-        return RouteName.historyPage;
+      case TabItem.report:
+        return RouteName.reportPage;
         break;
       case TabItem.dashboard:
         return RouteName.dashboardPage;

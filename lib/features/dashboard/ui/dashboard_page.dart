@@ -12,7 +12,7 @@ import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 import 'package:fluttermiwallet/utils/logger/logger.dart';
 import 'package:fluttermiwallet/utils/widgets/donut_auto_label_chart.dart';
-import 'package:fluttermiwallet/utils/widgets/custom_bar_chart.dart';
+import 'package:fluttermiwallet/utils/widgets/custom_chart.dart';
 import 'package:fluttermiwallet/utils/widgets/empty_dashboard.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
 import 'package:provider/provider.dart';
@@ -209,7 +209,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ..add(transactions.isEmpty
                   ? Container()
                   : _chartContainer(transactions))
-              ..add(transactions.isEmpty  ? EmptyDashboard() : _piChartContainer())
+              ..add(transactions.isEmpty ? EmptyDashboard() : _piChartContainer())
               ..addAll(transactions.map<Widget>(
                   (AccountTransactionView transaction) =>
                       _IncomeExpensePercentHistory(transaction))),
@@ -225,7 +225,7 @@ class _DashboardPageState extends State<DashboardPage> {
       height: ScreenUtil().setWidth(200),
       width: ScreenUtil().setWidth(300),
       alignment: Alignment.center,
-      child: CustomBarChart(transactions),
+      child: CustomChart(transactions,isPointChart: false,),
     );
   }
 

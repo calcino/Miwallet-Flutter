@@ -2,6 +2,7 @@ class Strings {
   Strings._();
 
   static const String appName = 'Mi wallet';
+
   static const String income = 'Income';
   static const String expense = 'Expense';
   static const String addExpense = 'Add Expense';
@@ -86,11 +87,26 @@ class Strings {
   static const String dashboard = 'Dashboard';
   static const String totalExpensesByPercentage =
       'Total Expneses By Percentage';
+  static const String reports = 'Reports';
+  static const String byChoosingDate = 'By Choosing Date';
+  static const String averageCostPerDay = 'Average Cost Per Day';
+  static const String numberOfTransaction = 'Number Of Transactions';
+  static const String filters = 'Filters';
+  static const String choosingDate = 'Choosing Date';
+  static const String months = 'Months';
+  static const String wallets = 'Wallets';
 
 //array
   static const List<String> dashboardRangeOfDate = [
     'Last Week',
     'Last Month',
     'Last Year',
+  ];
+
+  static const List<String> filterReports = [
+    'Choosing Date',
+    'Category',
+    'Wallets',
+    'Months',
   ];
 }

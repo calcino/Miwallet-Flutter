@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/features/add_count/ui/add_transaction_screen.dart';
 import 'package:fluttermiwallet/features/dashboard/ui/dashboard_page.dart';
 import 'package:fluttermiwallet/features/home/ui/home_page.dart';
+import 'package:fluttermiwallet/features/report/report_page.dart';
 import 'package:fluttermiwallet/features/setting/ui/about_us.dart';
 import 'package:fluttermiwallet/features/setting/ui/backup_screen.dart';
 import 'package:fluttermiwallet/features/setting/ui/setting_screen.dart';
 import 'package:fluttermiwallet/features/wallets/ui/account_transaction_page.dart';
-import 'package:fluttermiwallet/features/wallets/ui/accounts_page.dart';
+import 'package:fluttermiwallet/features/wallets/ui/wallet_page.dart';
 import 'package:fluttermiwallet/features/wallets/ui/new_wallet_page.dart';
 import 'package:fluttermiwallet/features/wallets/ui/money_transfer_page.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
@@ -20,7 +21,10 @@ class Navigation {
         return MaterialPageRoute(builder: (ctx) => HomePage());
         break;
       case RouteName.accountsPage:
-        return MaterialPageRoute(builder: (ctx) => AccountsPage());
+        return MaterialPageRoute(builder: (ctx) => WalletPage());
+        break;
+        case RouteName.reportPage:
+        return MaterialPageRoute(builder: (ctx) => ReportPage());
         break;
       case RouteName.accountTransactionsPage:
         int _id = settings.arguments;
@@ -30,7 +34,11 @@ class Navigation {
         bool _isIncome = settings.arguments;
         return MaterialPageRoute(builder: (ctx) => AddTransactionPage(_isIncome));
         break;
-      case RouteName.addWalletPage:
+      case RouteName.walletPage:
+        return MaterialPageRoute(builder: (ctx) => WalletPage());
+        break;
+
+        case RouteName.addWalletPage:
         return MaterialPageRoute(builder: (ctx) => AddWalletPage());
         break;
       case RouteName.dashboardPage:

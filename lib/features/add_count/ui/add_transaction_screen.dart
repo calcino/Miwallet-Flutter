@@ -5,12 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/account_transaction.dart';
-import 'package:fluttermiwallet/db/entity/category.dart';
-import 'package:fluttermiwallet/db/entity/subcategory.dart';
 import 'package:fluttermiwallet/features/add_count/logic/add_transaction_provider.dart';
+import 'package:fluttermiwallet/repository/db/entity/account.dart';
+import 'package:fluttermiwallet/repository/db/entity/account_transaction.dart';
+import 'package:fluttermiwallet/repository/db/entity/category.dart';
+import 'package:fluttermiwallet/repository/db/entity/subcategory.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
@@ -96,9 +95,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   void initState() {
     _nameController = TextEditingController();
     _descController = TextEditingController();
-    var appProvider = context.read<AppProvider>();
-    _provider = AddTransactionProvider(appProvider.db);
-    _provider.insertAccount();
+    _provider = Provider.of<AddTransactionProvider>(context,listen: false);
     _provider.getAllAccount();
     super.initState();
   }
@@ -110,11 +107,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       height: 640,
     );
     return ChangeNotifierProvider<AddTransactionProvider>(
-      create: (ctx) =>
-          AddTransactionProvider(
-              Provider
-                  .of<AppProvider>(ctx, listen: false)
-                  .db),
+      create: (ctx) => _provider,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,

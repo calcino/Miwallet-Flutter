@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/features/home/logic/history_provider.dart';
 import 'package:fluttermiwallet/features/home/logic/home_provider.dart';
 import 'package:fluttermiwallet/features/home/ui/history_list.dart';
 import 'package:fluttermiwallet/res/colors.dart';
@@ -29,10 +27,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
-    super.initState();
-    var appProvider = context.read<AppProvider>();
-    _homeProvider = HomeProvider(appProvider.db);
+    _homeProvider = Provider.of<HomeProvider>(context,listen: false);
     _tabController = TabController(length: 5, vsync: this);
+    super.initState();
   }
 
   @override

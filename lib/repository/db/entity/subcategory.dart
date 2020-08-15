@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 import 'package:flutter/foundation.dart' hide Category;
-import 'package:fluttermiwallet/db/entity/category.dart';
+import 'category.dart';
 
 @Entity(foreignKeys: [
   ForeignKey(

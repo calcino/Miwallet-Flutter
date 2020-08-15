@@ -1,8 +1,10 @@
-import 'package:flutter/foundation.dart';
-import 'package:fluttermiwallet/db/database.dart';
+import 'package:fluttermiwallet/base/base_provider.dart';
+import 'package:fluttermiwallet/repository/repository.dart';
+import 'package:inject/inject.dart';
 
-class AppProvider with ChangeNotifier{
-  final AppDatabase db;
+class AppProvider extends BaseProvider {
 
-  AppProvider(this.db);
+  @provide
+  AppProvider(Repository repository) : super(repository);
+
 }

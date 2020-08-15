@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
+import 'account.dart';
 
 @Entity(foreignKeys: [
   ForeignKey(

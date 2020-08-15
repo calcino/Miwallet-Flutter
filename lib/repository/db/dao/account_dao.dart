@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
+import '../entity/account.dart';
 
 @dao
 abstract class AccountDao {

@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttermiwallet/db/entity/bank.dart';
+import 'bank.dart';
 
 @Entity(foreignKeys: [
   ForeignKey(childColumns: ['bankId'], parentColumns: ['id'], entity: Bank)

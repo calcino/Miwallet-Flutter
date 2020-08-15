@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account_transaction.dart';
-import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
+import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
@@ -27,8 +25,7 @@ class _AccountTransactionPageState extends State<AccountTransactionPage> {
   @override
   void initState() {
     super.initState();
-    var _appProvider = context.read<AppProvider>();
-    _provider = WalletsProvider(_appProvider.db);
+    _provider = Provider.of<WalletsProvider>(context);
     _provider.getAllTransaction();
   }
 
@@ -40,8 +37,7 @@ class _AccountTransactionPageState extends State<AccountTransactionPage> {
         backgroundColor: Colors.white,
         appBar: _appBar(context),
         body: ChangeNotifierProvider(
-            create: (_) => WalletsProvider(
-                Provider.of<AppProvider>(context, listen: false).db),
+            create: (_) => Provider.of<WalletsProvider>(context, listen: false),
             builder: (context, _) {
               return _body();
             }),

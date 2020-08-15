@@ -1,8 +1,8 @@
 import 'package:floor/floor.dart';
 import 'package:flutter/foundation.dart' hide Category;
-import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/category.dart';
-import 'package:fluttermiwallet/db/entity/subcategory.dart';
+import 'account.dart';
+import 'category.dart';
+import 'subcategory.dart';
 
 @Entity(tableName: 'AccountTransaction', foreignKeys: [
   ForeignKey(

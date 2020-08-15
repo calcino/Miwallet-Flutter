@@ -3,9 +3,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
+import 'package:fluttermiwallet/repository/db/entity/account.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -24,8 +23,7 @@ class _WalletPageState extends State<WalletPage> {
   @override
   void initState() {
     super.initState();
-    var appProvider = context.read<AppProvider>();
-    _provider = WalletsProvider(appProvider.db);
+    _provider = Provider.of<WalletsProvider>(context,listen: false);
     _provider.getAllAccounts();
   }
 
@@ -36,12 +34,7 @@ class _WalletPageState extends State<WalletPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: _appBar(),
-        body: ChangeNotifierProvider(
-            create: (ctx) => WalletsProvider(
-                Provider.of<AppProvider>(ctx, listen: false).db),
-            builder: (_, __) {
-              return _body();
-            }),
+        body: _body(),
       ),
     );
   }

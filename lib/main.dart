@@ -1,11 +1,13 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttermiwallet/db/database.dart';
 
-import 'app/ui/mi_wallet_app.dart';
+import 'di/app_component.dart';
+import 'di/provider_module.dart';
+import 'di/repository_module.dart';
+import 'di/widget_module.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final db = await $FloorAppDatabase.databaseBuilder('miwallet.db').build();
-  runApp(MiWalletApp(db: db));
+  var container = await AppComponent.create(
+      ProviderModule(), RepositoryModule(), WidgetModule());
+  runApp(container.app);
 }

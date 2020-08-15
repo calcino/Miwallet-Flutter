@@ -281,7 +281,7 @@ class _$BankDao extends BankDao {
 
 class _$CategoryDao extends CategoryDao {
   _$CategoryDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _categoryInsertionAdapter = InsertionAdapter(
             database,
             'Category',
@@ -290,8 +290,7 @@ class _$CategoryDao extends CategoryDao {
                   'name': item.name,
                   'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
-                },
-            changeListener),
+                }),
         _categoryUpdateAdapter = UpdateAdapter(
             database,
             'Category',
@@ -301,8 +300,7 @@ class _$CategoryDao extends CategoryDao {
                   'name': item.name,
                   'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -320,18 +318,15 @@ class _$CategoryDao extends CategoryDao {
   final UpdateAdapter<Category> _categoryUpdateAdapter;
 
   @override
-  Stream<List<Category>> findAll() {
-    return _queryAdapter.queryListStream('SELECT * FROM Category',
-        queryableName: 'Category', isView: false, mapper: _categoryMapper);
+  Future<List<Category>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM Category',
+        mapper: _categoryMapper);
   }
 
   @override
-  Stream<Category> findCategory(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Category WHERE id = ?',
-        arguments: <dynamic>[id],
-        queryableName: 'Category',
-        isView: false,
-        mapper: _categoryMapper);
+  Future<Category> findCategory(int id) async {
+    return _queryAdapter.query('SELECT * FROM Category WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _categoryMapper);
   }
 
   @override
@@ -347,7 +342,7 @@ class _$CategoryDao extends CategoryDao {
 
 class _$SubcategoryDao extends SubcategoryDao {
   _$SubcategoryDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _subcategoryInsertionAdapter = InsertionAdapter(
             database,
             'Subcategory',
@@ -357,8 +352,7 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'name': item.name,
                   'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
-                },
-            changeListener),
+                }),
         _subcategoryUpdateAdapter = UpdateAdapter(
             database,
             'Subcategory',
@@ -369,8 +363,7 @@ class _$SubcategoryDao extends SubcategoryDao {
                   'name': item.name,
                   'hexColor': item.hexColor,
                   'createdDateTime': item.createdDateTime
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -389,10 +382,8 @@ class _$SubcategoryDao extends SubcategoryDao {
   final UpdateAdapter<Subcategory> _subcategoryUpdateAdapter;
 
   @override
-  Stream<List<Subcategory>> findAll() {
-    return _queryAdapter.queryListStream('SELECT * FROM Subcategory',
-        queryableName: 'Subcategory',
-        isView: false,
+  Future<List<Subcategory>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM Subcategory',
         mapper: _subcategoryMapper);
   }
 
@@ -492,7 +483,7 @@ class _$TransferDao extends TransferDao {
 
 class _$AccountTransactionDao extends AccountTransactionDao {
   _$AccountTransactionDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _accountTransactionInsertionAdapter = InsertionAdapter(
             database,
             'AccountTransaction',
@@ -507,8 +498,7 @@ class _$AccountTransactionDao extends AccountTransactionDao {
                   'createdDateTime': item.createdDateTime,
                   'isIncome':
                       item.isIncome == null ? null : (item.isIncome ? 1 : 0)
-                },
-            changeListener),
+                }),
         _accountTransactionUpdateAdapter = UpdateAdapter(
             database,
             'AccountTransaction',
@@ -524,8 +514,7 @@ class _$AccountTransactionDao extends AccountTransactionDao {
                   'createdDateTime': item.createdDateTime,
                   'isIncome':
                       item.isIncome == null ? null : (item.isIncome ? 1 : 0)
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -582,23 +571,20 @@ class _$AccountTransactionDao extends AccountTransactionDao {
   }
 
   @override
-  Stream<List<AccountTransactionView>> findAll(String fromDate, String toDate) {
-    return _queryAdapter.queryListStream(
+  Future<List<AccountTransactionView>> findAll(
+      String fromDate, String toDate) async {
+    return _queryAdapter.queryList(
         'SELECT * FROM AccountTransactionView WHERE dateTime >= ? AND dateTime <= ?',
         arguments: <dynamic>[fromDate, toDate],
-        queryableName: 'AccountTransactionView',
-        isView: true,
         mapper: _accountTransactionViewMapper);
   }
 
   @override
-  Stream<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
-      String fromDate, String toDate, String isIncome) {
-    return _queryAdapter.queryListStream(
+  Future<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
+      String fromDate, String toDate, String isIncome) async {
+    return _queryAdapter.queryList(
         'SELECT * FROM TransactionGroupedByCategory WHERE dateTime >= ? AND dateTime <= ? AND isIncome = ?',
         arguments: <dynamic>[fromDate, toDate, isIncome],
-        queryableName: 'TransactionGroupedByCategory',
-        isView: true,
         mapper: _transactionGroupedByCategoryMapper);
   }
 

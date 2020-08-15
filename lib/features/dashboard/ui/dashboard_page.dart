@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
-import 'package:fluttermiwallet/db/views/transaction_grouped_by_category.dart';
 import 'package:fluttermiwallet/features/dashboard/logic/dashboard_provider.dart';
+import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
+import 'package:fluttermiwallet/repository/db/views/transaction_grouped_by_category.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/strings.dart';
-import 'package:fluttermiwallet/utils/custom_paint/custom_rock_painter.dart';
 import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
-import 'package:fluttermiwallet/utils/logger/logger.dart';
-import 'package:fluttermiwallet/utils/widgets/donut_auto_label_chart.dart';
 import 'package:fluttermiwallet/utils/widgets/custom_chart.dart';
+import 'package:fluttermiwallet/utils/widgets/donut_auto_label_chart.dart';
 import 'package:fluttermiwallet/utils/widgets/empty_dashboard.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
 import 'package:provider/provider.dart';
@@ -31,37 +28,21 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    var appProvider = context.read<AppProvider>();
-    _provider = DashboardProvider(appProvider.db);
+    _provider = Provider.of<DashboardProvider>(context, listen: false);
     _onSelectedDateRange(_selectedRange);
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(width: 320, height: 640);
-    //_provider.insertFakeCategory();
-    //_provider.insertFakeSubcategory();
-    //_provider.insertFakeBank();
-    //_provider.insertFakeAccount();
-    //_provider.insertFakeTransfer();
-    //_provider.insertFakeAccountTransactions();
     _provider.getTotalExpensesGroupedByCategoryId(
         dateRange: _selectedDateRange);
 
-    //_provider.getCategories();
-    //_provider.getSubcategories();
-    //_provider.getAllAccounts();
-    //_provider.getAllBanks();
     _provider.getAccountTransactions(dateRange: _selectedDateRange);
-    //_provider.getTransfers();
-    //_provider.getTransactionView();
-    return ChangeNotifierProvider<DashboardProvider>(
-      create: (_) => _provider,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: _appbar(),
-        body: _body(),
-      ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: _appbar(),
+      body: _body(),
     );
   }
 
@@ -209,7 +190,8 @@ class _DashboardPageState extends State<DashboardPage> {
               ..add(transactions.isEmpty
                   ? Container()
                   : _chartContainer(transactions))
-              ..add(transactions.isEmpty ? EmptyDashboard() : _piChartContainer())
+              ..add(
+                  transactions.isEmpty ? EmptyDashboard() : _piChartContainer())
               ..addAll(transactions.map<Widget>(
                   (AccountTransactionView transaction) =>
                       _IncomeExpensePercentHistory(transaction))),
@@ -225,7 +207,10 @@ class _DashboardPageState extends State<DashboardPage> {
       height: ScreenUtil().setWidth(200),
       width: ScreenUtil().setWidth(300),
       alignment: Alignment.center,
-      child: CustomChart(transactions,isPointChart: false,),
+      child: CustomChart(
+        transactions,
+        isPointChart: false,
+      ),
     );
   }
 
@@ -254,7 +239,6 @@ class _DashboardPageState extends State<DashboardPage> {
       ],
     );
   }
-
 }
 
 class _IncomeExpensePercentHistory extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/features/add_count/ui/add_transaction_screen.dart';
 import 'package:fluttermiwallet/features/dashboard/ui/dashboard_page.dart';
 import 'package:fluttermiwallet/features/home/ui/home_page.dart';
-import 'package:fluttermiwallet/features/report/report_page.dart';
+import 'package:fluttermiwallet/features/report/ui/report_page.dart';
 import 'package:fluttermiwallet/features/setting/ui/about_us.dart';
 import 'package:fluttermiwallet/features/setting/ui/backup_screen.dart';
 import 'package:fluttermiwallet/features/setting/ui/setting_screen.dart';

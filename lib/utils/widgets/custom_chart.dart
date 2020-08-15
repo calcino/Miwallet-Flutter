@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:charts_common/src/chart/common/behavior/legend/legend.dart';
-import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
-import 'package:fluttermiwallet/res/colors.dart';
-import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as element;
+import 'package:charts_flutter/src/text_style.dart' as style;
+import 'package:flutter/material.dart';
+import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
+import 'package:fluttermiwallet/res/colors.dart';
 import 'package:intl/intl.dart';
 
 class CustomChart extends StatelessWidget {

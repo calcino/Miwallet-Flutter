@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/transfer.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
+import 'package:fluttermiwallet/repository/db/entity/account.dart';
+import 'package:fluttermiwallet/repository/db/entity/transfer.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
@@ -46,7 +45,8 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
           sourceAccountId: widget._sourceId,
           destinationAccountId: _destinationAccId,
           amount: _amount,
-          dateTime: "${DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute)}",
+          dateTime:
+              "${DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute)}",
           descriptions: _descController.text,
         ),
       );
@@ -56,8 +56,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
   @override
   void initState() {
     _descController = TextEditingController();
-    var appProvider = context.read<AppProvider>();
-    _provider = WalletsProvider(appProvider.db);
+    _provider = Provider.of<WalletsProvider>(context, listen: false);
     super.initState();
   }
 
@@ -70,17 +69,14 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
         appBar: appBar(
             context,
             bottomCalcAppBar(
-              isExpanded: true,
-                onSubmitted: (amount) => _amount = amount
-            ),
+                isExpanded: true, onSubmitted: (amount) => _amount = amount),
             Strings.moneyTransfer, saveOnTap: () {
           setState(() {
             _isEmptyField();
           });
         }),
         body: ChangeNotifierProvider(
-            create: (_) => WalletsProvider(
-                Provider.of<AppProvider>(context, listen: false).db),
+            create: (_) => Provider.of<WalletsProvider>(context, listen: false),
             builder: (context, _) {
               return _body();
             }),
@@ -153,7 +149,8 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
                   marginTop: 0,
                   label: Strings.date,
                   marginLeft: 3.5,
-                  childWidget: dateTimeShow(DateFormat("dd MMMM,yyyy").format(_date),
+                  childWidget: dateTimeShow(
+                    DateFormat("dd MMMM,yyyy").format(_date),
                   ),
                   onPressed: () => showDatePickerWidget(
                     context,
@@ -174,7 +171,8 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
             label: Strings.description,
             marginBottom: 0,
             height: 84,
-            childWidget: descTextField((controller) => _descController = controller),
+            childWidget:
+                descTextField((controller) => _descController = controller),
           ),
         ],
       ),

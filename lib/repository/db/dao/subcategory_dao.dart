@@ -1,11 +1,11 @@
 import 'package:floor/floor.dart';
-import 'package:fluttermiwallet/db/entity/subcategory.dart';
+import '../entity/subcategory.dart';
 
 @dao
 abstract class SubcategoryDao {
 
   @Query('SELECT * FROM Subcategory')
-  Stream<List<Subcategory>> findAll();
+  Future<List<Subcategory>> findAll();
 
   @Query('SELECT * FROM Subcategory WHERE id = :id')
   Future<Subcategory> findSubcategory(int id);

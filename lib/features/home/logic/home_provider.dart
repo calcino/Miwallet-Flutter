@@ -1,4 +1,5 @@
 import 'package:fluttermiwallet/base/base_provider.dart';
+import 'package:fluttermiwallet/features/add_count/logic/add_transaction_provider.dart';
 import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/repository/repository.dart';
 import 'package:fluttermiwallet/utils/date_range.dart';
@@ -6,8 +7,10 @@ import 'package:fluttermiwallet/utils/date_range.dart';
 class HomeProvider extends BaseProvider {
   List<AccountTransactionView> transactions = [];
   bool isLoading = false;
+  final AddTransactionProvider addTransactionProvider;
 
-  HomeProvider(Repository repository) : super(repository);
+  HomeProvider(Repository repository, this.addTransactionProvider)
+      : super(repository);
 
   void getAllTransaction({DateRange dateRange = const DateRange()}) async {
     isLoading = true;

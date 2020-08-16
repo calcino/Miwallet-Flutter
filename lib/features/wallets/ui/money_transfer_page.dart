@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
-import 'package:fluttermiwallet/repository/db/entity/account.dart';
-import 'package:fluttermiwallet/repository/db/entity/transfer.dart';
-import 'package:fluttermiwallet/res/colors.dart';
-import 'package:fluttermiwallet/res/strings.dart';
-import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
-import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
-import 'package:fluttermiwallet/utils/widgets/error_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/show_date_picker_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/show_date_time_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../features/wallets/logic/wallets_provider.dart';
+import '../../../repository/db/entity/account.dart';
+import '../../../repository/db/entity/transfer.dart';
+import '../../../res/colors.dart';
+import '../../../res/strings.dart';
+import '../../../utils/widgets/bottom_sheet_widget.dart';
+import '../../../utils/widgets/custom_appbar.dart';
+import '../../../utils/widgets/custom_text_field.dart';
+import '../../../utils/widgets/error_widget.dart';
+import '../../../utils/widgets/show_date_picker_widget.dart';
+import '../../../utils/widgets/show_date_time_widget.dart';
+
 class MoneyTransferPage extends StatefulWidget {
-  int _sourceId;
+  final int _sourceId;
 
   @override
   _MoneyTransferPageState createState() => _MoneyTransferPageState();

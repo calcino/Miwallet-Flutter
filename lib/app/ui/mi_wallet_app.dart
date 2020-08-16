@@ -61,7 +61,7 @@ class App extends StatefulWidget {
       this.reportProvider, this.homeProvider, this.dashboardProvider, this.settingsProvider);
 
   @override
-  State<StatefulWidget> createState() => AppState();
+  State<App> createState() => AppState();
 }
 
 class AppState extends State<App> {

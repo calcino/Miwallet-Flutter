@@ -36,7 +36,7 @@ class ProviderModule {
 
   @provide
   @singleton
-  HomeProvider homeProvider(Repository repository) => HomeProvider(repository);
+  HomeProvider homeProvider(Repository repository,AddTransactionProvider addTransactionProvider) => HomeProvider(repository,addTransactionProvider);
 
   @provide
   @singleton

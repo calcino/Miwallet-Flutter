@@ -1,13 +1,14 @@
 import 'dart:math';
 
-import 'package:charts_common/src/chart/common/behavior/legend/legend.dart';
+import 'package:charts_common/common.dart' as common;
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:charts_flutter/src/text_element.dart' as element;
+import 'package:charts_flutter/src/text_element.dart';
 import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:flutter/material.dart';
-import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:intl/intl.dart';
+
+import '../../repository/db/views/account_transaction_view.dart';
 
 class CustomChart extends StatelessWidget {
   List<charts.Series<dynamic, String>> _barSeriesList;
@@ -15,6 +16,7 @@ class CustomChart extends StatelessWidget {
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
   final bool animate;
   final bool isPointChart;
+  static String pointerValue;
 
   CustomChart(List<AccountTransactionView> transactionViewList,
       {this.isPointChart = false, this.animate = true}) {
@@ -53,13 +55,21 @@ class CustomChart extends StatelessWidget {
       selectionModels: [
         charts.SelectionModelConfig(
             changedListener: (charts.SelectionModel model) {
-          if (model.hasDatumSelection)
-            print(model.selectedSeries[0]
-                .measureFn(model.selectedDatum[0].index));
-        })
+              if (model.hasDatumSelection)
+                pointerValue = model.selectedSeries[0]
+                    .measureFn(model.selectedDatum[0].index)
+                    .toString();
+            })
       ],
       behaviors: [
-        charts.SeriesLegend(),
+        charts.LinePointHighlighter(
+          symbolRenderer: CustomCircleSymbolRenderer(),
+        ),
+        charts.SeriesLegend.customLayout(
+          CustomLegendBuilder(),
+          position: charts.BehaviorPosition.top,
+          outsideJustification: charts.OutsideJustification.start,
+        ),
       ],
     );
   }
@@ -151,58 +161,100 @@ class CustomCircleSymbolRenderer extends charts.CircleSymbolRenderer {
     super.paint(canvas, bounds,
         dashPattern: dashPattern,
         fillColor: fillColor,
+        fillPattern: fillPattern,
         strokeColor: strokeColor,
         strokeWidthPx: strokeWidthPx);
+
     canvas.drawRect(
         Rectangle(bounds.left - 5, bounds.top - 30, bounds.width + 10,
             bounds.height + 10),
         fill: charts.ColorUtil.fromDartColor(Colors.grey[200]));
     var textStyle = style.TextStyle();
     textStyle.color = charts.Color.black;
-    textStyle.fontSize = 15;
-    canvas.drawText(element.TextElement("1", style: textStyle),
-        (bounds.left).round(), (bounds.top - 28).round());
+    textStyle.fontSize = 10;
+
+    canvas.drawText(TextElement(CustomChart.pointerValue, style: textStyle),
+        (bounds.left).round(), (bounds.top - 25).round());
   }
 }
 
+/// Custom legend builder
 class CustomLegendBuilder extends charts.LegendContentBuilder {
+  /// Convert the charts common TextStlyeSpec into a standard TextStyle.
+  TextStyle _convertTextStyle(
+      bool isHidden, BuildContext context, charts.TextStyleSpec textStyle) {
+    return new TextStyle(
+        inherit: true,
+        fontFamily: textStyle?.fontFamily,
+        fontSize:
+        textStyle?.fontSize != null ? textStyle.fontSize.toDouble() : null,
+        color: Colors.white);
+  }
+
+  Widget createLabel(BuildContext context, common.LegendEntry legendEntry,
+      common.SeriesLegend legend, bool isHidden) {
+    TextStyle style =
+    _convertTextStyle(isHidden, context, legendEntry.textStyle);
+    Color color =
+        charts.ColorUtil.toDartColor(legendEntry.color) ?? Colors.blue;
+
+    return new GestureDetector(
+        child: Container(
+            height: 30,
+            width: 90,
+            margin: EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: isHidden ? (color).withOpacity(0.26) : color,
+            ),
+            child: Center(child: Text(legendEntry.label, style: style))),
+        onTapUp: makeTapUpCallback(context, legendEntry, legend));
+  }
+
+  GestureTapUpCallback makeTapUpCallback(BuildContext context,
+      common.LegendEntry legendEntry, common.SeriesLegend legend) {
+    return (TapUpDetails d) {
+      switch (legend.legendTapHandling) {
+        case common.LegendTapHandling.hide:
+          final seriesId = legendEntry.series.id;
+          if (legend.isSeriesHidden(seriesId)) {
+            // This will not be recomended since it suposed to be accessible only from inside the legend class, but it worked fine on my code.
+            legend.showSeries(seriesId);
+          } else {
+            legend.hideSeries(seriesId);
+          }
+          legend.chart.redraw(skipLayout: true, skipAnimation: false);
+          break;
+        case common.LegendTapHandling.none:
+        default:
+          break;
+      }
+    };
+  }
+
   @override
-  Widget build(BuildContext context, LegendState<dynamic> legendState,
-      Legend<dynamic> legend,
+  Widget build(BuildContext context, common.LegendState legendState,
+      common.Legend legend,
       {bool showMeasures}) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: legend.chart.currentSeriesList
-            .map<Widget>((e) => InkWell(
-                  onTap: () {},
-                  child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(e.seriesColor.a, e.seriesColor.r,
-                            e.seriesColor.g, e.seriesColor.b),
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: Text(
-                        e.displayName,
-                        style: TextStyle(color: Colors.white),
-                      )),
-                ))
-            .toList()
-              ..add(Spacer())
-              ..add(Transform.rotate(
-                angle: 90 * (pi / 180),
-                child: Icon(
-                  Icons.tune,
-                  size: 30,
-                  //color: Col,
-                ),
-              )));
+    final entryWidgets = legendState.legendEntries.map((legendEntry) {
+      var isHidden = false;
+      if (legend is common.SeriesLegend) {
+        isHidden = legend.isSeriesHidden(legendEntry.series.id);
+      }
+      return createLabel(
+          context, legendEntry, legend as common.SeriesLegend, isHidden);
+    }).toList();
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 40.0, top: 10),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: entryWidgets),
+    );
   }
 }
+
 
 class TransactionModel {
   final DateTime date;

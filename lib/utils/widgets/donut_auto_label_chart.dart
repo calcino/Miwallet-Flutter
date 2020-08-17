@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/repository/db/views/transaction_grouped_by_category.dart';
 
 class DonutAutoLabelChart extends StatelessWidget {
-  List<charts.Series> seriesList;
+  List<charts.Series<TransactionGroupedByCategory, int>> seriesList;
   final bool animate;
 
   DonutAutoLabelChart(List<TransactionGroupedByCategory> transactions,
@@ -28,7 +28,7 @@ class DonutAutoLabelChart extends StatelessWidget {
             ]));
   }
 
-  static List<charts.Series<TransactionGroupedByCategory, int>>
+  List<charts.Series<TransactionGroupedByCategory, int>>
       _convertTransactionsToSeries(
           List<TransactionGroupedByCategory> transactions) {
     double totalAmount = 0.0;

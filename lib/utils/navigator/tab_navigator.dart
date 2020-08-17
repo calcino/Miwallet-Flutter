@@ -16,6 +16,7 @@ class TabNavigator<T extends ChangeNotifier> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<T>(
       create: (_) => provider,
+      lazy: true,
       child: Navigator(
         key: navigatorKey,
         initialRoute: _initialTab(tabItem),

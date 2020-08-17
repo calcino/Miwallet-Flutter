@@ -15,7 +15,7 @@ abstract class AccountTransactionDao {
   @Query(
       'SELECT * FROM TransactionGroupedByCategory WHERE dateTime >= :fromDate AND dateTime <= :toDate AND isIncome = :isIncome')
   Future<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
-      String fromDate, String toDate,String isIncome);
+      String fromDate, String toDate,bool isIncome);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertAccountTransaction(AccountTransaction accountTransaction);

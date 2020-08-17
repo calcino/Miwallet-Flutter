@@ -1,9 +1,10 @@
-import 'package:fluttermiwallet/base/base_provider.dart';
-import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
-import 'package:fluttermiwallet/repository/db/views/transaction_grouped_by_category.dart';
-import 'package:fluttermiwallet/repository/repository.dart';
-import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:inject/inject.dart';
+
+import '../../../base/base_provider.dart';
+import '../../../repository/db/views/account_transaction_view.dart';
+import '../../../repository/db/views/transaction_grouped_by_category.dart';
+import '../../../repository/repository.dart';
+import '../../../utils/date_range.dart';
 
 class DashboardProvider extends BaseProvider {
   double totalExpense = 0;
@@ -11,6 +12,8 @@ class DashboardProvider extends BaseProvider {
   double totalBalance = 0;
   List<AccountTransactionView> transactions = [];
   List<TransactionGroupedByCategory> totalExpensesGroupedByCategory = [];
+  List<TransactionGroupedByCategory> totalIncomeGroupedByCategory = [];
+  List<TransactionGroupedByCategory> totalIncomeExpenseGroupedByCategory = [];
   bool isLoading = false;
 
   @provide
@@ -18,26 +21,31 @@ class DashboardProvider extends BaseProvider {
 
   void getAccountTransactions({DateRange dateRange = const DateRange()}) async {
     isLoading = true;
-    transactions =
-        await repository.getAccountTransactions(dateRange: dateRange);
+    var data = await repository.getAccountTransactions(dateRange: dateRange);
     totalIncome = 0;
     totalExpense = 0;
-    transactions.forEach((transaction) {
+    data.forEach((transaction) {
       if (transaction.isIncome)
         totalIncome += transaction.amount;
       else
         totalExpense += transaction.amount;
     });
+    totalBalance = totalIncome - totalExpense;
+    await getTotalIncomeExpensesGroupedByCategoryId(dateRange: dateRange);
+    transactions = data;
     isLoading = false;
     notifyListeners();
   }
 
-  void getTotalExpensesGroupedByCategoryId(
+  Future<void> getTotalIncomeExpensesGroupedByCategoryId(
       {DateRange dateRange = const DateRange()}) async {
     totalExpensesGroupedByCategory = await repository
         .getTotalExpensesGroupedByCategoryId(dateRange: dateRange);
-    notifyListeners();
+    totalIncomeGroupedByCategory = await repository
+        .getTotalExpensesGroupedByCategoryId(dateRange: dateRange);
+    totalIncomeExpenseGroupedByCategory =
+        List.from(totalIncomeGroupedByCategory)
+          ..addAll(totalExpensesGroupedByCategory);
+    return;
   }
-
-  void getTotalIncomeByPercentage() {}
 }

@@ -105,7 +105,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             '''CREATE VIEW IF NOT EXISTS `AccountTransactionView` AS SELECT AccountTransaction.id AS accountTransactionId, AccountTransaction.accountId AS accountId, AccountTransaction.categoryId AS categoryId, AccountTransaction.subcategoryId AS subcategoryId, AccountTransaction.dateTime AS dateTime, AccountTransaction.isIncome AS isIncome, AccountTransaction.amount AS amount, AccountTransaction.receiptImagePath AS receiptImagePath, Account.name AS accountName, Subcategory.name AS subcategoryName, Category.name AS categoryName, Category.hexColor AS categoryHexColor FROM AccountTransaction JOIN Category ON AccountTransaction.categoryId = Category.id JOIN Subcategory ON AccountTransaction.subcategoryId = Subcategory.id JOIN Account ON AccountTransaction.accountId = Account.id ''');
         await database.execute(
-            '''CREATE VIEW IF NOT EXISTS `TransactionGroupedByCategory` AS SELECT categoryId,isIncome,categoryName,dateTime,categoryHexColor, sum(amount) as amountSum FROM AccountTransactionView GROUP BY categoryId''');
+            '''CREATE VIEW IF NOT EXISTS `TransactionGroupedByCategory` AS SELECT categoryId,subcategoryId,subcategoryName,isIncome,categoryName,dateTime,categoryHexColor, sum(amount) as amountSum FROM AccountTransactionView GROUP BY categoryId''');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -557,7 +557,9 @@ class _$AccountTransactionDao extends AccountTransactionDao {
           row['categoryHexColor'] as String,
           row['dateTime'] as String,
           row['isIncome'] == null ? null : (row['isIncome'] as int) != 0,
-          row['categoryName'] as String);
+          row['categoryName'] as String,
+          row['subcategoryId'] as int,
+          row['subcategoryName'] as String);
 
   final InsertionAdapter<AccountTransaction>
       _accountTransactionInsertionAdapter;
@@ -581,10 +583,14 @@ class _$AccountTransactionDao extends AccountTransactionDao {
 
   @override
   Future<List<TransactionGroupedByCategory>> findAllGroupedByCategoryId(
-      String fromDate, String toDate, String isIncome) async {
+      String fromDate, String toDate, bool isIncome) async {
     return _queryAdapter.queryList(
         'SELECT * FROM TransactionGroupedByCategory WHERE dateTime >= ? AND dateTime <= ? AND isIncome = ?',
-        arguments: <dynamic>[fromDate, toDate, isIncome],
+        arguments: <dynamic>[
+          fromDate,
+          toDate,
+          isIncome == null ? null : (isIncome ? 1 : 0)
+        ],
         mapper: _transactionGroupedByCategoryMapper);
   }
 

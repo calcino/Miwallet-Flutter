@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
+import 'package:fluttermiwallet/repository/db/entity/account.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
@@ -34,8 +33,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
   @override
   void initState() {
     _descController = TextEditingController();
-    var appProvider = context.read<AppProvider>();
-    _provider = WalletsProvider(appProvider.db);
+    _provider = Provider.of<WalletsProvider>(context);
     super.initState();
   }
 
@@ -48,7 +46,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
           name: _accountNameSelected,
           balance: _amount,
           descriptions: _descController.text,
-          createdDateTime: DateTime.now().toIso8601String(),
         ),
       );
       Navigator.of(context).pop();
@@ -83,8 +80,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
           },
         ),
         body: ChangeNotifierProvider(
-            create: (_) => WalletsProvider(
-                Provider.of<AppProvider>(context, listen: false).db),
+            create: (_) => Provider.of<WalletsProvider>(context, listen: false),
             builder: (context, _) {
               return _body();
             }),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/views/account_transaction_view.dart';
-import 'package:fluttermiwallet/features/home/logic/history_provider.dart';
+import 'package:fluttermiwallet/features/home/logic/home_provider.dart';
+import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 import 'package:fluttermiwallet/utils/widgets/empty_data_widget.dart';
 import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
@@ -14,29 +14,40 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HistoryList extends StatelessWidget {
-  final DateTime fromDate, toDate;
-  HistoryProvider _historyProvider;
+  final DateRange dateRange;
+  HomeProvider _homeProvider;
 
-  HistoryList({Key key, @required this.fromDate, @required this.toDate})
-      : super(key: key);
+  HistoryList({Key key, @required this.dateRange}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    _homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    _homeProvider.getAllTransaction(dateRange: dateRange);
+
     ScreenUtil.init(width: 320, height: 640);
-    final appProvider = Provider.of<AppProvider>(context, listen: false);
-    _historyProvider =
-        HistoryProvider(db: appProvider.db, fromDate: fromDate, toDate: toDate);
-    return StreamBuilder<List<AccountTransactionView>>(
-        stream: _historyProvider.getAllTransaction(),
-        initialData: null,
-        builder: (_, snapshot) {
-          if (snapshot.hasData) {
-            return _buildList(snapshot.data);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[_content(), _loadingWidget()],
+    );
+  }
+
+  Widget _content() {
+    return Selector<HomeProvider, List<AccountTransactionView>>(
+        selector: (_, provider) => provider.transactions,
+        builder: (_, data, __) {
+          return _buildList(data);
+        });
+  }
+
+  Widget _loadingWidget() {
+    return Selector<HomeProvider, bool>(
+        selector: (_, provider) => provider.isLoading,
+        builder: (_, loading, __) {
+          return loading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container();
         });
   }
 
@@ -45,7 +56,7 @@ class HistoryList extends StatelessWidget {
     var totalIncome = 0.0;
     var totalExpense = 0.0;
     if (data != null && data.isNotEmpty) {
-      var incomeExpense = _historyProvider.getTotalIncomeExpense(data);
+      var incomeExpense = _homeProvider.getTotalIncomeExpense(data);
       totalIncome = incomeExpense[0];
       totalExpense = incomeExpense[1];
     }
@@ -63,8 +74,8 @@ class HistoryList extends StatelessWidget {
                 return TotalIncomeExpense(
                     income: totalIncome, expense: totalExpense);
               } else {
-                var totals = _historyProvider.getTotalIncomeExpense(
-                    data, DateFormat('yyyy-MM-dd').format(dateTime));
+                var totals = _homeProvider.getTotalIncomeExpense(data,
+                    dateRange: dateRange);
                 var groupIncome = totals[0];
                 var groupExpense = totals[1];
                 return _HistoryHeader(

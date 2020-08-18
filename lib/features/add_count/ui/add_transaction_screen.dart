@@ -1,31 +1,33 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/account_transaction.dart';
-import 'package:fluttermiwallet/db/entity/category.dart';
-import 'package:fluttermiwallet/db/entity/subcategory.dart';
-import 'package:fluttermiwallet/features/add_count/logic/add_transaction_provider.dart';
-import 'package:fluttermiwallet/res/colors.dart';
-import 'package:fluttermiwallet/res/strings.dart';
-import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/custom_appbar.dart';
-import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
-import 'package:fluttermiwallet/utils/widgets/error_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/show_date_picker_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/show_date_time_widget.dart';
+import 'package:fluttermiwallet/features/home/logic/home_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:inject/inject.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AddTransactionPage extends StatefulWidget {
-  bool _isIncome;
+import '../../../repository/db/entity/account.dart';
+import '../../../repository/db/entity/account_transaction.dart';
+import '../../../repository/db/entity/category.dart';
+import '../../../repository/db/entity/subcategory.dart';
+import '../../../res/colors.dart';
+import '../../../res/strings.dart';
+import '../../../utils/widgets/bottom_sheet_widget.dart';
+import '../../../utils/widgets/custom_appbar.dart';
+import '../../../utils/widgets/custom_text_field.dart';
+import '../../../utils/widgets/error_widget.dart';
+import '../../../utils/widgets/show_date_picker_widget.dart';
+import '../../../utils/widgets/show_date_time_widget.dart';
+import '../../add_count/logic/add_transaction_provider.dart';
 
+class AddTransactionPage extends StatefulWidget {
+  final bool _isIncome;
+
+  @provide
   AddTransactionPage(this._isIncome);
 
   @override
@@ -53,55 +55,50 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   TextEditingController _nameController;
   TextEditingController _descController;
 
-   _isEmpty() {
-      if (_accountNameSelected != Strings.choose &&
-          _catNameSelected != Strings.choose &&
-          _subCatSelected != Strings.choose) {
-        _provider.insertTransaction(
-          AccountTransaction(
-              accountId: accId,
-              amount: _amount,
-              dateTime:
-              "${DateTime(
-                  _date.year, _date.month, _date.day, _time.hour, _time.minute)}",
-              //yyy-MM-ddTHH:mm:ss
-              receiptImagePath: _imageFile.toString(),
-              categoryId: catId,
-              subcategoryId: subId,
-              createdDateTime: DateTime.now().toIso8601String(),
-              isIncome: widget._isIncome),
-        );
-        Navigator.of(context).pop();
-      } else {
-        if (_catNameSelected == Strings.choose) {
-          setState(() {
-            _isChoosedCat = true;
-          });
-        }
-        if (_subCatSelected == Strings.choose) {
-          setState(() {
-            _isChoosedSub = true;
-          });
-        }
-        if(_accountNameSelected == Strings.choose) {
-          setState(() {
-            _isChoosedAcc = true;
-          });
-        }
-      }
-  }
-
-
-
   @override
   void initState() {
+    super.initState();
+    _provider = Provider.of<HomeProvider>(context, listen: false)
+        .addTransactionProvider;
     _nameController = TextEditingController();
     _descController = TextEditingController();
-    var appProvider = context.read<AppProvider>();
-    _provider = AddTransactionProvider(appProvider.db);
-    _provider.insertAccount();
     _provider.getAllAccount();
-    super.initState();
+  }
+
+  _isEmpty() {
+    if (_accountNameSelected != Strings.choose &&
+        _catNameSelected != Strings.choose &&
+        _subCatSelected != Strings.choose) {
+      _provider.insertTransaction(
+        AccountTransaction(
+            accountId: accId,
+            amount: _amount,
+            dateTime:
+                "${DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute)}",
+            //yyy-MM-ddTHH:mm:ss
+            receiptImagePath: _imageFile.toString(),
+            categoryId: catId,
+            subcategoryId: subId,
+            isIncome: widget._isIncome),
+      );
+      Navigator.of(context).pop();
+    } else {
+      if (_catNameSelected == Strings.choose) {
+        setState(() {
+          _isChoosedCat = true;
+        });
+      }
+      if (_subCatSelected == Strings.choose) {
+        setState(() {
+          _isChoosedSub = true;
+        });
+      }
+      if (_accountNameSelected == Strings.choose) {
+        setState(() {
+          _isChoosedAcc = true;
+        });
+      }
+    }
   }
 
   @override
@@ -111,11 +108,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       height: 640,
     );
     return ChangeNotifierProvider<AddTransactionProvider>(
-      create: (ctx) =>
-          AddTransactionProvider(
-              Provider
-                  .of<AppProvider>(ctx, listen: false)
-                  .db),
+      create: (_) => _provider,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -124,8 +117,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               bottomCalcAppBar(onSubmitted: (amount) => _amount = amount),
               widget._isIncome ? Strings.addIncome : Strings.addExpense,
               saveOnTap: () {
-                _isEmpty();
-              }),
+            _isEmpty();
+          }),
           body: _body(context),
         ),
       ),
@@ -193,18 +186,16 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                   childWidget: dateTimeShow(
                     DateFormat("HH:mm").format(_time),
                   ),
-                  onPressed: () =>
-                      showDatePickerWidget(
-                        context,
-                        DateTimePickerMode.time,
-                        "HH:mm",
-                            (dateTime, _) =>
-                            setState(
-                                  () {
-                                _time = dateTime;
-                              },
-                            ),
-                      ),
+                  onPressed: () => showDatePickerWidget(
+                    context,
+                    DateTimePickerMode.time,
+                    "HH:mm",
+                    (dateTime, _) => setState(
+                      () {
+                        _time = dateTime;
+                      },
+                    ),
+                  ),
                 ),
               ),
               Expanded(
@@ -215,18 +206,16 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                   childWidget: dateTimeShow(
                     DateFormat("dd MMMM,yyyy").format(_date),
                   ),
-                  onPressed: () =>
-                      showDatePickerWidget(
-                        context,
-                        DateTimePickerMode.date,
-                        "dd MMMM,yyyy",
-                            (dateTime, _) =>
-                            setState(
-                                  () {
-                                _date = dateTime;
-                              },
-                            ),
-                      ),
+                  onPressed: () => showDatePickerWidget(
+                    context,
+                    DateTimePickerMode.date,
+                    "dd MMMM,yyyy",
+                    (dateTime, _) => setState(
+                      () {
+                        _date = dateTime;
+                      },
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -246,7 +235,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     value: _provider,
                     child: _chooseBtmSheet(context, (acc) {
                       setState(
-                            () {
+                        () {
                           _accountNameSelected = acc.name;
                           accId = acc.id;
                         },
@@ -261,7 +250,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             marginBottom: 23.5,
             height: 84,
             childWidget:
-            descTextField((controller) => _descController = controller),
+                descTextField((controller) => _descController = controller),
           ),
           Divider(
             height: ScreenUtil().setWidth(1),
@@ -292,9 +281,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
 
   _chooseCategoryBtmSheet(bool isCategory, {Function(dynamic) onTap}) {
     String _hintText =
-    isCategory ? Strings.chooseCategory : Strings.chooseSubCategory;
+        isCategory ? Strings.chooseCategory : Strings.chooseSubCategory;
     String _addText =
-    isCategory ? Strings.addNewCategory : Strings.chooseSubCategory;
+        isCategory ? Strings.addNewCategory : Strings.chooseSubCategory;
     if (isCategory) {
       _provider.getAllCategory();
     } else {
@@ -311,7 +300,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           categoryAppBar(_hintText, context),
           Selector<AddTransactionProvider, List<dynamic>>(
               selector: (_, provider) =>
-              isCategory ? provider.categories : provider.subCategories,
+                  isCategory ? provider.categories : provider.subCategories,
               builder: (_, data, __) {
                 print('data : ${data.toString()}');
                 return Expanded(
@@ -320,24 +309,24 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     itemBuilder: (context, index) {
                       return index == 0
                           ? categoryListField(_addText, icon: Icons.add,
-                          onTap: () {
-                            Navigator.pop(context);
-                            showModalBottomSheetWidget(
-                                context, _addCategoryBtmSheet(isCategory));
-                          })
+                              onTap: () {
+                              Navigator.pop(context);
+                              showModalBottomSheetWidget(
+                                  context, _addCategoryBtmSheet(isCategory));
+                            })
                           : categoryListField(
-                          isCategory
-                              ? (data[index - 1] as Category)
-                              .name
-                              .toString()
-                              : (data[index - 1] as Subcategory)
-                              .name
-                              .toString(), onTap: () {
-                        onTap(isCategory
-                            ? (data[index - 1] as Category)
-                            : (data[index - 1] as Subcategory));
-                        Navigator.pop(context);
-                      });
+                              isCategory
+                                  ? (data[index - 1] as Category)
+                                      .name
+                                      .toString()
+                                  : (data[index - 1] as Subcategory)
+                                      .name
+                                      .toString(), onTap: () {
+                              onTap(isCategory
+                                  ? (data[index - 1] as Category)
+                                  : (data[index - 1] as Subcategory));
+                              Navigator.pop(context);
+                            });
                     },
                   ),
                 );
@@ -359,23 +348,21 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         children: <Widget>[
           categoryAppBar(Strings.addCategory, context,
               isBackable: true, hasDone: true, onTap: () {
-                isCategory
-                    ? _provider.insertCategory(
-                  Category(
-                    name: _nameController.text,
-                    imagePath: "null",
-                    createdDateTime: DateTime.now().toIso8601String(),
-                  ),
-                )
-                    : _provider.insertSubCategory(
-                  Subcategory(
-                    categoryId: 1,
-                    name: _nameController.text,
-                    imagePath: "null",
-                    createdDateTime: DateTime.now().toIso8601String(),
-                  ),
-                );
-              }),
+            isCategory
+                ? _provider.insertCategory(
+                    Category(
+                      name: _nameController.text,
+                      hexColor: "#ffff00",
+                    ),
+                  )
+                : _provider.insertSubCategory(
+                    Subcategory(
+                      categoryId: 1,
+                      name: _nameController.text,
+                      hexColor: "#00ffff",
+                    ),
+                  );
+          }),
           _labelText(
               isCategory ? Strings.nameCategory : Strings.nameSubCategory,
               marginTop: 20,
@@ -460,7 +447,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
 
   void _openGallery(BuildContext context) async {
     PickedFile _picture =
-    await _pickedFile.getImage(source: ImageSource.gallery);
+        await _pickedFile.getImage(source: ImageSource.gallery);
 
     if (_picture != null) {
       this.setState(() {

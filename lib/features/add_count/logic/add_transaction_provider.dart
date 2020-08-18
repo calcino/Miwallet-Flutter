@@ -1,67 +1,43 @@
+import 'package:fluttermiwallet/base/base_provider.dart';
+import 'package:fluttermiwallet/repository/db/entity/account.dart';
+import 'package:fluttermiwallet/repository/db/entity/account_transaction.dart';
+import 'package:fluttermiwallet/repository/db/entity/category.dart';
+import 'package:fluttermiwallet/repository/db/entity/subcategory.dart';
+import 'package:fluttermiwallet/repository/repository.dart';
 
-import 'package:flutter/foundation.dart' hide Category;
-import 'package:fluttermiwallet/db/database.dart';
-import 'package:fluttermiwallet/db/entity/account.dart';
-import 'package:fluttermiwallet/db/entity/account_transaction.dart';
-import 'package:fluttermiwallet/db/entity/category.dart';
-import 'package:fluttermiwallet/db/entity/subcategory.dart';
-import 'package:fluttermiwallet/utils/logger/logger.dart';
-
-class AddTransactionProvider with ChangeNotifier {
-  final AppDatabase _db;
-  String subCategoryName="";
-  String categoryName="";
+class AddTransactionProvider extends BaseProvider {
+  String subCategoryName = "";
+  String categoryName = "";
   List<Category> categories = [];
   List<Account> accounts = [];
   List<Subcategory> subCategories = [];
 
-
-  AddTransactionProvider(this._db);
-
-  void insertAccount() async {
-//    await _db.accountDao.insertAccount(account);
-        await _db.accountDao.insertAccount(
-      Account(id: 1,bankId: 1, name: "my acc", balance: 1000, descriptions: "chettori", createdDateTime: DateTime.now().toIso8601String()),
-    );
-    notifyListeners();
-  }
+  AddTransactionProvider(Repository repository) : super(repository);
 
   void insertTransaction(AccountTransaction transaction) async {
-    await _db.accountTransactionDao.insertAccountTransaction(transaction);
+    await repository.insertAccountTransaction(transaction: transaction);
+  }
+
+  void insertCategory(Category category) async {
+    await repository.insertCategory(category: category);
+  }
+
+  void getAllAccount() async {
+    accounts = await repository.getAllAccount();
     notifyListeners();
   }
 
+  void insertSubCategory(Subcategory subCategory) async {
+    await repository.insertSubCategory(subcategory: subCategory);
+  }
 
-
-
-
-  void insertCategory(Category category) async{
-    await _db.categoryDao.insertCategory(category);
+  void getAllCategory() async {
+    categories = await repository.getAllCategory();
     notifyListeners();
   }
 
-  void getAllAccount() async{
-    accounts = await _db.accountDao.findAll();
+  void getAllSubCategory() async {
+    subCategories = await repository.getAllSubCategory();
     notifyListeners();
   }
-
-  void insertSubCategory(Subcategory subCategory) async{
-    await _db.subcategoryDao.insertSubcategory(subCategory);
-    notifyListeners();
-  }
-
-  void getAllCategory() {
-    _db.categoryDao.findAll().listen((event) {
-      categories = event;
-      notifyListeners();
-    });
-  }
-
-  void getAllSubCategory() {
-    _db.subcategoryDao.findAll().listen((event) {
-      subCategories = event;
-      notifyListeners();
-    });
-  }
-
 }

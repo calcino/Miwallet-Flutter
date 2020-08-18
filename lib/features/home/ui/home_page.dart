@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/features/home/logic/history_provider.dart';
 import 'package:fluttermiwallet/features/home/logic/home_provider.dart';
 import 'package:fluttermiwallet/features/home/ui/history_list.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/dimen.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
+import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:intl/intl.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:provider/provider.dart';
@@ -28,10 +27,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
-    super.initState();
-    var appProvider = context.read<AppProvider>();
-    _homeProvider = HomeProvider(appProvider.db);
+    _homeProvider = Provider.of<HomeProvider>(context,listen: false);
     _tabController = TabController(length: 5, vsync: this);
+    super.initState();
   }
 
   @override
@@ -51,29 +49,41 @@ class _HomePageState extends State<HomePage>
     return TabBarView(
       children: [
         HistoryList(
-          fromDate: DateTime(currentDateTime.year, currentDateTime.month, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month, 31),
+            dateRange: DateRange(
+          from: DateTime(currentDateTime.year, currentDateTime.month, 1)
+              .toIso8601String(),
+          to: DateTime(currentDateTime.year, currentDateTime.month, 31)
+              .toIso8601String(),
+        )),
+        HistoryList(
+            dateRange: DateRange(
+          from: DateTime(currentDateTime.year, currentDateTime.month - 1, 1)
+              .toIso8601String(),
+          to: DateTime(currentDateTime.year, currentDateTime.month - 1, 31)
+              .toIso8601String(),
+        )),
+        HistoryList(
+          dateRange: DateRange(
+              from: DateTime(currentDateTime.year, currentDateTime.month - 2, 1)
+                  .toIso8601String(),
+              to: DateTime(currentDateTime.year, currentDateTime.month - 2, 31)
+                  .toIso8601String()),
         ),
         HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 1, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 1, 31),
-        ),
+            dateRange: DateRange(
+          from: DateTime(currentDateTime.year, currentDateTime.month - 3, 1)
+              .toIso8601String(),
+          to: DateTime(currentDateTime.year, currentDateTime.month - 3, 31)
+              .toIso8601String(),
+        )),
         HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 2, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 2, 31),
-        ),
-        HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 3, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 3, 31),
-        ),
-        HistoryList(
-          fromDate:
-              DateTime(currentDateTime.year, currentDateTime.month - 4, 1),
-          toDate: DateTime(currentDateTime.year, currentDateTime.month - 4, 31),
-        ),
+            dateRange: DateRange(
+                from:
+                    DateTime(currentDateTime.year, currentDateTime.month - 4, 1)
+                        .toIso8601String(),
+                to: DateTime(
+                        currentDateTime.year, currentDateTime.month - 4, 31)
+                    .toIso8601String())),
       ],
       controller: _tabController,
     );
@@ -158,14 +168,26 @@ class _HomePageState extends State<HomePage>
 
     var childButtons = List<UnicornButton>();
 
-    childButtons
-        .add(_createUnicornButton(Strings.expense, Icons.arrow_upward, () {
-      Navigator.pushNamed(context, RouteName.addTransactionPage,arguments: false);
-    },),);
-    childButtons
-        .add(_createUnicornButton(Strings.income, Icons.arrow_downward, () {
-      Navigator.pushNamed(context, RouteName.addTransactionPage,arguments: true);
-    },),);
+    childButtons.add(
+      _createUnicornButton(
+        Strings.expense,
+        Icons.arrow_upward,
+        () {
+          Navigator.pushNamed(context, RouteName.addTransactionPage,
+              arguments: false);
+        },
+      ),
+    );
+    childButtons.add(
+      _createUnicornButton(
+        Strings.income,
+        Icons.arrow_downward,
+        () {
+          Navigator.pushNamed(context, RouteName.addTransactionPage,
+              arguments: true);
+        },
+      ),
+    );
 
     return UnicornDialer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),

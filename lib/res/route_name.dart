@@ -12,4 +12,5 @@ class RouteName {
   static const settingsPage = 'settingsPage';
   static const aboutUsPage = 'aboutUsPage';
   static const backUpPage = 'backUpPage';
+  static const reportPage = 'reportPage';
 }

@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/app/logic/app_provider.dart';
-import 'package:fluttermiwallet/db/database.dart';
-import 'package:fluttermiwallet/res/colors.dart';
-import 'package:fluttermiwallet/res/strings.dart';
-import 'package:fluttermiwallet/utils/navigator/bottom_navigation.dart';
-import 'package:fluttermiwallet/utils/navigator/tab_navigator.dart';
+import 'package:inject/inject.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttermiwallet/utils/extentions/color_extentions.dart';
+
+import '../../app/logic/app_provider.dart';
+import '../../features/add_count/logic/add_transaction_provider.dart';
+import '../../features/dashboard/logic/dashboard_provider.dart';
+import '../../features/home/logic/home_provider.dart';
+import '../../features/report/logic/report_provider.dart';
+import '../../features/setting/logic/settings_provider.dart';
+import '../../features/wallets/logic/wallets_provider.dart';
+import '../../res/colors.dart';
+import '../../res/strings.dart';
+import '../../utils/extentions/color_extentions.dart';
+import '../../utils/navigator/bottom_navigation.dart';
+import '../../utils/navigator/tab_navigator.dart';
 
 class MiWalletApp extends StatelessWidget {
-  final AppDatabase db;
+  final AppProvider appProvider;
+  final App app;
 
-  const MiWalletApp({Key key, this.db}) : super(key: key);
+  @provide
+  const MiWalletApp(
+    this.appProvider,
+    this.app,
+  );
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppProvider>(
-      create: (_) => AppProvider(db),
+      create: (_) => appProvider,
       child: _materialApp(context),
     );
   }
@@ -28,16 +40,28 @@ class MiWalletApp extends StatelessWidget {
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: ColorRes.blueColor.toMaterial(),
+          primaryColor: ColorRes.blueColor.toMaterial(),
           canvasColor: ColorRes.blueColor),
-      home: App(),
+      home: app,
     );
   }
 }
 
 class App extends StatefulWidget {
+
+  final WalletsProvider walletsProvider;
+  final AddTransactionProvider addTransactionProvider;
+  final ReportProvider reportProvider;
+  final HomeProvider homeProvider;
+  final DashboardProvider dashboardProvider;
+  final SettingsProvider settingsProvider;
+
+  @provide
+  const App(this.walletsProvider, this.addTransactionProvider,
+      this.reportProvider, this.homeProvider, this.dashboardProvider, this.settingsProvider);
+
   @override
-  State<StatefulWidget> createState() => AppState();
+  State<App> createState() => AppState();
 }
 
 class AppState extends State<App> {
@@ -45,7 +69,7 @@ class AppState extends State<App> {
   Map<TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
     TabItem.wallet: GlobalKey<NavigatorState>(),
-    TabItem.history: GlobalKey<NavigatorState>(),
+    TabItem.report: GlobalKey<NavigatorState>(),
     TabItem.dashboard: GlobalKey<NavigatorState>(),
     TabItem.settings: GlobalKey<NavigatorState>(),
   };
@@ -79,11 +103,16 @@ class AppState extends State<App> {
       },
       child: Scaffold(
         body: Stack(children: <Widget>[
-          _buildOffstageNavigator(TabItem.home),
-          _buildOffstageNavigator(TabItem.wallet),
-          _buildOffstageNavigator(TabItem.history),
-          _buildOffstageNavigator(TabItem.dashboard),
-          _buildOffstageNavigator(TabItem.settings),
+          _buildOffstageNavigator<HomeProvider>(
+              TabItem.home, widget.homeProvider),
+          _buildOffstageNavigator<WalletsProvider>(
+              TabItem.wallet, widget.walletsProvider),
+          _buildOffstageNavigator<ReportProvider>(
+              TabItem.report, widget.reportProvider),
+          _buildOffstageNavigator<DashboardProvider>(
+              TabItem.dashboard, widget.dashboardProvider),
+          _buildOffstageNavigator<SettingsProvider>(
+              TabItem.settings, widget.settingsProvider),
         ]),
         bottomNavigationBar: BottomNavigation(
           currentTab: _currentTab,
@@ -93,12 +122,14 @@ class AppState extends State<App> {
     );
   }
 
-  Widget _buildOffstageNavigator(TabItem tabItem) {
+  Widget _buildOffstageNavigator<T extends ChangeNotifier>(
+      TabItem tabItem, T provider) {
     return Offstage(
       offstage: _currentTab != tabItem,
-      child: TabNavigator(
+      child: TabNavigator<T>(
         navigatorKey: _navigatorKeys[tabItem],
         tabItem: tabItem,
+        provider: provider,
       ),
     );
   }

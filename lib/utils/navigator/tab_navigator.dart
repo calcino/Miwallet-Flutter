@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/utils/navigator/navigation.dart';
+import 'package:provider/provider.dart';
 
 import 'bottom_navigation.dart';
 
-class TabNavigator extends StatelessWidget {
-  TabNavigator({this.navigatorKey, this.tabItem});
+class TabNavigator<T extends ChangeNotifier> extends StatelessWidget {
+  TabNavigator({this.navigatorKey, this.tabItem, this.provider});
 
   final GlobalKey<NavigatorState> navigatorKey;
   final TabItem tabItem;
+  final T provider;
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: _initialTab(tabItem),
-      onGenerateRoute: Navigation.generateRoute,
+    return ChangeNotifierProvider<T>(
+      create: (_) => provider,
+      lazy: true,
+      child: Navigator(
+        key: navigatorKey,
+        initialRoute: _initialTab(tabItem),
+        onGenerateRoute: Navigation.generateRoute,
+      ),
     );
   }
 
@@ -27,8 +33,8 @@ class TabNavigator extends StatelessWidget {
       case TabItem.wallet:
         return RouteName.walletPage;
         break;
-      case TabItem.history:
-        return RouteName.historyPage;
+      case TabItem.report:
+        return RouteName.reportPage;
         break;
       case TabItem.dashboard:
         return RouteName.dashboardPage;

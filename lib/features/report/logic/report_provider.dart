@@ -4,14 +4,14 @@ import 'package:fluttermiwallet/repository/repository.dart';
 import 'package:fluttermiwallet/utils/date_range.dart';
 
 class ReportProvider extends BaseProvider {
-  List<AccountTransactionView> transactions = [];
+  List<AccountTransactionView> transactionHistory = [];
   bool isLoading = false;
 
   ReportProvider(Repository repository) : super(repository);
 
   void getAccountTransactions({DateRange dateRange = const DateRange()}) async {
     isLoading = true;
-    transactions =
+    transactionHistory =
         await repository.getAccountTransactions(dateRange: dateRange);
     isLoading = false;
     notifyListeners();

@@ -11,7 +11,7 @@ import '../../../res/strings.dart';
 import '../../../utils/widgets/custom_chart.dart';
 import '../../../utils/widgets/donut_auto_label_chart.dart';
 import '../../../utils/widgets/empty_dashboard.dart';
-import '../../../utils/widgets/total_income_expnse.dart';
+import '../../../utils/widgets/total_income_expense.dart';
 import '../logic/dashboard_provider.dart';
 import 'widgets/bottom_bar_widget.dart';
 import 'widgets/income_expense_history_item.dart';

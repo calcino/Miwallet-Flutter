@@ -6,7 +6,6 @@ import 'package:fluttermiwallet/utils/date_range.dart';
 
 class HomeProvider extends BaseProvider {
   List<AccountTransactionView> transactions = [];
-  bool isLoading = false;
   final AddTransactionProvider addTransactionProvider;
 
   HomeProvider(Repository repository, this.addTransactionProvider)

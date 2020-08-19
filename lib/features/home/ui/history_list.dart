@@ -8,7 +8,7 @@ import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/date_range.dart';
 import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
 import 'package:fluttermiwallet/utils/widgets/empty_data_widget.dart';
-import 'package:fluttermiwallet/utils/widgets/total_income_expnse.dart';
+import 'package:fluttermiwallet/utils/widgets/total_income_expense.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

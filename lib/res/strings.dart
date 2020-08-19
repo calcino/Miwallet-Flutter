@@ -95,6 +95,9 @@ class Strings {
   static const String choosingDate = 'Choosing Date';
   static const String months = 'Months';
   static const String wallets = 'Wallets';
+  static const String exportReport = 'export report';
+  static const String cancel = 'cancel';
+  static const String export = 'export';
 
 //array
   static const List<String> dashboardRangeOfDate = [

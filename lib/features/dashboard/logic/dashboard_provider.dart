@@ -14,7 +14,6 @@ class DashboardProvider extends BaseProvider {
   List<TransactionGroupedByCategory> totalExpensesGroupedByCategory = [];
   List<TransactionGroupedByCategory> totalIncomeGroupedByCategory = [];
   List<TransactionGroupedByCategory> totalIncomeExpenseGroupedByCategory = [];
-  bool isLoading = false;
 
   @provide
   DashboardProvider(Repository repository) : super(repository);

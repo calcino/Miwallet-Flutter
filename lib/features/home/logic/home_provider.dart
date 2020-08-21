@@ -1,8 +1,9 @@
-import 'package:fluttermiwallet/base/base_provider.dart';
-import 'package:fluttermiwallet/features/add_count/logic/add_transaction_provider.dart';
-import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
-import 'package:fluttermiwallet/repository/repository.dart';
-import 'package:fluttermiwallet/utils/date_range.dart';
+import '../../../base/base_provider.dart';
+import '../../../features/add_count/logic/add_transaction_provider.dart';
+import '../../../repository/db/views/account_transaction_view.dart';
+import '../../../repository/repository.dart';
+import '../../../utils/date_range.dart';
+import '../../../utils/income_expense.dart';
 
 class HomeProvider extends BaseProvider {
   List<AccountTransactionView> transactions = [];
@@ -19,7 +20,7 @@ class HomeProvider extends BaseProvider {
     notifyListeners();
   }
 
-  List<double> getTotalIncomeExpense(List<AccountTransactionView> list,
+  IncomeExpense getTotalIncomeExpense(List<AccountTransactionView> list,
       {DateRange dateRange = const DateRange()}) {
     var totalIncome = 0.0;
     var totalExpense = 0.0;
@@ -35,6 +36,6 @@ class HomeProvider extends BaseProvider {
           totalExpense += element.amount;
       }
     });
-    return [totalIncome, totalExpense];
+    return IncomeExpense(income: totalIncome, expense: totalExpense);
   }
 }

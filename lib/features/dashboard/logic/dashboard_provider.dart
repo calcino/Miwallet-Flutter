@@ -1,3 +1,4 @@
+import 'package:fluttermiwallet/utils/income_expense.dart';
 import 'package:inject/inject.dart';
 
 import '../../../base/base_provider.dart';
@@ -7,8 +8,7 @@ import '../../../repository/repository.dart';
 import '../../../utils/date_range.dart';
 
 class DashboardProvider extends BaseProvider {
-  double totalExpense = 0;
-  double totalIncome = 0;
+  IncomeExpense incomeExpense = IncomeExpense(income: 0, expense: 0);
   double totalBalance = 0;
   List<AccountTransactionView> transactions = [];
   List<TransactionGroupedByCategory> totalExpensesGroupedByCategory = [];
@@ -21,8 +21,8 @@ class DashboardProvider extends BaseProvider {
   void getAccountTransactions({DateRange dateRange = const DateRange()}) async {
     isLoading = true;
     var data = await repository.getAccountTransactions(dateRange: dateRange);
-    totalIncome = 0;
-    totalExpense = 0;
+    var totalIncome = 0.0;
+    var totalExpense = 0.0;
     data.forEach((transaction) {
       if (transaction.isIncome)
         totalIncome += transaction.amount;
@@ -30,6 +30,7 @@ class DashboardProvider extends BaseProvider {
         totalExpense += transaction.amount;
     });
     totalBalance = totalIncome - totalExpense;
+    incomeExpense = IncomeExpense(income: totalIncome, expense: totalExpense);
     await getTotalIncomeExpensesGroupedByCategoryId(dateRange: dateRange);
     transactions = data;
     isLoading = false;

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../repository/db/views/account_transaction_view.dart';
 import '../../../res/colors.dart';
 import '../../../res/strings.dart';
+import '../../../utils/income_expense.dart';
 import '../../../utils/widgets/custom_chart.dart';
 import '../../../utils/widgets/loading_widget.dart';
 import '../../../utils/widgets/total_income_expense.dart';
@@ -29,6 +30,12 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   @override
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -44,10 +51,31 @@ class _ReportPageState extends State<ReportPage> {
     return SingleChildScrollView(
       child: Stack(
         alignment: Alignment.center,
-        children: [
-          _content(),
-          LoadingWidget(),
-        ],
+        children: [_content(), _loadingWidget()],
+      ),
+    );
+  }
+
+  Widget _loadingWidget() {
+    return Selector<ReportProvider, bool>(
+        selector: (_, provider) => provider.isLoading,
+        builder: (_, isLoading, __) =>
+            isLoading ? LoadingWidget() : Container());
+  }
+
+  Widget _incomeExpenseWidget() {
+    return Selector<ReportProvider, IncomeExpense>(
+        builder: (_, incomeExpense, ___) =>
+            TotalIncomeExpense(incomeExpense: incomeExpense),
+        selector: (_, provider) => provider.incomeExpense);
+  }
+
+  Widget _customChartWidget() {
+    return Selector<ReportProvider, List<AccountTransactionView>>(
+      selector: (_, provider) => provider.transactionHistory,
+      builder: (_, transactions, __) => CustomChart(
+        transactions,
+        isPointChart: true,
       ),
     );
   }
@@ -58,21 +86,14 @@ class _ReportPageState extends State<ReportPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          TotalIncomeExpense(income: 2000, expense: 289100),
+          _incomeExpenseWidget(),
           Container(
-            margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
-            height: ScreenUtil().setWidth(200),
-            width: ScreenUtil().setWidth(300),
-            color: Colors.white,
-            alignment: Alignment.center,
-            child: Selector<ReportProvider, List<AccountTransactionView>>(
-              selector: (_, provider) => provider.transactionHistory,
-              builder: (_, transactions, __) => CustomChart(
-                transactions,
-                isPointChart: true,
-              ),
-            ),
-          ),
+              margin: EdgeInsets.all(ScreenUtil().setWidth(10)),
+              height: ScreenUtil().setWidth(200),
+              width: ScreenUtil().setWidth(300),
+              color: Colors.white,
+              alignment: Alignment.center,
+              child: _customChartWidget()),
           ReportRowItem(
               backgroundColor: Colors.grey[200],
               title: Strings.averageCostPerDay,

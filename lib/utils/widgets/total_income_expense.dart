@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:fluttermiwallet/res/colors.dart';
-import 'package:fluttermiwallet/res/strings.dart';
-import 'package:fluttermiwallet/utils/extentions/string_extentions.dart';
+
+import '../../res/colors.dart';
+import '../../res/strings.dart';
+import '../../utils/extentions/string_extentions.dart';
+import '../../utils/income_expense.dart';
 
 class TotalIncomeExpense extends StatelessWidget {
-  final double income, expense;
+  final IncomeExpense incomeExpense;
 
-  const TotalIncomeExpense(
-      {Key key, @required this.income, @required this.expense})
+  const TotalIncomeExpense({Key key, @required this.incomeExpense})
       : super(key: key);
 
   @override
@@ -42,9 +43,9 @@ class TotalIncomeExpense extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _globalCostWidget(isIncome: true, amount: income),
+            _globalCostWidget(isIncome: true, amount: incomeExpense.income),
             _divider(),
-            _globalCostWidget(isIncome: false, amount: expense),
+            _globalCostWidget(isIncome: false, amount: incomeExpense.expense),
           ],
         ),
       ),

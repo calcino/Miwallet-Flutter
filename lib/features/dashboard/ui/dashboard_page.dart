@@ -100,8 +100,7 @@ class _DashboardPageState extends State<DashboardPage> {
             itemBuilder: (_, index) {
               if (index == 0) {
                 return TotalIncomeExpense(
-                    income: _provider.totalIncome,
-                    expense: _provider.totalExpense);
+                    incomeExpense: _provider.incomeExpense);
               } else if (index == 1) {
                 return _barChartContainer(transactions);
               } else if (index == 2) {

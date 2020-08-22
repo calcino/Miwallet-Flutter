@@ -7,10 +7,10 @@ Widget boxRow(String text,
     {Function onChanged,
     double paddingRight = 16,
     double paddingLeft = 9,
-      double marginTop=0,
-      double marginBottom=0,
+    double marginTop = 0,
+    double marginBottom = 0,
     Widget secondWidget,
-      Color color = ColorRes.boxColor,
+    Color color = ColorRes.boxColor,
     double height = 46}) {
   return Container(
     height: height,

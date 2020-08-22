@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/features/wallets/ui/widgets/choose_wallet_bottom_sheet_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -108,14 +109,19 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
                           setState(() {
                             _isChoosedAccount = false;
                           });
-                          return _chooseBtmSheet(ctx, (account) {
-                            setState(
-                              () {
-                                _accountNameSelected = account.name;
-                                _destinationAccId = account.id;
-                              },
-                            );
-                          });
+                          return ChooseWalletBottomSheetWidget(
+                            context: ctx,
+                            onTap: (account) {
+                              setState(
+                                () {
+                                  _accountNameSelected = account.name;
+                                  _destinationAccId = account.id;
+                                },
+                              );
+                            },
+                            title: Strings.account,
+                            isAccount: true,
+                          );
                         },
                       ),
                     ),
@@ -180,48 +186,4 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
     );
   }
 
-  Widget _chooseBtmSheet(
-    BuildContext context,
-    Function(Account) onTap,
-  ) {
-    _provider.getAllAccounts();
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: 0,
-        maxHeight: ScreenUtil().setHeight(550),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          categoryAppBar(Strings.account, context, isBackable: false),
-          Selector<WalletsProvider, List<Account>>(
-              selector: (ctx, provider) => provider.accounts,
-              builder: (_, data, __) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (_, index) {
-                      return Column(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              onTap(data[index]);
-                              Navigator.pop(context);
-                            },
-                            child: categoryListField(data[index].name),
-                          ),
-                          Divider(
-                            color: ColorRes.hintColor,
-                            height: ScreenUtil().setHeight(1),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              }),
-        ],
-      ),
-    );
-  }
 }

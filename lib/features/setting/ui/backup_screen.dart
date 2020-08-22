@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:fluttermiwallet/features/setting/ui/widgets/choose_setting_bottom_sheet.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 import 'package:fluttermiwallet/utils/widgets/bottom_sheet_widget.dart';
@@ -61,12 +62,11 @@ class _BackupPageState extends State<BackupPage> {
             onPressed: () {
               showModalBottomSheetWidget(
                 context,
-                _chooseBtmSheet(
-                  context,
-                  Strings.backuoToGoogle,
-                  true,
-                  _backUpKindList,
-                  (sort) {
+                ChooseSettingBottomSheet(
+                  context:context,
+                  title:Strings.backuoToGoogle,
+                  data:_backUpKindList,
+                  onTap:(sort) {
                     setState(
                       () {
                         _backupKind = sort;
@@ -120,48 +120,7 @@ class _BackupPageState extends State<BackupPage> {
     );
   }
 
-  Widget _chooseBtmSheet(
-    BuildContext context,
-    String title,
-    bool isAccount,
-    List<String> data,
-    Function(dynamic) onTap,
-  ) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: 0,
-        maxHeight: ScreenUtil().setHeight(300),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          categoryAppBar(title, context, isBackable: false),
-          Expanded(
-            child: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (_, index) {
-                return Column(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        onTap(data[index]);
-                        Navigator.pop(context);
-                      },
-                      child: categoryListField(data[index], hasIcon: false),
-                    ),
-                    Divider(
-                      color: ColorRes.hintColor,
-                      height: ScreenUtil().setHeight(1),
-                    ),
-                  ],
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
+
 
   List<String> _backUpKindList = [
     Strings.daily,

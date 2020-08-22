@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttermiwallet/features/setting/ui/widgets/choose_setting_bottom_sheet.dart';
+import 'package:fluttermiwallet/features/setting/ui/widgets/radio_group_widgets.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/route_name.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -18,7 +20,7 @@ class _SettingPageState extends State<SettingPage> {
   bool _hasNotification = false;
   bool _hasDarkMode = false;
   bool _hasPassword = false;
-  int _radioValue = -1;
+
   String _langNameSelected;
   String _currencyNameSelected;
 
@@ -62,11 +64,16 @@ class _SettingPageState extends State<SettingPage> {
             onPressed: () {
               showModalBottomSheetWidget(
                 context,
-                _chooseBtmSheet(context, Strings.language, (lang) {
-                  setState(() {
-                    _langNameSelected = lang;
-                  });
-                }, languageList),
+                ChooseSettingBottomSheet(
+                  context: context,
+                  title: Strings.language,
+                  onTap: (lang) {
+                    setState(() {
+                      _langNameSelected = lang;
+                    });
+                  },
+                  data: languageList,
+                ),
               );
             },
             marginTop: ScreenUtil().setHeight(11),
@@ -79,11 +86,16 @@ class _SettingPageState extends State<SettingPage> {
             onPressed: () {
               showModalBottomSheetWidget(
                 context,
-                _chooseBtmSheet(context, Strings.currency, (lang) {
-                  setState(() {
-                    _currencyNameSelected = lang;
-                  });
-                }, currencyList),
+                ChooseSettingBottomSheet(
+                  context: context,
+                  title: Strings.currency,
+                  onTap: (lang) {
+                    setState(() {
+                      _currencyNameSelected = lang;
+                    });
+                  },
+                  data: currencyList,
+                ),
               );
             },
           ),
@@ -127,17 +139,22 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
           ),
-          _radioGroup(),
+          RadioGroupWidgets(),
           _labelContainer(Strings.data),
           GestureDetector(
             onTap: () {
               showModalBottomSheetWidget(
                 context,
-                _chooseBtmSheet(context, Strings.backup, (backUp) {
-                  if (backUp == Strings.backuoOnGoogle) {
-                    Navigator.pushNamed(context, RouteName.backUpPage);
-                  }
-                }, backUpList),
+                ChooseSettingBottomSheet(
+                  context: context,
+                  title: Strings.backup,
+                  onTap: (backUp) {
+                    if (backUp == Strings.backuoOnGoogle) {
+                      Navigator.pushNamed(context, RouteName.backUpPage);
+                    }
+                  },
+                  data: backUpList,
+                ),
               );
             },
             child: boxRow(
@@ -171,8 +188,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           GestureDetector(
-            onTap: (){
-            },
+            onTap: () {},
             child: boxRow(
               Strings.rateUs,
               marginTop: 10,
@@ -200,98 +216,6 @@ class _SettingPageState extends State<SettingPage> {
         ],
       ),
     );
-  }
-
-  Widget _chooseBtmSheet(
-      BuildContext context, String title, Function(dynamic) onTap, data) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: 0,
-        maxHeight: ScreenUtil().setHeight(250),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          categoryAppBar(title, context, isBackable: false),
-          Expanded(
-            child: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (_, index) {
-                return Column(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        onTap(data[index]);
-                        Navigator.pop(context);
-                      },
-                      child: categoryListField(data[index], hasIcon: false),
-                    ),
-                    Divider(
-                      color: ColorRes.hintColor,
-                      height: ScreenUtil().setHeight(1),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _radioGroup() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(21),
-      ),
-      margin: EdgeInsets.only(
-        bottom: ScreenUtil().setHeight(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          RadioButton(
-            description: Strings.pattern,
-            value: 0,
-            groupValue: _radioValue,
-            onChanged: (value) => setState(
-              () => _radioValue = value,
-            ),
-          ),
-          RadioButton(
-            description: Strings.pin,
-            value: 1,
-            groupValue: _radioValue,
-            onChanged: (value) => setState(
-              () => _radioValue = value,
-            ),
-          ),
-          RadioButton(
-            description: Strings.face,
-            value: 2,
-            groupValue: _radioValue,
-            onChanged: (value) => setState(
-              () => _radioValue = value,
-            ),
-          ),
-          RadioButton(
-            description: Strings.fingerPrint,
-            value: 3,
-            groupValue: _radioValue,
-            onChanged: (value) => setState(
-                  () => _radioValue = value,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleRadioValueChange(int value) {
-    setState(() {
-      _radioValue = value;
-    });
   }
 
   Widget _labelContainer(String labelText) {

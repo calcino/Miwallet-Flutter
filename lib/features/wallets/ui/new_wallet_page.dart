@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttermiwallet/features/wallets/logic/wallets_provider.dart';
+import 'package:fluttermiwallet/features/wallets/ui/widgets/choose_wallet_bottom_sheet_widget.dart';
 import 'package:fluttermiwallet/repository/db/entity/account.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
@@ -105,15 +106,18 @@ class _AddWalletPageState extends State<AddWalletPage> {
                 context,
                 ChangeNotifierProvider.value(
                   value: _provider,
-                  child: _chooseBtmSheet(context, Strings.accountName, true,
-                      (account) {
-                    setState(
-                      () {
-                        _accountNameSelected = account.name;
-                        accId = account.sourceId;
-                      },
-                    );
-                  }),
+                  child: ChooseWalletBottomSheetWidget(
+                      context: context,
+                      title: Strings.accountName,
+                      isAccount: true,
+                      onTap: (account) {
+                        setState(
+                          () {
+                            _accountNameSelected = account.name;
+                            accId = account.sourceId;
+                          },
+                        );
+                      }),
                 ),
               );
             },
@@ -131,12 +135,16 @@ class _AddWalletPageState extends State<AddWalletPage> {
                 context,
                 ChangeNotifierProvider.value(
                   value: _provider,
-                  child: _chooseBtmSheet(context, Strings.bank, false, (bank) {
-                    setState(() {
-                      _bankNameSelected = bank.name;
-                      bankId = bank.sourceId;
-                    });
-                  }),
+                  child: ChooseWalletBottomSheetWidget(
+                      context: context,
+                      title: Strings.bank,
+                      isAccount: false,
+                      onTap: (bank) {
+                        setState(() {
+                          _bankNameSelected = bank.name;
+                          bankId = bank.sourceId;
+                        });
+                      }),
                 ),
               );
             },
@@ -173,54 +181,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _chooseBtmSheet(
-    BuildContext context,
-    String title,
-    bool isAccount,
-    Function(dynamic) onTap,
-  ) {
-    isAccount ? _provider.getAllAccounts() : _provider.findAllBank();
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: 0,
-        maxHeight: ScreenUtil().setHeight(550),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          categoryAppBar(title, context, isBackable: false),
-          Selector<WalletsProvider, List<dynamic>>(
-              selector: (ctx, provider) =>
-                  isAccount ? provider.accounts : provider.banks,
-              builder: (_, data, __) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (_, index) {
-                      return Column(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              onTap(data[index]);
-                              Navigator.pop(context);
-                            },
-                            child: categoryListField(data[index].name),
-                          ),
-                          Divider(
-                            color: ColorRes.hintColor,
-                            height: ScreenUtil().setHeight(1),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              }),
         ],
       ),
     );

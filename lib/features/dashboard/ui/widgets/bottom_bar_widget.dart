@@ -12,7 +12,8 @@ import 'time_period_drop_down.dart';
 class BottomBarWidget extends StatelessWidget {
   final Function(DateRange) onSelectDate;
 
-  const BottomBarWidget({Key key,@required this.onSelectDate}) : super(key: key);
+  const BottomBarWidget({Key key, @required this.onSelectDate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

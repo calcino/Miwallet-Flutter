@@ -4,8 +4,8 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../../repository/db/views/account_transaction_view.dart';
-import '../../../utils/date_range.dart';
-import '../../../utils/income_expense.dart';
+import '../../../utils/custom_models/date_range.dart';
+import '../../../utils/custom_models/income_expense.dart';
 import '../../../utils/widgets/empty_data_widget.dart';
 import '../../../utils/widgets/total_income_expense.dart';
 import '../logic/home_provider.dart';

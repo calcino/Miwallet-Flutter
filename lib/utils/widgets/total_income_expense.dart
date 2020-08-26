@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import '../../res/colors.dart';
 import '../../res/strings.dart';
 import '../../utils/extentions/string_extentions.dart';
-import '../../utils/income_expense.dart';
+import '../custom_models/income_expense.dart';
 
 class TotalIncomeExpense extends StatelessWidget {
   final IncomeExpense incomeExpense;

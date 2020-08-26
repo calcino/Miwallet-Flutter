@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:inject/inject.dart';
 
-import '../utils/date_range.dart';
+import '../utils/custom_models/date_range.dart';
 import '../utils/logger/logger.dart';
 import 'db/database.dart';
 import 'db/entity/account.dart';
@@ -66,17 +66,17 @@ class Repository {
   }
 
   Future<List<AccountTransactionView>> getAccountTransactions(
-      {DateRange dateRange = const DateRange()}) async {
+      {DateRange dateRange}) async {
     var db = await database;
-    var data =
-        await db.accountTransactionDao.findAll(dateRange.from, dateRange.to);
-    Logger.log('atv: ${data.toString()}');
+    var data = await db.accountTransactionDao.findAll(
+        dateRange != null ? dateRange.from : '',
+        dateRange != null ? dateRange.to : '');
+    Logger.log('transactions: ${data.toString()}');
     return data;
   }
 
   Future<List<TransactionGroupedByCategory>>
-      getTotalExpensesGroupedByCategoryId(
-          {DateRange dateRange = const DateRange()}) async {
+      getTotalExpensesGroupedByCategoryId({DateRange dateRange}) async {
     var db = await database;
     var data = await db.accountTransactionDao
         .findAllGroupedByCategoryId(dateRange.from, dateRange.to, false);
@@ -84,10 +84,10 @@ class Repository {
   }
 
   Future<List<TransactionGroupedByCategory>> getTotalIncomeGroupedByCategoryId(
-      {DateRange dateRange = const DateRange()}) async {
+      {DateRange dateRange}) async {
     var db = await database;
     var data = await db.accountTransactionDao
-        .findAllGroupedByCategoryId(dateRange.from, dateRange.to, true);
+        .findAllGroupedByCategoryId(dateRange?.from, dateRange?.to, true);
     return data;
   }
 

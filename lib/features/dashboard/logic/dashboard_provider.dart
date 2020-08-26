@@ -1,11 +1,11 @@
-import 'package:fluttermiwallet/utils/income_expense.dart';
+import 'package:fluttermiwallet/utils/custom_models/income_expense.dart';
 import 'package:inject/inject.dart';
 
 import '../../../base/base_provider.dart';
 import '../../../repository/db/views/account_transaction_view.dart';
 import '../../../repository/db/views/transaction_grouped_by_category.dart';
 import '../../../repository/repository.dart';
-import '../../../utils/date_range.dart';
+import '../../../utils/custom_models/date_range.dart';
 
 class DashboardProvider extends BaseProvider {
   IncomeExpense incomeExpense = IncomeExpense(income: 0, expense: 0);
@@ -18,7 +18,7 @@ class DashboardProvider extends BaseProvider {
   @provide
   DashboardProvider(Repository repository) : super(repository);
 
-  void getAccountTransactions({DateRange dateRange = const DateRange()}) async {
+  void getAccountTransactions({DateRange dateRange}) async {
     isLoading = true;
     var data = await repository.getAccountTransactions(dateRange: dateRange);
     var totalIncome = 0.0;
@@ -38,7 +38,7 @@ class DashboardProvider extends BaseProvider {
   }
 
   Future<void> getTotalIncomeExpensesGroupedByCategoryId(
-      {DateRange dateRange = const DateRange()}) async {
+      {DateRange dateRange}) async {
     totalExpensesGroupedByCategory = await repository
         .getTotalExpensesGroupedByCategoryId(dateRange: dateRange);
     totalIncomeGroupedByCategory = await repository

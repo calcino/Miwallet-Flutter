@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart' hide DayPicker;
 import 'package:flutter_date_pickers/flutter_date_pickers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttermiwallet/res/colors.dart';
-import 'package:fluttermiwallet/res/dimen.dart';
-import 'package:fluttermiwallet/res/strings.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../res/colors.dart';
+import '../../../../res/dimen.dart';
+import '../../../../res/strings.dart';
 
 class ChoosingDateSheet extends StatefulWidget {
   DatePeriod selectedPeriod;

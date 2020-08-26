@@ -6,12 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../res/dimen.dart';
 import '../../../../res/strings.dart';
+import '../../../../utils/custom_models/filter_transactions_model.dart';
 import 'report_bottom_app_bar.dart';
 
 class ReportAppBar extends AppBar {
   final VoidCallback callback;
+  final FilterTransactionModel filterTransactionModel;
 
-  ReportAppBar({this.callback});
+  ReportAppBar({@required this.filterTransactionModel, this.callback});
 
   @override
   Widget get title => Text(
@@ -61,7 +63,13 @@ class ReportAppBar extends AppBar {
   @override
   PreferredSizeWidget get bottom => PreferredSize(
         preferredSize: Size(double.infinity, kBottomNavigationBarHeight),
-        child: ReportBottomAppBar(selectedDate: '', filtered: []),
+        child: ReportBottomAppBar(
+            selectedDate: filterTransactionModel.dateRange.toString(),
+            filtered: [
+              filterTransactionModel?.category?.name ?? '',
+              filterTransactionModel?.wallet?.name ?? '',
+              filterTransactionModel?.user?.firstName ?? ''
+            ]),
       );
 
   @override

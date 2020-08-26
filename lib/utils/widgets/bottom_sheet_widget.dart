@@ -4,11 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttermiwallet/res/colors.dart';
 import 'package:fluttermiwallet/res/strings.dart';
 
-Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false,bool hasDone=false,Function onTap}) {
+Widget categoryAppBar(String title, BuildContext context,
+    {bool isBackable = false, bool hasDone = false, Function onTap}) {
   return Container(
     decoration: BoxDecoration(
       color: ColorRes.blueColor,
-      borderRadius: BorderRadius.vertical(top: Radius.circular(ScreenUtil().setWidth(25),),),
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(
+          ScreenUtil().setWidth(25),
+        ),
+      ),
     ),
     height: ScreenUtil().setHeight(60.78),
     child: Stack(
@@ -40,12 +45,14 @@ Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false
           child: Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 onTap();
                 Navigator.pop(context);
               },
               child: Container(
-                padding: EdgeInsets.only(right: ScreenUtil().setWidth(21),),
+                padding: EdgeInsets.only(
+                  right: ScreenUtil().setWidth(21),
+                ),
                 child: Text(
                   Strings.ok,
                   style: TextStyle(
@@ -62,8 +69,11 @@ Widget categoryAppBar(String title,BuildContext context,{ bool isBackable= false
   );
 }
 
-Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =true,Function onTap}) {
-  ScreenUtil.init(width: 360, height: 640);
+Widget categoryListField(String name,
+    {IconData icon = Icons.image,
+    bool hasIcon = true,
+    Color color = Colors.grey,
+    Function onTap}) {
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -80,7 +90,7 @@ Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =
             child: Icon(
               icon,
               size: ScreenUtil().setWidth(31),
-              color: ColorRes.blueColor,
+              color: color,
             ),
           ),
           Visibility(
@@ -91,16 +101,16 @@ Widget categoryListField(String name,{IconData icon = Icons.image,bool hasIcon =
           ),
           Text(
             name,
-            style: TextStyle(fontSize: ScreenUtil().setSp(14), color: ColorRes.hintColor),
+            style: TextStyle(
+                fontSize: ScreenUtil().setSp(14), color: ColorRes.hintColor),
           ),
         ],
       ),
     ),
-
   );
 }
 
-void showModalBottomSheetWidget(BuildContext context,Widget childWidget) {
+void showModalBottomSheetWidget(BuildContext context, Widget childWidget) {
   showModalBottomSheet(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
@@ -117,4 +127,3 @@ void showModalBottomSheetWidget(BuildContext context,Widget childWidget) {
     },
   );
 }
-

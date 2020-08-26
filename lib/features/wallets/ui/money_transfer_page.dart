@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../../features/wallets/logic/wallets_provider.dart';
 import '../../../repository/db/entity/account.dart';
 import '../../../repository/db/entity/transfer.dart';
-import '../../../res/colors.dart';
 import '../../../res/strings.dart';
 import '../../../utils/widgets/bottom_sheet_widget.dart';
 import '../../../utils/widgets/custom_appbar.dart';
@@ -92,7 +91,7 @@ class _MoneyTransferPageState extends State<MoneyTransferPage> {
         children: <Widget>[
           errorTextWidget(_isChoosedAccount, Strings.pleaseChooseAccount),
           Selector<WalletsProvider, List<Account>>(
-            selector: (ctx, provider) => _provider.accounts,
+            selector: (ctx, provider) => provider.accounts,
             builder: (ctx, accounts, _) {
               return customTextBox(
                 marginTop: 19,

@@ -23,22 +23,17 @@ class _AccountTransactionPageState extends State<AccountTransactionPage> {
   @override
   void initState() {
     super.initState();
-    _provider = Provider.of<WalletsProvider>(context);
+    _provider = Provider.of<WalletsProvider>(context,listen: false);
     _provider.getAllTransaction();
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(width: 360, height: 640);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: _appBar(context),
-        body: ChangeNotifierProvider(
-            create: (_) => Provider.of<WalletsProvider>(context, listen: false),
-            builder: (context, _) {
-              return _body();
-            }),
+        body: _body(),
       ),
     );
   }
@@ -64,7 +59,7 @@ class _AccountTransactionPageState extends State<AccountTransactionPage> {
 
   Widget _body() {
     return Selector<WalletsProvider, List<AccountTransactionView>>(
-        selector: (ctx, provider) => _provider.transactions,
+        selector: (ctx, provider) => provider.transactions,
         builder: (ctx, transaction, child) {
           return ListView.builder(
               itemCount: transaction.length,

@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import '../../../repository/db/views/account_transaction_view.dart';
 import '../../../res/colors.dart';
 import '../../../res/strings.dart';
-import '../../../utils/income_expense.dart';
+import '../../../utils/custom_models/filter_transactions_model.dart';
+import '../../../utils/custom_models/income_expense.dart';
+import '../../../utils/logger/logger.dart';
 import '../../../utils/widgets/custom_chart.dart';
 import '../../../utils/widgets/loading_widget.dart';
 import '../../../utils/widgets/total_income_expense.dart';
@@ -22,11 +24,14 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   ReportProvider _provider;
+  FilterTransactionModel _filterTransactionModel;
 
   @override
   void initState() {
     super.initState();
+    _filterTransactionModel = FilterTransactionModel();
     _provider = Provider.of<ReportProvider>(context, listen: false);
+    _provider.getAccountTransactions(_filterTransactionModel);
   }
 
   @override
@@ -42,6 +47,7 @@ class _ReportPageState extends State<ReportPage> {
       body: _body(),
       floatingActionButton: _exportFAB(),
       appBar: ReportAppBar(
+        filterTransactionModel: _filterTransactionModel,
         callback: _openFilterReportBottomSheet,
       ),
     );
@@ -60,7 +66,7 @@ class _ReportPageState extends State<ReportPage> {
     return Selector<ReportProvider, bool>(
         selector: (_, provider) => provider.isLoading,
         builder: (_, isLoading, __) =>
-            isLoading ? LoadingWidget() : Container());
+        isLoading ? LoadingWidget() : Container());
   }
 
   Widget _incomeExpenseWidget() {
@@ -73,10 +79,11 @@ class _ReportPageState extends State<ReportPage> {
   Widget _customChartWidget() {
     return Selector<ReportProvider, List<AccountTransactionView>>(
       selector: (_, provider) => provider.transactionHistory,
-      builder: (_, transactions, __) => CustomChart(
-        transactions,
-        isPointChart: true,
-      ),
+      builder: (_, transactions, __) =>
+          CustomChart(
+            transactions,
+            isPointChart: true,
+          ),
     );
   }
 
@@ -94,16 +101,32 @@ class _ReportPageState extends State<ReportPage> {
               color: Colors.white,
               alignment: Alignment.center,
               child: _customChartWidget()),
+          _averageCostPerDayWidget(),
+          _numberOfTransactionWidget(),
+        ],
+      ),
+    );
+  }
+
+  Widget _averageCostPerDayWidget() {
+    return Selector<ReportProvider, double>(
+      selector: (_, provider) => provider.averageCostPerDay,
+      builder: (_, averageCostPerDay, __) =>
           ReportRowItem(
               backgroundColor: Colors.grey[200],
               title: Strings.averageCostPerDay,
-              value: '\$150'),
+              value: '\$$averageCostPerDay'),
+    );
+  }
+
+  Widget _numberOfTransactionWidget() {
+    return Selector<ReportProvider, int>(
+      selector: (_, provider) => provider.numberOfTransactions,
+      builder: (_, numberOfTransactions, __) =>
           ReportRowItem(
               backgroundColor: Colors.white,
               title: Strings.numberOfTransaction,
-              value: '100'),
-        ],
-      ),
+              value: '$numberOfTransactions'),
     );
   }
 
@@ -131,7 +154,7 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   _openFilterReportBottomSheet() {
-    showModalBottomSheet<int>(
+    showModalBottomSheet<FilterTransactionModel>(
         isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
@@ -139,7 +162,16 @@ class _ReportPageState extends State<ReportPage> {
                 topRight: Radius.circular(ScreenUtil().setWidth(30)),
                 topLeft: Radius.circular(ScreenUtil().setWidth(30)))),
         builder: (context) {
-          return FilterReportsSheet();
-        }).then((value) => print('bottomsheet closed with int : $value'));
+          return FilterReportsSheet(filter: _filterTransactionModel,
+            categories: _provider.getCategories(),);
+        }).then((value) {
+      if (value != null) {
+        Logger.log('filter updated : $value');
+        setState(() {
+          _filterTransactionModel = value;
+        });
+        _provider.getAccountTransactions(_filterTransactionModel);
+      }
+    });
   }
 }

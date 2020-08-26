@@ -4,7 +4,7 @@ import 'package:fluttermiwallet/repository/db/entity/bank.dart';
 import 'package:fluttermiwallet/repository/db/entity/transfer.dart';
 import 'package:fluttermiwallet/repository/db/views/account_transaction_view.dart';
 import 'package:fluttermiwallet/repository/repository.dart';
-import 'package:fluttermiwallet/utils/date_range.dart';
+import 'package:fluttermiwallet/utils/custom_models/date_range.dart';
 
 class WalletsProvider extends BaseProvider {
   List<Account> accounts = [];

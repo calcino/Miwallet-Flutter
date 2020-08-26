@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../res/dimen.dart';
 import '../../../../res/strings.dart';
-import '../../../../utils/date_range.dart';
+import '../../../../utils/custom_models/date_range.dart';
 import '../../../../utils/extentions/string_extentions.dart';
 import '../../logic/dashboard_provider.dart';
 import 'time_period_drop_down.dart';

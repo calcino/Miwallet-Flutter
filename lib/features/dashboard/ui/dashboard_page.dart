@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttermiwallet/repository/db/views/transaction_grouped_by_category.dart';
-import 'package:fluttermiwallet/utils/date_range.dart';
+import 'package:fluttermiwallet/utils/custom_models/date_range.dart';
 import 'package:provider/provider.dart';
 
 import '../../../repository/db/views/account_transaction_view.dart';
@@ -104,7 +104,6 @@ class _DashboardPageState extends State<DashboardPage> {
               } else if (index == 1) {
                 return _barChartContainer(transactions);
               } else if (index == 2) {
-                print('fuck: ${_provider.totalExpensesGroupedByCategory}');
                 return _piChartContainer(
                     _provider.totalExpensesGroupedByCategory);
               } else {

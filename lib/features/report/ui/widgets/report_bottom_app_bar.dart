@@ -36,9 +36,9 @@ class ReportBottomAppBar extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      selectedDate,
+                      selectedDate ?? '',
                       style: TextStyle(
-                          fontSize: ScreenUtil().setSp(DimenRes.smallText),
+                          fontSize: ScreenUtil().setSp(DimenRes.verySmallText),
                           color: Colors.white),
                     ),
                     Icon(

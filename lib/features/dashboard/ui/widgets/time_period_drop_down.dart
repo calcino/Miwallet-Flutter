@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../res/colors.dart';
 import '../../../../res/dimen.dart';
 import '../../../../res/strings.dart';
-import '../../../../utils/date_range.dart';
+import '../../../../utils/custom_models/date_range.dart';
 
 class TimePeriodDropDown extends StatefulWidget {
   final Function(DateRange) onSelectDate;

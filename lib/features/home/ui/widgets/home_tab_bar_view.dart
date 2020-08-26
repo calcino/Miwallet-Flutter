@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/date_range.dart';
+import '../../../../utils/custom_models/date_range.dart';
 import '../history_list_widget.dart';
 
 class HomeTabBarView extends StatelessWidget {

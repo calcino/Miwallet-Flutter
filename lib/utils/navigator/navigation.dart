@@ -19,13 +19,13 @@ class Navigation {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouteName.homePage:
-        return MaterialPageRoute(builder: (ctx) => HomePage());
+        return MaterialPageRoute(builder: (ctx) => HomePage(key: PageStorageKey('homePage')));
         break;
       case RouteName.accountsPage:
-        return MaterialPageRoute(builder: (ctx) => WalletPage());
+        return MaterialPageRoute(builder: (ctx) => WalletPage(key: PageStorageKey('walletPage')));
         break;
       case RouteName.reportPage:
-        return MaterialPageRoute(builder: (ctx) => ReportPage());
+        return MaterialPageRoute(builder: (ctx) => ReportPage(key: PageStorageKey('reportPage')));
         break;
       case RouteName.accountTransactionsPage:
         int _id = settings.arguments;
@@ -37,7 +37,7 @@ class Navigation {
             builder: (ctx) => AddTransactionPage(_isIncome));
         break;
       case RouteName.walletPage:
-        return MaterialPageRoute(builder: (ctx) => WalletPage());
+        return MaterialPageRoute(builder: (ctx) => WalletPage(key: PageStorageKey('walletPage')));
         break;
 
       case RouteName.addWalletPage:
@@ -51,7 +51,7 @@ class Navigation {
         return MaterialPageRoute(builder: (ctx) => MoneyTransferPage(_id));
         break;
       case RouteName.settingsPage:
-        return MaterialPageRoute(builder: (ctx) => SettingPage());
+        return MaterialPageRoute(builder: (ctx) => SettingPage(key: PageStorageKey('settingsPage')));
         break;
       case RouteName.backUpPage:
         return MaterialPageRoute(builder: (ctx) => BackupPage());

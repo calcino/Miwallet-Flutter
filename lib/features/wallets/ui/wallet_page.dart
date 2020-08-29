@@ -14,6 +14,7 @@ import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
 class WalletPage extends StatefulWidget {
+  const WalletPage({Key key}):super(key: key);
   @override
   _WalletPageState createState() => _WalletPageState();
 }

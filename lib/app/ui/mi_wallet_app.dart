@@ -65,6 +65,7 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
+  final PageStorageBucket _bucket = PageStorageBucket();
   TabItem _currentTab = TabItem.home;
   Map<TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
@@ -102,18 +103,21 @@ class AppState extends State<App> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
-        body: Stack(children: <Widget>[
-          _buildOffstageNavigator<HomeProvider>(
-              TabItem.home, widget.homeProvider),
-          _buildOffstageNavigator<WalletsProvider>(
-              TabItem.wallet, widget.walletsProvider),
-          _buildOffstageNavigator<ReportProvider>(
-              TabItem.report, widget.reportProvider),
-          _buildOffstageNavigator<DashboardProvider>(
-              TabItem.dashboard, widget.dashboardProvider),
-          _buildOffstageNavigator<SettingsProvider>(
-              TabItem.settings, widget.settingsProvider),
-        ]),
+        body: PageStorage(
+          bucket: _bucket,
+          child: Stack(children: <Widget>[
+            _buildOffstageNavigator<HomeProvider>(
+                TabItem.home, widget.homeProvider),
+            _buildOffstageNavigator<WalletsProvider>(
+                TabItem.wallet, widget.walletsProvider),
+            _buildOffstageNavigator<ReportProvider>(
+                TabItem.report, widget.reportProvider),
+            _buildOffstageNavigator<DashboardProvider>(
+                TabItem.dashboard, widget.dashboardProvider),
+            _buildOffstageNavigator<SettingsProvider>(
+                TabItem.settings, widget.settingsProvider),
+          ]),
+        ),
         bottomNavigationBar: BottomNavigation(
           currentTab: _currentTab,
           onSelectTab: _selectTab,

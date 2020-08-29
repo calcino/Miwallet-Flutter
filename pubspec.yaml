@@ -41,7 +41,9 @@ dependencies:
   flutter_provider: ^1.1.1
   flutter_date_pickers: ^0.1.5
   inject:
-    path: ./vendor/inject.dart/package/inject
+    git:
+      url: https://github.com/AndreySouza1/inject.dart
+      path: package/inject
 
 dev_dependencies:
   flutter_test:
@@ -49,7 +51,9 @@ dev_dependencies:
   floor_generator: ^0.14.0
   build_runner: ^1.7.3
   inject_generator:
-    path: ./vendor/inject.dart/package/inject_generator
+    git:
+      url: https://github.com/AndreySouza1/inject.dart
+      path: package/inject_generator
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

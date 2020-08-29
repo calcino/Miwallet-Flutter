@@ -12,6 +12,7 @@ import 'widgets/home_app_bar.dart';
 import 'widgets/home_tab_bar_view.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key key}):super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }

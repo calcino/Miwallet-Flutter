@@ -12,6 +12,7 @@ import 'package:fluttermiwallet/utils/widgets/custom_text_field.dart';
 import 'package:fluttermiwallet/utils/widgets/switch_box_row_widget.dart';
 
 class SettingPage extends StatefulWidget {
+  const SettingPage({Key key}):super(key: key);
   @override
   _SettingPageState createState() => _SettingPageState();
 }

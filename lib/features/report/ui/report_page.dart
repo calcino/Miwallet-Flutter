@@ -18,6 +18,7 @@ import 'widgets/report_app_bar.dart';
 import 'widgets/report_row_item.dart';
 
 class ReportPage extends StatefulWidget {
+  const ReportPage({Key key}):super(key: key);
   @override
   _ReportPageState createState() => _ReportPageState();
 }
